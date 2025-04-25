@@ -1,11 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
+  imports: [RouterModule],
   selector: 'app-user-panel',
-  imports: [],
   templateUrl: './user-panel.component.html',
-  styleUrl: './user-panel.component.css'
+  styles: ''
 })
 export class UserPanelComponent {
-
+@Output() toggleSidebar: EventEmitter<void> = new EventEmitter<void>();
+fire(){
+  this.toggleSidebar.emit();
+  console.log("toggleSidebar event emitted");
+}
 }

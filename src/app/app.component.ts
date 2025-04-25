@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
-import { HomeComponent } from './features/home/home.component';
+
+import { NavbarComponent } from './Shared/Components/navbar/navbar.component';
+import { FooterComponent } from './Shared/Components/footer/footer.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [
-    HomeComponent
-  ],
+  imports: [NavbarComponent, FooterComponent, RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
   title = 'frontend';
