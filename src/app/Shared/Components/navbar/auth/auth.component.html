@@ -1,0 +1,55 @@
+<div class="flex items-center justify-center py-20 z-50">
+  <div
+    class="relative rounded-3xl shadow-2xl overflow-hidden max-w-5xl w-full flex flex-col bg-white"
+  >
+    <!-- Close Button -->
+    <button
+      class="absolute top-4 right-4 bg-gradient-to-br from-sky-400 to-blue-500 text-white rounded-full p-2 shadow-md hover:bg-gray-300 hover:text-gray-800 transition duration-300"
+    >
+      <a
+        class="block"
+        routerLink="/home"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </a>
+    </button>
+
+    <!-- Toggle Buttons -->
+    <div class="flex justify-center space-x-4 py-4">
+      <a
+        class="block px-6 py-2 bg-gray-200 text-gray-500 rounded-lg font-semibold shadow-md hover:bg-gray-300 transition duration-300"
+        [routerLinkActiveOptions]="{ exact: true }"
+        routerLinkActive="text-white bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-500 hover:to-blue-600"
+        routerLink="login"
+      >
+        LOGIN
+      </a>
+
+      <a
+        class="block px-6 py-2 bg-gray-200 text-gray-500 rounded-lg font-semibold shadow-md hover:bg-gray-300 transition duration-300"
+        routerLinkActive="text-white bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-500 hover:to-blue-600"
+        routerLink="register"
+      >
+        REGISTER
+      </a>
+    </div>
+
+    <!-- Dynamic Content -->
+    <div class="p-6">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

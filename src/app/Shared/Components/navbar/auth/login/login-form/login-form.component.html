@@ -1,0 +1,55 @@
+<!-- Right Side Form -->
+<div class="w-full  bg-white p-8 space-y-6">
+  <!-- Social Login -->
+  <div class="text-center space-y-4">
+    <p class="text-gray-600 font-medium">Sign in With</p>
+    <div class="flex justify-center space-x-4">
+      <img
+        src="https://img.icons8.com/color/48/facebook.png"
+        class="w-8 h-8 cursor-pointer hover:scale-110 transition duration-300"
+        alt="Facebook"
+      />
+      <img
+        src="https://img.icons8.com/color/48/google-logo.png"
+        class="w-8 h-8 cursor-pointer hover:scale-110 transition duration-300"
+        alt="Google"
+      />
+      <img
+        src="https://img.icons8.com/color/48/twitter--v1.png"
+        class="w-8 h-8 cursor-pointer hover:scale-110 transition duration-300"
+        alt="Twitter"
+      />
+    </div>
+    <div class="flex items-center justify-between space-x-2">
+      <hr class="border border-gray-300 w-full" />
+      <span class="text-gray-400 text-sm">OR</span>
+      <hr class="border border-gray-300 w-full" />
+    </div>
+  </div>
+
+  <!-- Form Fields -->
+  <form class="space-y-4">
+    <input
+      type="email"
+      placeholder="Email Address"
+      class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-400 shadow-sm"
+    />
+    <input
+      type="password"
+      placeholder="Password"
+      class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-400 shadow-sm"
+    />
+    <div class="flex items-center justify-between text-sm text-gray-600">
+      <label class="flex items-center">
+        <input type="checkbox" class="mr-2 accent-sky-500" /> Remember me
+      </label>
+      <a routerLink="forgetPassword" class="hover:underline text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600">Forgot Password?</a>
+    </div>
+    <button
+      type="submit"
+      class="w-full bg-gradient-to-r from-sky-400 to-blue-600 text-white font-semibold py-2 rounded-md shadow-lg transition duration-300"
+    >
+      LOGIN
+    </button>
+  </form>
+</div>
