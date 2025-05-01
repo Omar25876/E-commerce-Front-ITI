@@ -6,6 +6,7 @@ import { AuthComponent } from './Shared/Components/navbar/auth/auth.component';
 import { LoginFormComponent } from './Shared/Components/navbar/auth/login/login-form/login-form.component';
 import { ForgotPasswordComponent } from './Shared/Components/navbar/auth/login/forgot-password/forgot-password.component';
 import { ErrorComponent } from './Shared/Components/error/error.component';
+import { CategoriesComponent } from './features/categories/categories.component';
 
 export const routes: Routes = [
   // Redirect to home by default
@@ -13,6 +14,9 @@ export const routes: Routes = [
 
    // Home Route
   { path: 'home', component: HomeComponent, title: 'Home'},
+
+  //Categories Route
+  {path:'categories',component:CategoriesComponent,title:'Categories'},
 
    // Auth Routes
   {

@@ -3,12 +3,14 @@ import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { UserPanelComponent } from './user-panel/user-panel.component';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
   imports: [
     UserPanelComponent,
-    CommonModule
+    CommonModule,
+    RouterModule
   ],
   templateUrl: './navbar.component.html',
   styles: ''

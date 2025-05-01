@@ -1,0 +1,45 @@
+<div class="container  mx-auto my-5 relative group">
+  <!-- ✅ السلايدر -->
+  <div class="flex transition-transform duration-1000 ease-in-out h-full relative" (mouseenter)="stop()"
+    (mouseleave)="startSliding()">
+
+    <div *ngFor="let image of Images; let i = index"
+      class="relative flex-shrink-0 m-2 w-full h-full overflow-hidden group" [hidden]="i !== currentIndex">
+
+      <img [src]="image" alt="Slide" class="w-full h-full object-cover" />
+
+      <!-- ✅ القوس الأيمن -->
+      <svg
+        class="absolute top-0 right-0 h-full z-10 transition-opacity duration-700 ease-in-out pointer-events-none opacity-0 group-hover:opacity-100"
+        viewBox="0 0 20 100" preserveAspectRatio="none"
+        style="width: 5%; height: 100%; transform: perspective(800px) rotateY(-18deg) translateX(53%);">
+        <path d="M10,0 L0,50 L10,100 Z"
+          [attr.fill]="hoveredButton === 'next' ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0.7)'" />
+      </svg>
+
+      <!-- ✅ القوس الأيسر -->
+      <svg
+        class="absolute top-0 left-0 h-full z-10 transition-opacity duration-700 ease-in-out pointer-events-none opacity-0 group-hover:opacity-100"
+        viewBox="0 0 20 100" preserveAspectRatio="none"
+        style="width: 5%; height: 100%; transform: perspective(800px) rotateY(18deg) translateX(-53%);">
+        <path d="M10,0 L20,50 L10,100 Z"
+          [attr.fill]="hoveredButton === 'prev' ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0.7)'" />
+      </svg>
+    </div>
+  </div>
+
+  <!-- ✅ أزرار التنقل -->
+  <button (click)="prevSlide()" (mouseenter)="hoveredButton = 'prev'" (mouseleave)="hoveredButton = null" class="absolute left-10 transform bg-white text-black text-2xl pb-1 w-12 h-12 rounded-full z-20
+           transition-all duration-800 ease-in-out opacity-0 group-hover:opacity-100 hover:-translate-x-13
+           top-1/2 -translate-y-1/2 shadow-md hover:shadow-lg">
+    {{hoveredButton==='prev'? '<<':'<'}} </button>
+
+      <button (click)="nextSlide()" (mouseenter)="hoveredButton = 'next'" (mouseleave)="hoveredButton = null" class="absolute right-6 transform bg-white text-black text-2xl pb-1 w-12 h-12 rounded-full z-20
+           transition-all duration-800 ease-in-out opacity-0 group-hover:opacity-100 hover:translate-x-13
+           top-1/2 -translate-y-1/2 shadow-md hover:shadow-lg">
+        {{hoveredButton==='next'? '>>':'>'}}
+      </button>
+
+      <!-- ✅ noUiSlider -->
+      <div #sliderRef id="slider" class="w-full mt-5"></div>
+</div>
