@@ -1,23 +1,34 @@
 import { Component } from '@angular/core';
-import { LoginComponent } from './auth/login/login.component';
-import { RegisterComponent } from './auth/register/register.component';
-import { UserPanelComponent } from './user-panel/user-panel.component';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../services/auth.service';
+import { HttpClientModule } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
+  providers:[AuthService],
   imports: [
-    UserPanelComponent,
-    CommonModule
+    CommonModule,
+    HttpClientModule
   ],
   templateUrl: './navbar.component.html',
   styles: ''
 })
 export class NavbarComponent {
-  isUserPanelVisible: boolean = false;
+  islogin: boolean = false;
+  isMobileMenuOpen: boolean = false;
 
-
-  toggleUserPanel(): void {
-    this.isUserPanelVisible = !this.isUserPanelVisible;
+  constructor(private myService: AuthService, private router: Router) {
+    this.islogin = this.myService.isLoggedIn();
   }
+
+  sign(): void {
+    this.router.navigate(['/auth/login']);
+  }
+
+  viewProfile(): void {
+    this.router.navigate(['/dashboard']);
+  }
+
+
 }

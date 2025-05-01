@@ -6,6 +6,10 @@ import { AuthComponent } from './Shared/Components/navbar/auth/auth.component';
 import { LoginFormComponent } from './Shared/Components/navbar/auth/login/login-form/login-form.component';
 import { ForgotPasswordComponent } from './Shared/Components/navbar/auth/login/forgot-password/forgot-password.component';
 import { ErrorComponent } from './Shared/Components/error/error.component';
+import { ProductComponent } from './features/product/product.component';
+import { ProdDescribComponent } from './features/product/product-sec3/prod-describ/prod-describ.component';
+import { ProdFAQComponent } from './features/product/product-sec3/prod-faq/prod-faq.component';
+import { ProdReviewsComponent } from './features/product/product-sec3/prod-reviews/prod-reviews.component';
 
 export const routes: Routes = [
   // Redirect to home by default
@@ -13,6 +17,13 @@ export const routes: Routes = [
 
    // Home Route
   { path: 'home', component: HomeComponent, title: 'Home'},
+
+  // Product Route
+  { path: 'product/:id', component: ProductComponent, title: 'Product' ,children:[
+    { path: '', component: ProdReviewsComponent, title: 'Reviews' },
+    { path: '', component: ProdDescribComponent, title: 'Description' },
+    { path: '', component: ProdFAQComponent, title: 'FAQ' },
+  ]},
 
    // Auth Routes
   {
