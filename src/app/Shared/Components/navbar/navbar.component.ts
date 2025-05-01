@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -8,6 +9,9 @@ import { Router } from '@angular/router';
   selector: 'app-navbar',
   providers:[AuthService],
   imports: [
+    UserPanelComponent,
+    CommonModule,
+    RouterModule
     CommonModule,
     HttpClientModule
   ],
