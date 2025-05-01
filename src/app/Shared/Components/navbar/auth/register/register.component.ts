@@ -1,16 +1,32 @@
 import { CommonModule } from '@angular/common';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators, ValidationErrors } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../../../services/auth.service';
 
 @Component({
   selector: 'app-register',
-
-  imports: [ReactiveFormsModule, CommonModule],
+  providers: [AuthService],
+  imports: [ReactiveFormsModule, CommonModule,HttpClientModule],
   templateUrl: './register.component.html',
   styles: '',
 })
 export class RegisterComponent {
+
+  constructor(private myService: AuthService, private router:Router){}
+
   passwordMismatch: boolean = false;
+  showPassword = false;
+  showConfirmPassword = false;
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
   myForm = new FormGroup(
     {
       firstName: new FormControl<string | null>(null, [
@@ -52,7 +68,21 @@ export class RegisterComponent {
     this.passwordMismatch = password !== confirmPassword;
   }
   onSubmit(): void {
+
     if (this.myForm.valid) {
+
+      (this.myForm as FormGroup).removeControl('confirmPassword');
+      console.log(this.myForm.value);
+      this.myService.registerUser(this.myForm.value).subscribe({
+        next: (res) => {
+          console.log(res);
+          this.router.navigate(['/auth/login']);
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      }
+    );
       console.log('Form Submitted', this.myForm.value);
     } else {
       console.log('Form is invalid');

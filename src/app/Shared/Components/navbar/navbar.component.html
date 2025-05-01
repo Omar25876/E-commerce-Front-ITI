@@ -1,52 +1,89 @@
 <nav
-  class="bg-gradient-to-r from-sky-400 to-blue-600 text-white px-6 py-4 flex items-center justify-between rounded-lg shadow-lg m-5"
+  class="bg-gradient-to-r from-sky-400 to-blue-600 text-white px-4 sm:px-6 py-4 flex items-center justify-between rounded-lg shadow-lg m-2 sm:m-5"
 >
   <!-- Logo -->
-  <div class="text-3xl font-bold font-serif flex items-center">
-    <img src="Images/Icons/WebsiteLogo.png" alt="Logo" class="h-12 w-auto inline-block mr-3" />
+  <div class="text-2xl sm:text-3xl font-bold font-serif flex items-center">
+    <img
+      src="Images/Icons/WebsiteLogo.png"
+      alt="Logo"
+      class="h-10 sm:h-12 w-auto mr-2 sm:mr-3 sm:block"
+    />
+
   </div>
 
   <!-- Navigation Links -->
-  <ul class="flex space-x-8 text-lg font-semibold">
-    <li><a href="#" class="hover:underline hover:text-gray-200 transition duration-300 font-[Century Gothic]">Home</a></li>
-    <li><a href="#" class="hover:underline hover:text-gray-200 transition duration-300">Categories</a></li>
-    <li><a href="#" class="hover:underline hover:text-gray-200 transition duration-300">Compare</a></li>
+  <ul
+    class="md:flex space-x-8  text-sm sm:text-lg font-semibold"
+  >
+    <li>
+      <a
+        href="#"
+        class="hover:underline hover:text-gray-200 transition duration-300"
+        >Home</a
+      >
+    </li>
+    <li>
+      <a
+        href="#"
+        class="hover:underline hover:text-gray-200 transition duration-300"
+        >Categories</a
+      >
+    </li>
+    <li>
+      <a
+        href="#"
+        class="hover:underline hover:text-gray-200 transition duration-300"
+        >Compare</a
+      >
+    </li>
   </ul>
 
   <!-- Search + Icons -->
-  <div class="flex items-center space-x-6">
+  <div
+    class=" md:flex items-center space-x-4 sm:space-x-6"
+  >
     <!-- Search Bar -->
     <div
-      class="flex items-center bg-white text-gray-600 rounded-full px-4 py-2 shadow-md hover:shadow-lg transition duration-300"
+      class="hidden lg:flex items-center bg-white text-gray-600 rounded-full px-4 py-2 shadow-md hover:shadow-lg transition duration-300"
     >
       <input
         type="text"
         placeholder="Search"
-        class="outline-none bg-transparent w-32 sm:w-64 text-sm"
+        class="outline-none bg-transparent w-24 sm:w-32 lg:w-64 text-sm"
       />
-      <img class="w-5 h-5 ml-2 text-gray-500" src="Images/Icons/Search Icon.png" alt="">
+      <img
+        class="w-5 h-5 ml-2 text-gray-500"
+        src="Images/Icons/Search Icon.png"
+        alt="Search"
+      />
     </div>
 
     <!-- Cart Icon -->
-    <button class="h-10 w-10 flex items-center justify-center rounded-full shadow-md hover:shadow-lg transition duration-300">
+    <button
+      class="hidden md:flex h-10 w-10  items-center justify-center rounded-full shadow-md hover:shadow-lg transition duration-300"
+    >
       <img class="h-6" src="Images/Icons/CartIcon.png" alt="Cart" />
     </button>
 
+    <!-- Sign In/Sign Up -->
+    <ng-container *ngIf="!islogin">
+      <button
+        class="h-10 w-30 px-4 flex items-center justify-center border-2 border-white rounded-full shadow-md hover:shadow-lg transition duration-300"
+        (click)="sign()"
+      >
+        <span class="text-sm text-white font-bold">Sign In/Sign Up</span>
+      </button>
+    </ng-container>
+
     <!-- User Icon -->
-    <button
-      class="h-10 w-10 flex items-center justify-center rounded-full shadow-md hover:shadow-lg transition duration-300"
-      (click)="toggleUserPanel()"
-    >
-      <img class="h-6" src="Images/Icons/UserIcon.png" alt="User" />
-    </button>
+    <ng-container *ngIf="islogin">
+      <button
+        class="h-10 w-30 px-4 flex items-center justify-center border-2 border-white rounded-full shadow-md hover:shadow-lg transition duration-300"
+        (click)="viewProfile()"
+      >
+        <img class="h-6" src="Images/Icons/UserIcon.png" alt="User" />
+      </button>
+    </ng-container>
   </div>
 </nav>
-
-<!-- User Panel -->
- @if (isUserPanelVisible) {
-  <div class="absolute top-15 right-10 shadow-lg  p-4 z-50">
-    <app-user-panel (toggleSidebar)="toggleUserPanel()"></app-user-panel>
-  </div>
- }
-
 
