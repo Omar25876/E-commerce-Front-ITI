@@ -1,8 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { LoginResponse } from '../models/userModel';
 
 @Injectable({
   providedIn: 'root',
@@ -18,8 +16,8 @@ export class AuthService {
   }
 
   // Login User
-  loginUser(userData: any):Observable<LoginResponse>{
-    return this.myHTTPClient.post<LoginResponse>(`${this.URL}/login`, userData);
+  loginUser(userData: any) {
+    return this.myHTTPClient.post(`${this.URL}/login`, userData);
   }
 
   // Save Token to Local Storage
