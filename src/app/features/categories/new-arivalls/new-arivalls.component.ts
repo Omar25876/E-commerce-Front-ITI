@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 interface productInformation{
 name:string,
@@ -13,8 +14,8 @@ numberOfReviews:number
   selector: 'app-new-arivalls',
   imports: [
     CommonModule,
-    FormsModule
-
+    FormsModule,
+    RouterModule
   ],
   templateUrl: './new-arivalls.component.html',
   styles: ``
