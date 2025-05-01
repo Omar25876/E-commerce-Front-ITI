@@ -78,9 +78,10 @@ export class SlidarComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   restartSlider() {
-    clearInterval(this.interval);
-    this.startSliding();
     this.updateNoUISlider();
+    // clearInterval(this.interval);
+    this.startSliding();
+
   }
 
   stop() {
