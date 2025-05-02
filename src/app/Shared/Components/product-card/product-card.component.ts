@@ -1,8 +1,19 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
+interface productInformation{
+  name:string,
+  rate:number,
+  price:string,
+  numberOfReviews:number
+
+  }
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-card',
+  imports: [
+    CommonModule
+  ],
   templateUrl: './product-card.component.html',
   styles: '',
 })

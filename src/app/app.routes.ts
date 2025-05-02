@@ -6,6 +6,10 @@ import { AuthComponent } from './Shared/Components/navbar/auth/auth.component';
 import { LoginFormComponent } from './Shared/Components/navbar/auth/login/login-form/login-form.component';
 import { ForgotPasswordComponent } from './Shared/Components/navbar/auth/login/forgot-password/forgot-password.component';
 import { ErrorComponent } from './Shared/Components/error/error.component';
+import { CategoriesComponent } from './features/categories/categories.component';
+import { NewarrivallchildComponent } from './features/categories/newarrivallchild/newarrivallchild.component';
+import { AllchildComponent } from './features/categories/allchild/allchild.component';
+import { BrandchildComponent } from './features/categories/brandchild/brandchild.component';
 import { ProductComponent } from './features/product/product.component';
 import { ProdDescribComponent } from './features/product/product-sec3/prod-describ/prod-describ.component';
 import { ProdFAQComponent } from './features/product/product-sec3/prod-faq/prod-faq.component';
@@ -17,6 +21,18 @@ export const routes: Routes = [
 
    // Home Route
   { path: 'home', component: HomeComponent, title: 'Home'},
+
+  //Categories Route
+  {
+    path:'categories',
+    component:CategoriesComponent,
+    title:'Categories',
+    // children:[
+    //   {path:'arrival',component:NewarrivallchildComponent,title:'New Arrival'},
+    //   {path:'all',component:AllchildComponent,title:'HeadPhones'},
+    //   {path:'btands',component:BrandchildComponent,title:'Brands'},
+    // ]
+  },
 
   // Product Route
   { path: 'product/:id', component: ProductComponent, title: 'Product' ,children:[

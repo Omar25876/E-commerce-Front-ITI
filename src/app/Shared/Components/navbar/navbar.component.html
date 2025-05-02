@@ -6,32 +6,29 @@
     <img
       src="Images/Icons/WebsiteLogo.png"
       alt="Logo"
-      class="h-10 sm:h-12 w-auto mr-2 sm:mr-3 sm:block"
+      class="h-10 sm:h-12 w-auto mr-2 sm:mr-3"
     />
-
   </div>
 
   <!-- Navigation Links -->
-  <ul
-    class="md:flex space-x-8  text-sm sm:text-lg font-semibold"
-  >
+  <ul class="hidden md:flex space-x-8 text-lg font-semibold">
     <li>
       <a
-        href="#"
+        routerLink="/"
         class="hover:underline hover:text-gray-200 transition duration-300"
         >Home</a
       >
     </li>
     <li>
       <a
-        href="#"
+        routerLink="/categories"
         class="hover:underline hover:text-gray-200 transition duration-300"
         >Categories</a
       >
     </li>
     <li>
       <a
-        href="#"
+        routerLink="/compare"
         class="hover:underline hover:text-gray-200 transition duration-300"
         >Compare</a
       >
@@ -39,9 +36,7 @@
   </ul>
 
   <!-- Search + Icons -->
-  <div
-    class=" md:flex items-center space-x-4 sm:space-x-6"
-  >
+  <div class="flex items-center space-x-4 sm:space-x-6">
     <!-- Search Bar -->
     <div
       class="hidden lg:flex items-center bg-white text-gray-600 rounded-full px-4 py-2 shadow-md hover:shadow-lg transition duration-300"
@@ -60,7 +55,7 @@
 
     <!-- Cart Icon -->
     <button
-      class="hidden md:flex h-10 w-10  items-center justify-center rounded-full shadow-md hover:shadow-lg transition duration-300"
+      class="hidden md:flex h-10 w-10 items-center justify-center rounded-full shadow-md hover:shadow-lg transition duration-300"
     >
       <img class="h-6" src="Images/Icons/CartIcon.png" alt="Cart" />
     </button>
@@ -86,4 +81,3 @@
     </ng-container>
   </div>
 </nav>
-
