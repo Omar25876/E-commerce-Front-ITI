@@ -9,10 +9,8 @@ import { Router } from '@angular/router';
   selector: 'app-navbar',
   providers:[AuthService],
   imports: [
-    UserPanelComponent,
     CommonModule,
-    RouterModule
-    CommonModule,
+    RouterModule,
     HttpClientModule
   ],
   templateUrl: './navbar.component.html',
