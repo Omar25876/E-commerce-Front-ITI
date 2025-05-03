@@ -7,7 +7,17 @@ import { LoginFormComponent } from './Shared/Components/navbar/auth/login/login-
 import { ForgotPasswordComponent } from './Shared/Components/navbar/auth/login/forgot-password/forgot-password.component';
 import { ErrorComponent } from './Shared/Components/error/error.component';
 import { CategoriesComponent } from './features/categories/categories.component';
+<<<<<<< HEAD
 import { SearchComponent } from './Shared/Components/search/search.component';
+=======
+import { NewarrivallchildComponent } from './features/categories/newarrivallchild/newarrivallchild.component';
+import { AllchildComponent } from './features/categories/allchild/allchild.component';
+import { BrandchildComponent } from './features/categories/brandchild/brandchild.component';
+import { ProductComponent } from './features/product/product.component';
+import { ProdDescribComponent } from './features/product/product-sec3/prod-describ/prod-describ.component';
+import { ProdFaqComponent } from './features/product/product-sec3/prod-faq/prod-faq.component';
+import { ProdReviewsComponent } from './features/product/product-sec3/prod-reviews/prod-reviews.component';
+>>>>>>> origin/3ziz
 
 export const routes: Routes = [
   // Redirect to home by default
@@ -21,6 +31,14 @@ export const routes: Routes = [
   
   //search
   {path:'search',component:SearchComponent,title:'Search'},
+
+  // Product Route
+  { path: 'product/:id', component: ProductComponent, title: 'Product' ,children:[
+    { path: '', redirectTo: 'description', pathMatch: 'full' },
+    { path: 'reviews', component: ProdReviewsComponent, title: 'Reviews' },
+    { path: 'description', component: ProdDescribComponent, title: 'Description' },
+    { path: 'faq', component: ProdFaqComponent, title: 'FAQ' },
+  ]},
 
    // Auth Routes
   {

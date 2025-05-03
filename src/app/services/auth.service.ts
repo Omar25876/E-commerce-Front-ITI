@@ -22,23 +22,35 @@ export class AuthService {
 
   // Save Token to Local Storage
   saveToken(token: string): void {
-    localStorage.setItem('userToken', token);
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('userToken', token);
+    }
   }
 
   // Get Token from Local Storage
   getToken(): string | null {
-    return localStorage.getItem('userToken');
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return localStorage.getItem('userToken');
+    }
+    return null;
   }
 
-  //Remove Token from Local Storage
+  // Remove Token from Local Storage
   removeToken(): void {
-    localStorage.removeItem('userToken');
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.removeItem('userToken');
+    }
+  }
+
+  // Check if User is Logged In
+  isLoggedIn(): boolean {
+    return !this.isTokenExpired();
   }
 
   // Logout User
   logout(): void {
     localStorage.removeItem('userToken');
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 
   // Check if Token is Expired
@@ -59,8 +71,28 @@ export class AuthService {
     }
   }
 
-  // Check if User is Logged In
-  isLoggedIn(): boolean {
-    return !this.isTokenExpired();
+  saveUserData(userData: any): void {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('userData', JSON.stringify(userData));
+    }
   }
+
+  getUserData(): any {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const userData = localStorage.getItem('userData');
+      return userData ? JSON.parse(userData) : null;
+    }
+    return null;
+  }
+
+  removeUserData(): void {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.removeItem('userData');
+    }
+  }
+  getUserRole(): string | null {
+    const userData = this.getUserData();
+    return userData ? userData.role : null;
+  }
+
 }

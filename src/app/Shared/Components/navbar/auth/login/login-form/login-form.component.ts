@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../../../../../../services/auth.service';
+import { AuthService } from '../../../../../../services/auth.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
@@ -13,6 +13,11 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   styles: ``
 })
 export class LoginFormComponent {
+  showPassword = false;
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
   constructor(private authService: AuthService, private router: Router) {}
 
   myForm = new FormGroup({
@@ -31,16 +36,13 @@ export class LoginFormComponent {
     if (this.myForm.valid) {
       const { email, password } = this.myForm.value;
       this.authService.removeToken();
-      console.log(this.authService.isTokenExpired());
-
       // Call the login API
       this.authService.loginUser({ email, password }).subscribe({
         next: (res: any) => {
           if (res.token) {
             // Save the token and navigate to the dashboard
             this.authService.saveToken(res.token);
-            console.log(this.authService.isTokenExpired());
-            console.log(this.authService.getToken());
+            this.authService.saveUserData(res.user);
             this.router.navigate(['/dashboard']);
           } else {
             console.error('No token received');

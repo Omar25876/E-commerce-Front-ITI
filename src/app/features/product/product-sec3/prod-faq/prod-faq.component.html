@@ -1,0 +1,33 @@
+<div class="max-w-4xl mx-auto p-6">
+  <div class="mb-6">
+    <input
+      type="text"
+      placeholder="Search in FAQ"
+      class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+  </div>
+
+  <h2 class="text-xl font-semibold mb-4">Customer Questions & Answers</h2>
+
+  <!-- FAQ Items -->
+  <div class="space-y-6">
+    <div
+      *ngFor="let faq of faqs; let i = index"
+      class="border-l-2 border-blue-500 pl-4 cursor-pointer"
+      (click)="toggleAnswer(i)"
+    >
+      <p class="font-semibold">
+        <span class="text-gray-600">Questions:</span> {{ faq.question }}
+      </p>
+      <p
+        class="mt-2 text-gray-800"
+        *ngIf="activeIndex === i"
+      >
+        <span class="font-semibold text-gray-600">Answers:</span> <br />
+        {{ faq.answer }}
+        <br />
+        <span class="text-sm text-gray-500">{{ faq.date }}</span>
+      </p>
+    </div>
+  </div>
+</div>

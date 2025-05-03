@@ -1,12 +1,18 @@
 <div class="flex flex-col items-center justify-center w-full h-full bg-white">
   <div class="flex flex-col items-center justify-center w-full max-w-4xl p-6">
-    <h2 class="text-2xl font-bold text-gray-800">Get Started with Our App</h2>
-    <p class="mt-2 text-gray-600">Join us today and experience the best features we have to offer.</p>
+    <h2 class="text-2xl font-bold text-gray-800">
+      Populer Products From All Brands
+    </h2>
+    <p class="mt-2 text-gray-600">
+      Join us today and experience the best features we have to offer.
+    </p>
   </div>
 
-  <div class="flex items-center w-full overflow-x-scroll  scrollbar-hide space-x-5 p-5">
+  <div
+    class="flex items-center w-full overflow-x-scroll scrollbar-hide space-x-5 p-5"
+  >
     @for (product of productList; track $index) {
-      <app-product-card [myProduct]="product"></app-product-card>
+    <app-product-card [myProduct]="product"></app-product-card>
     }
-
+  </div>
 </div>
