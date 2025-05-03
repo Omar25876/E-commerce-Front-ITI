@@ -7,9 +7,7 @@ import { LoginFormComponent } from './Shared/Components/navbar/auth/login/login-
 import { ForgotPasswordComponent } from './Shared/Components/navbar/auth/login/forgot-password/forgot-password.component';
 import { ErrorComponent } from './Shared/Components/error/error.component';
 import { CategoriesComponent } from './features/categories/categories.component';
-import { NewarrivallchildComponent } from './features/categories/newarrivallchild/newarrivallchild.component';
-import { AllchildComponent } from './features/categories/allchild/allchild.component';
-import { BrandchildComponent } from './features/categories/brandchild/brandchild.component';
+import { SearchComponent } from './Shared/Components/search/search.component';
 
 export const routes: Routes = [
   // Redirect to home by default
@@ -19,16 +17,10 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent, title: 'Home'},
 
   //Categories Route
-  {
-    path:'categories',
-    component:CategoriesComponent,
-    title:'Categories',
-    // children:[
-    //   {path:'arrival',component:NewarrivallchildComponent,title:'New Arrival'},
-    //   {path:'all',component:AllchildComponent,title:'HeadPhones'},
-    //   {path:'btands',component:BrandchildComponent,title:'Brands'},
-    // ]
-  },
+  { path:'categories', component:CategoriesComponent,title:'Categories' },
+  
+  //search
+  {path:'search',component:SearchComponent,title:'Search'},
 
    // Auth Routes
   {

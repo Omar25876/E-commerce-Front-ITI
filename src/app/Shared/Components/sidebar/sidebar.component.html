@@ -1,1 +1,159 @@
-<p>sidebar works!</p>
+<!-- Category Card -->
+<div class="card mx-5 mt-32 my-3 shadow-lg rounded-xl overflow-hidden w-64">
+  <div class="bg-sky-500 flex flex-row py-2 justify-between">
+    <h3 class="text-2xl font-bold text-white mx-3">Category</h3>
+    <button class="flex items-center  w-10 h-10 ">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24"
+        stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+      </svg>
+    </button>
+  </div>
+  <div class="mx-5 p-5 my-3 ">
+    <div class="flex flex-row flex-wrap space-x-5">
+      <input type="checkbox">
+      <h3>Over-Ear Devices</h3>
+    </div>
+
+    <div class="flex flex-row flex-wrap space-x-5 my-3">
+      <input type="checkbox">
+      <h3>On-Ear Devices</h3>
+    </div>
+
+    <div class="flex flex-row flex-wrap space-x-5 my-3">
+      <input type="checkbox">
+      <h3>In-Ear Devices</h3>
+    </div>
+
+    <div class="flex flex-row flex-wrap space-x-5 my-3">
+      <input type="checkbox">
+      <h3>Speaker</h3>
+    </div>
+  </div>
+</div>
+
+<!-- Category Brand -->
+<div class="card mx-5 my-3  shadow-lg rounded-xl overflow-hidden w-64">
+  <div class="bg-sky-500 flex flex-row py-2 justify-between">
+    <h3 class="text-2xl font-bold text-white mx-3">Brand</h3>
+    <button class="flex items-center  w-10 h-10 ">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24"
+        stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+      </svg>
+    </button>
+  </div>
+  <div class="mx-5 p-5 my-3 ">
+    <div class="flex flex-row flex-wrap space-x-5">
+      <input type="checkbox">
+      <h3>Samsung</h3>
+    </div>
+
+    <div class="flex flex-row flex-wrap space-x-5 my-3">
+      <input type="checkbox">
+      <h3>Anker</h3>
+    </div>
+
+    <div class="flex flex-row flex-wrap space-x-5 my-3">
+      <input type="checkbox">
+      <h3>JPL</h3>
+    </div>
+
+    <div class="flex flex-row flex-wrap space-x-5 my-3">
+      <input type="checkbox">
+      <h3>Bose</h3>
+    </div>
+
+    <div class="flex flex-row flex-wrap space-x-5 my-3">
+      <input type="checkbox">
+      <h3>Sony</h3>
+    </div>
+  </div>
+</div>
+
+<!-- Rating -->
+<div class="card mx-5 my-3 shadow-lg rounded-xl overflow-hidden w-64">
+  <div class="bg-sky-500 flex flex-row py-2 justify-between">
+    <h3 class="text-2xl font-bold text-white mx-3">Rating</h3>
+    <button class="flex items-center  w-10 h-10 ">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24"
+        stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+      </svg>
+    </button>
+  </div>
+  <div class="mx-5 p-5 my-3 ">
+    <div class="flex flex-row flex-wrap space-x-3 my-3">
+      <input type="checkbox">
+      @for (star of Stars; track $index)
+      {
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="green" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L14.95 8.63L22 9.24L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.24L9.05 8.63L12 2Z" />
+      </svg>
+      }
+    </div>
+
+    <div class="flex flex-row flex-wrap space-x-3 my-3">
+      <input type="checkbox">
+      <ng-container *ngFor="let star of Stars; let i = index">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          [attr.fill]="i < 4 ? 'lightgreen' : '#D3D3D3'"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M12 2L14.95 8.63L22 9.24L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.24L9.05 8.63L12 2Z" />
+        </svg>
+      </ng-container>
+    </div>
+    
+
+    <div class="flex flex-row flex-wrap space-x-3 my-3">
+      <input type="checkbox">
+      <ng-container *ngFor="let star of Stars; let i = index">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          [attr.fill]="i < 3 ? '#FFA500' : '#D3D3D3'"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M12 2L14.95 8.63L22 9.24L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.24L9.05 8.63L12 2Z" />
+        </svg>
+      </ng-container>
+    </div>
+
+    <div class="flex flex-row flex-wrap space-x-3 my-3">
+      <input type="checkbox">
+      <ng-container *ngFor="let star of Stars; let i = index">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          [attr.fill]="i < 2 ? '#FFCC80' : '#D3D3D3'"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M12 2L14.95 8.63L22 9.24L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.24L9.05 8.63L12 2Z" />
+        </svg>
+      </ng-container>
+    </div>
+
+    <div class="flex flex-row flex-wrap space-x-3 my-3">
+      <input type="checkbox">
+      <ng-container *ngFor="let star of Stars; let i = index">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          [attr.fill]="i < 1 ? 'red' : '#D3D3D3'"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M12 2L14.95 8.63L22 9.24L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.24L9.05 8.63L12 2Z" />
+        </svg>
+      </ng-container>
+    </div>
+
+  </div>
+</div>
+
