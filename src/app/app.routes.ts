@@ -12,7 +12,7 @@ import { AllchildComponent } from './features/categories/allchild/allchild.compo
 import { BrandchildComponent } from './features/categories/brandchild/brandchild.component';
 import { ProductComponent } from './features/product/product.component';
 import { ProdDescribComponent } from './features/product/product-sec3/prod-describ/prod-describ.component';
-import { ProdFAQComponent } from './features/product/product-sec3/prod-faq/prod-faq.component';
+import { ProdFaqComponent } from './features/product/product-sec3/prod-faq/prod-faq.component';
 import { ProdReviewsComponent } from './features/product/product-sec3/prod-reviews/prod-reviews.component';
 
 export const routes: Routes = [
@@ -36,9 +36,10 @@ export const routes: Routes = [
 
   // Product Route
   { path: 'product/:id', component: ProductComponent, title: 'Product' ,children:[
-    { path: '', component: ProdReviewsComponent, title: 'Reviews' },
-    { path: '', component: ProdDescribComponent, title: 'Description' },
-    { path: '', component: ProdFAQComponent, title: 'FAQ' },
+    { path: '', redirectTo: 'description', pathMatch: 'full' },
+    { path: 'reviews', component: ProdReviewsComponent, title: 'Reviews' },
+    { path: 'description', component: ProdDescribComponent, title: 'Description' },
+    { path: 'faq', component: ProdFaqComponent, title: 'FAQ' },
   ]},
 
    // Auth Routes

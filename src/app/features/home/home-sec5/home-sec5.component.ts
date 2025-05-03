@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductCardComponent } from "../../../Shared/Components/product-card/product-card.component";
+import { ProductCardComponent } from '../../../Shared/Components/product-card/product-card.component';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../../services/product.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -9,7 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
   providers: [ProductService],
   imports: [ProductCardComponent, CommonModule, HttpClientModule],
   templateUrl: './home-sec5.component.html',
-  styleUrl: './home-sec5.component.css'
+  styleUrl: './home-sec5.component.css',
 })
 export class HomeSec5Component implements OnInit {
   productList: any[] = []; // Ensure productList is an array
@@ -40,14 +40,15 @@ export class HomeSec5Component implements OnInit {
    * Fetch products from the API and update localStorage
    */
   fetchProducts(): void {
-    this.productService.getAllProducts().subscribe({
+    this.productService.getAllProductsbyFilters().subscribe({
       next: (data) => {
-        console.log('Products fetched:', data.products);
-        const popularProducts = data.products.filter((product: any) => product.isPopular === true);
-
+        const popularProducts = data;
         // Update localStorage and productList
         if (typeof window !== 'undefined' && window.localStorage) {
-          localStorage.setItem('popularProducts', JSON.stringify(popularProducts));
+          localStorage.setItem(
+            'popularProducts',
+            JSON.stringify(popularProducts)
+          );
         }
         this.productList = popularProducts;
         this.isLoading = false;
@@ -59,7 +60,7 @@ export class HomeSec5Component implements OnInit {
       },
       complete: () => {
         console.log('Product fetching completed.');
-      }
+      },
     });
   }
 }

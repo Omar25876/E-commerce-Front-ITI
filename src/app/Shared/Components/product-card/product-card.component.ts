@@ -1,37 +1,52 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-interface productInformation{
-  name:string,
-  rate:number,
-  price:string,
-  numberOfReviews:number
-
-  }
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-card',
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   templateUrl: './product-card.component.html',
   styles: '',
 })
 export class ProductCardComponent {
-  constructor(private router: Router) {} // Ensure Router is injected
+  @Input() myProduct: any; // Input property to receive product data
 
-  @Input() myProduct: any;
+  image: string = ''; // Default value for the product image
+  rawUrl: string = '';
+  constructor(private router: Router) {}
 
+  ngOnInit(): void {
+    // Ensure myProduct and imagesAndColors are defined before accessing them
+    if (this.myProduct && this.myProduct.imagesAndColors) {
+      const firstColorKey = Object.keys(this.myProduct.imagesAndColors)[0];
+      this.image = this.myProduct.imagesAndColors[firstColorKey] || ''; // Set the first image
+      this.rawUrl = this.image
+        .replace('github.com', 'raw.githubusercontent.com')
+        .replace('/blob/', '/');
+    }
+  }
+
+  /**
+   * Add the product to the cart
+   * @param product - The product to add to the cart
+   */
   addToCart(product: any): void {
     console.log('Added to cart:', product);
     // Add logic to handle adding the product to the cart
   }
 
+  /**
+   * Add the product to the wishlist
+   * @param product - The product to add to the wishlist
+   */
   addToWishlist(product: any): void {
     console.log('Added to wishlist:', product);
     // Add logic to handle adding the product to the wishlist
   }
 
+  /**
+   * Navigate to the product's quick view page
+   */
   quickView(): void {
     console.log('Quick view:', this.myProduct);
     if (typeof window !== 'undefined' && window.localStorage) {

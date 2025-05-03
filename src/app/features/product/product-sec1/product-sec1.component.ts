@@ -17,11 +17,13 @@ export class ProductSec1Component {
     oldPrice: 0,
     discount: 0,
     colors: [],
+    images: [],
+    imagesAndColors: {},
     selectedColor: '',
     stock: 0,
     rating: 0,
     reviewsCount: 0,
-    images: [],
+    reviews: [],
     highlights: [],
     specs: {},
     modelNumber: '',
@@ -31,19 +33,13 @@ export class ProductSec1Component {
     isNewArrival: false,
     isDiscover: false,
     category: '',
-    __v: 0,
+    brand: '',
     createdAt: '',
     updatedAt: '',
   };
 
-  productImages: string[] = [
-    'Images/Prod-Page/1.png',
-    'Images/Prod-Page/2.png',
-    'Images/Prod-Page/3.png',
-    'Images/Prod-Page/4.png',
-  ];
-  selectedImage: string = this.productImages[0];
-
+  productImages: string[] = [];
+  selectedImage: string = '';
   productColors: string[] = [];
   selectedColor: string = '';
   quantity: number = 1;
@@ -55,8 +51,22 @@ export class ProductSec1Component {
         this.product = JSON.parse(storedProduct);
 
         // Ensure product.colors is defined and assign it to productColors
-        this.productColors = this.product.colors || [];
+        this.productColors = this.product.imagesAndColors
+          ? Object.keys(this.product.imagesAndColors)
+          : [];
+        this.productImages = this.product.imagesAndColors
+          ? Object.values(this.product.imagesAndColors).map((image) =>
+              image
+                .replace('github.com', 'raw.githubusercontent.com')
+                .replace('/blob/', '/')
+            )
+          : [];
         this.selectedColor = this.productColors.length > 0 ? this.productColors[0] : '';
+        this.selectedImage = this.product.imagesAndColors[this.selectedColor]
+          ? this.product.imagesAndColors[this.selectedColor]
+              .replace('github.com', 'raw.githubusercontent.com')
+              .replace('/blob/', '/')
+          : '';
       }
     }
   }
@@ -67,6 +77,13 @@ export class ProductSec1Component {
 
   selectColor(color: string): void {
     this.selectedColor = color;
+
+    // Update the selected image based on the selected color
+    if (this.product.imagesAndColors[color]) {
+      this.selectedImage = this.product.imagesAndColors[color]
+        .replace('github.com', 'raw.githubusercontent.com')
+        .replace('/blob/', '/');
+    }
   }
 
   increaseQuantity(): void {

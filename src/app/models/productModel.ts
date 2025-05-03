@@ -2,6 +2,14 @@ export interface Specs {
   [key: string]: string;
 }
 
+export interface Review {
+  user: string;
+  rating: number;
+  comment: string;
+  _id: string;
+  createdAt: string;
+}
+
 export interface Product {
   _id: string;
   name: string;
@@ -9,14 +17,16 @@ export interface Product {
   price: number;
   oldPrice: number;
   discount: number;
-  colors: string[];
+  colors: string[]; // derived from imagesAndColors keys
+  images: string[]; // derived from imagesAndColors values
+  imagesAndColors: Record<string, string>;
   selectedColor: string;
   stock: number;
   rating: number;
   reviewsCount: number;
-  images: string[];
+  reviews: Review[];
   highlights: string[];
-  specs: Specs;
+  specs: Record<string, string>;
   modelNumber: string;
   modelName: string;
   whatsInTheBox: string[];
@@ -24,7 +34,7 @@ export interface Product {
   isNewArrival: boolean;
   isDiscover: boolean;
   category: string;
-  __v: number;
+  brand: string;
   createdAt: string;
   updatedAt: string;
 }
