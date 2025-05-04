@@ -1,0 +1,111 @@
+<div class="max-w-4xl mx-auto p-6 md:p-8 lg:p-10 rounded-lg shadow-md bg-white">
+  <h2 class="text-2xl font-semibold mb-6 text-gray-900">Your Cart</h2>
+
+  <div class="space-y-6">
+    @for (product of cartProducts; track product.name) {
+    <div
+      class="relative bg-[#F1F1F1B2] rounded-lg transition-all duration-300 overflow-hidden hover:shadow-lg cursor-pointer"
+      (click)="selectProduct(product)"
+    >
+      <div class="[font-family:Manrope] flex items-center justify-between">
+        <!-- Left content (product info) -->
+        <div class="flex items-center space-x-4 p-4 flex-1 min-w-0">
+          <div
+            class="relative w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center"
+          >
+            <img
+              class="w-[95%] h-[95%] rounded-full object-cover"
+              [src]="product.image"
+              alt="{{ product.name }}"
+            />
+          </div>
+          <div class="min-w-0">
+            <h3 class="text-lg font-bold text-gray-800 truncate">
+              {{ product.name }}
+            </h3>
+            <p class="text-sm text-gray-600 truncate">{{ product.brand }}</p>
+          </div>
+        </div>
+
+        <!-- Color and Quantity that will shift left -->
+        <div
+          class="flex items-center transition-transform duration-600 gap-7"
+          [ngClass]="{
+            'translate-x-[-48px] md:translate-x-[-75px]':
+              selectedProduct === product
+          }"
+        >
+          <!-- Color display -->
+          <div class="flex-1 text-center min-w-0 px-4">
+            <p class="text-sm text-gray-500 capitalize">
+              {{ product.color.toLowerCase() }}
+            </p>
+          </div>
+
+          <!-- Quantity controls -->
+          <div class="flex items-center space-x-4 p-4 gap-15">
+            <div
+              class="text-lg text-black flex items-center rounded-md overflow-hidden w-24 justify-center"
+            >
+              <button
+                class="cursor-pointer w-8 h-8 text-gray-600 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                (click)="decreaseQty(product); $event.stopPropagation()"
+                [attr.aria-label]="'Decrease quantity of ' + product.name"
+              >
+                <span class="text-2xl" aria-hidden="true">&minus;</span>
+              </button>
+              <span
+                class="flex items-center justify-center w-8 h-8 rounded-full bg-white text-[#000] font-semibold border border-gray-300"
+              >
+                {{ product.quantity }}
+              </span>
+              <button
+                class="cursor-pointer w-8 h-8 text-gray-600 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                (click)="increaseQty(product); $event.stopPropagation()"
+                [attr.aria-label]="'Increase quantity of ' + product.name"
+              >
+                <span class="text-2xl" aria-hidden="true">&plus;</span>
+              </button>
+            </div>
+            <!-- Price -->
+            <span class="text-gray-800 text-lg font-medium w-20 text-right">
+              {{ product.price | number }} EGP
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-0 transition-opacity duration-100"
+        [class.opacity-100]="selectedProduct === product"
+        [style.transitionDelay]="selectedProduct === product ? '300ms' : '0ms'"
+        [style.pointerEvents]="selectedProduct === product ? 'auto' : 'none'"
+        [style.visibility]="selectedProduct === product ? 'visible' : 'hidden'"
+      >
+        <button
+          (click)="removeProduct(product); $event.stopPropagation()"
+          class="cursor-pointer bg-[#17BBEF] hover:bg-[#0fa8d6] text-white w-8 h-8 rounded-full flex items-center justify-center shadow-md transition-colors duration-200"
+          [attr.aria-label]="'Remove ' + product.name + ' from cart'"
+        >
+          <span class="text-lg">✕</span>
+        </button>
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="mt-8 pt-4 border-t border-gray-200 text-right">
+    <h3 class="text-xl font-bold text-gray-900">
+      Total: {{ getCartTotal() | number }} EGP
+    </h3>
+    @if (cartProducts.length > 0) {
+    <button
+      class="mt-4 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
+    >
+      Proceed to Checkout
+    </button>
+    } @else {
+    <p class="mt-4 text-gray-600">Your cart is empty.</p>
+    }
+  </div>
+</div>

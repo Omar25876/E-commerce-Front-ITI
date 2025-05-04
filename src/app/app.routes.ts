@@ -7,6 +7,7 @@ import { LoginFormComponent } from './Shared/Components/navbar/auth/login/login-
 import { ForgotPasswordComponent } from './Shared/Components/navbar/auth/login/forgot-password/forgot-password.component';
 import { ErrorComponent } from './Shared/Components/error/error.component';
 import { CategoriesComponent } from './features/categories/categories.component';
+import { CartComponent } from './features/cart/cart.component';
 import { NewarrivallchildComponent } from './features/categories/newarrivallchild/newarrivallchild.component';
 import { AllchildComponent } from './features/categories/allchild/allchild.component';
 import { BrandchildComponent } from './features/categories/brandchild/brandchild.component';
@@ -19,43 +20,59 @@ export const routes: Routes = [
   // Redirect to home by default
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 
-   // Home Route
-  { path: 'home', component: HomeComponent, title: 'Home'},
+  // Home Route
+  { path: 'home', component: HomeComponent, title: 'Home' },
 
   //Categories Route
   {
-    path:'categories',
-    component:CategoriesComponent,
-    title:'Categories',
+    path: 'categories',
+    component: CategoriesComponent,
+    title: 'Categories',
     // children:[
     //   {path:'arrival',component:NewarrivallchildComponent,title:'New Arrival'},
     //   {path:'all',component:AllchildComponent,title:'HeadPhones'},
     //   {path:'btands',component:BrandchildComponent,title:'Brands'},
     // ]
   },
-
+  // Cart Route
+  { path: 'cart', component: CartComponent, title: 'Cart' },
+  
   // Product Route
-  { path: 'product/:id', component: ProductComponent, title: 'Product' ,children:[
-    { path: '', component: ProdReviewsComponent, title: 'Reviews' },
-    { path: '', component: ProdDescribComponent, title: 'Description' },
-    { path: '', component: ProdFAQComponent, title: 'FAQ' },
-  ]},
+  {
+    path: 'product/:id',
+    component: ProductComponent,
+    title: 'Product',
+    children: [
+      { path: '', component: ProdReviewsComponent, title: 'Reviews' },
+      { path: '', component: ProdDescribComponent, title: 'Description' },
+      { path: '', component: ProdFAQComponent, title: 'FAQ' },
+    ],
+  },
 
-   // Auth Routes
+  // Auth Routes
   {
     path: 'auth',
     component: AuthComponent,
     title: 'Authentication',
     children: [
       { path: '', redirectTo: 'login', pathMatch: 'full' }, // Default to login
-      { path: 'login', component: LoginComponent, title: 'Login',children:[
-        { path: '', component: LoginFormComponent, title: '' },
-        { path: 'forgetPassword', component: ForgotPasswordComponent, title: 'Forget Password' },
-      ]},
+      {
+        path: 'login',
+        component: LoginComponent,
+        title: 'Login',
+        children: [
+          { path: '', component: LoginFormComponent, title: '' },
+          {
+            path: 'forgetPassword',
+            component: ForgotPasswordComponent,
+            title: 'Forget Password',
+          },
+        ],
+      },
       { path: 'register', component: RegisterComponent, title: 'Register' },
     ],
   },
 
   // Wildcard Route (404 Page)
-  { path: '**', component: ErrorComponent, title: '404 Not Found'},
+  { path: '**', component: ErrorComponent, title: '404 Not Found' },
 ];
