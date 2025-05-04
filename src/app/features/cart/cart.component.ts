@@ -15,7 +15,7 @@ export class CartComponent {
       name: 'Wireless Headphones',
       brand: 'Anker',
       image: 'Images/Cart-Page/testCart1.webp',
-      price: 120,
+      price: 1200,
       quantity: 2,
       color: 'White',
     },

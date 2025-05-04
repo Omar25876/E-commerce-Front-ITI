@@ -43,16 +43,18 @@
           </div>
 
           <!-- Quantity controls -->
-          <div class="flex items-center space-x-4 p-4 gap-15">
+          <div class="flex items-center space-x- p-4 gap-15">
             <div
-              class="text-lg text-black flex items-center  overflow-hidden w-24 justify-center"
+              class="text-lg text-black flex items-center overflow-hidden w-24 justify-center"
             >
               <button
-                class="cursor-pointer w-8 h-8 text-gray-600 hover:bg-gray-200 focus:outline-none"
+                class="cursor-pointer w-8 h-8 text-black hover:bg-gray-200 focus:outline-none"
                 (click)="decreaseQty(product); $event.stopPropagation()"
                 [attr.aria-label]="'Decrease quantity of ' + product.name"
               >
-                <span class="text-2xl" aria-hidden="true">&minus;</span>
+                <span class="text-2xl font-bold" aria-hidden="true"
+                  >&minus;</span
+                >
               </button>
               <span
                 class="flex items-center justify-center w-8 h-8 rounded-full bg-white text-[#000] font-semibold border border-gray-300"
@@ -60,17 +62,20 @@
                 {{ product.quantity }}
               </span>
               <button
-                class="cursor-pointer w-8 h-8 text-gray-600 hover:bg-gray-200 focus:outline-none "
+                class="cursor-pointer w-8 h-8 text-black hover:bg-gray-200 focus:outline-none"
                 (click)="increaseQty(product); $event.stopPropagation()"
                 [attr.aria-label]="'Increase quantity of ' + product.name"
               >
-                <span class="text-2xl" aria-hidden="true">&plus;</span>
+                <span class="text-2xl font-bold" aria-hidden="true"
+                  >&plus;</span
+                >
               </button>
             </div>
             <!-- Price -->
-            <span class="text-gray-800 text-lg font-medium w-20 text-right">
+            <span class="font-manrope text-black text-[25px] leading-[100%] tracking-[0] outlined-text">
               {{ product.price | number }} EGP
             </span>
+
           </div>
         </div>
       </div>
