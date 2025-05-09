@@ -54,11 +54,12 @@
     </div>
 
     <!-- Cart Icon -->
-    <button
-      class="hidden md:flex h-10 w-10 items-center justify-center rounded-full shadow-md hover:shadow-lg transition duration-300"
+    <a
+      routerLink="/cart"
+      class="hidden md:flex h-10 w-10 items-center justify-center rounded-full shadow-md hover:shadow-lg transition duration-300 cursor-pointer"
     >
       <img class="h-6" src="Images/Icons/CartIcon.png" alt="Cart" />
-    </button>
+    </a>
 
     <!-- Sign In/Sign Up -->
     <ng-container *ngIf="!islogin">

@@ -1,0 +1,159 @@
+<div
+  class="max-w-4xl mb-8 mx-auto p-6 md:p-8 lg:p-10 rounded-lg shadow-md bg-white"
+>
+  <h2
+    class="[font-family:Manrope] mb-7 text-center text-2xl font-semibold mb-6 text-gray-900"
+  >
+    Your Shopping Cart
+  </h2>
+
+  <div class="space-y-6">
+    @for (product of cartProducts; track product.name) {
+    <div
+      class="relative bg-[#E0E0E0B2] rounded-lg transition-all duration-300 overflow-hidden hover:shadow-lg cursor-pointer"
+      (click)="selectProduct(product)"
+    >
+      <div class="[font-family:Manrope] flex items-center justify-between">
+        <!-- Left content (product info) -->
+        <div class="flex items-center space-x-4 p-4 flex-1 min-w-0">
+          <!-- image + name -->
+          <div class="relative w-20 h-20">
+            <!-- Circle (background or border-like effect) -->
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-20 h-20 rounded-full bg-white shadow-2xl"></div>
+            </div>
+
+            <!-- Image (slightly bigger and on top) -->
+            <img
+              class="absolute left-1 bottom-3 w-[95%] h-[100%]"
+              [src]="product.image"
+              alt="{{ product.name }}"
+            />
+          </div>
+          <!-- .... -->
+          <div class="min-w-0">
+            <h3 class="text-lg font-bold text-gray-800 truncate">
+              {{ product.name }}
+            </h3>
+            <p class="text-sm text-gray-600 truncate">{{ product.brand }}</p>
+          </div>
+        </div>
+
+        <!-- Color and Quantity that will shift left -->
+        <div
+          class="flex items-center transition-transform duration-600 gap-7"
+          [ngClass]="{
+            'translate-x-[-48px] md:translate-x-[-75px]':
+              selectedProduct === product
+          }"
+        >
+          <!-- Color display -->
+          <div class="flex-1 text-center min-w-0 px-4">
+            <p class="text-sm text-black font-bold capitalize">
+              {{ product.color.toLowerCase() }}
+            </p>
+          </div>
+
+          <!-- Quantity controls -->
+          <div class="flex items-center space-x- p-4 gap-15">
+            <div
+              class="text-lg text-black flex items-center overflow-hidden w-24 justify-center"
+            >
+              <button
+                class="cursor-pointer w-8 h-8 text-black hover:bg-gray-200 focus:outline-none"
+                (click)="decreaseQty(product); $event.stopPropagation()"
+                [attr.aria-label]="'Decrease quantity of ' + product.name"
+              >
+                <span class="text-2xl font-bold" aria-hidden="true"
+                  >&minus;</span
+                >
+              </button>
+              <span
+                class="flex items-center justify-center w-8 h-8 rounded-full bg-white text-[#000] font-semibold border border-gray-300"
+              >
+                {{ product.quantity }}
+              </span>
+              <button
+                class="cursor-pointer w-8 h-8 text-black hover:bg-gray-200 focus:outline-none"
+                (click)="increaseQty(product); $event.stopPropagation()"
+                [attr.aria-label]="'Increase quantity of ' + product.name"
+              >
+                <span class="text-2xl font-bold" aria-hidden="true"
+                  >&plus;</span
+                >
+              </button>
+            </div>
+            <!-- Price -->
+            <span
+              class="font-manrope text-black text-[25px] leading-[100%] tracking-[0] outlined-text"
+            >
+              {{ product.price | number }} EGP
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- X Button -->
+
+      <div
+        class="w-18 h-29 bg-white absolute right-0 bottom-0 top-1/2 transform -translate-y-1/2 opacity-0 transition-opacity duration-200"
+        [class.opacity-100]="selectedProduct === product"
+        [style.transitionDelay]="selectedProduct === product ? '300ms' : '0ms'"
+        [style.pointerEvents]="selectedProduct === product ? 'auto' : 'none'"
+        [style.visibility]="selectedProduct === product ? 'visible' : 'hidden'"
+      >
+        <button
+          (click)="removeProduct(product); $event.stopPropagation()"
+          class="left-3.5 top-8 cursor-pointer bg-[#17BBEF] hover:bg-[#0fa8d6] text-white w-11 h-11 rounded-full flex items-center justify-center transition-colors duration-200 relative"
+          [attr.aria-label]="'Remove ' + product.name + ' from cart'"
+        >
+          <span
+            class="font-bold text-3xl absolute top-5 left-5.5 transform -translate-x-1/2 -translate-y-1/2"
+            >✕</span
+          >
+        </button>
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="[font-family:Manrope] mt-5 pt-4">
+    <div
+      class="flex justify-between items-center text-xl font-bold text-gray-900 mb-5"
+    >
+      <div class="ml-5 mr-5"><h3>Subtotal</h3></div>
+      <div class="flex flex-row gap-3 items-end">
+        <button
+          class="mr-3 bg-[#00B8F3] font-bold text-white px-5 py-1.5 rounded-full text-sm transition-colors"
+        >
+          Promo Code?
+        </button>
+        <h3>{{ getCartTotal() | number }} EGP</h3>
+      </div>
+    </div>
+    <hr class="border-gray-300 my-5" />
+    <p class="text-sm text-black text-center">
+      Shipping, taxes, and discounts calculated at checkout.
+    </p>
+
+    @if (cartProducts.length > 0) {
+    <div class="mt-6 flex justify-between items-center">
+      <a
+        routerLink="/home"
+        class="cursor-pointer text-black-600 font-bold text-lg flex items-center"
+      >
+        ← Continue Shopping
+      </a>
+
+      <a
+        routerLink="/checkout"
+        class="pl-7 pr-7 w-70 text-xl rounded-full cursor-pointer bg-[#17BBEF] hover:bg-[#0fa8d6] duration-200 text-white font-semibold py-2 px-4 shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 flex items-center justify-center"
+      >
+        Go to Checkout ➔
+      </a>
+    </div>
+    } @else {
+    <p class="mt-4 text-gray-600 text-center">Your cart is empty.</p>
+    }
+  </div>
+</div>
