@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { User } from '../../../models/userModel';
 
 @Component({
   selector: 'app-navbar',
@@ -18,10 +19,34 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent {
   islogin: boolean = false;
-  isMobileMenuOpen: boolean = false;
+  dropdownOpen: boolean = false;
+  user: User = {
+    _id: '',
+    profileImageUrl: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    address: {
+      city: '',
+      street: '',
+      buildingNumber: '',
+      apartmentNumber: '',
+    },
+    phone: '',
+    gender: 'male',
+    isAdmin: true,
+    createdAt: '',
+    updatedAt: '',
+  };
 
-  constructor(private myService: AuthService, private router: Router) {
+  constructor(private myService: AuthService, private router: Router,private cdRef: ChangeDetectorRef,) {
     this.islogin = this.myService.isLoggedIn();
+    this.user = this.myService.getUserData();
+    console.log(this.user);
+  }
+
+  toggleDropdown(): void {
+    this.dropdownOpen = !this.dropdownOpen;
   }
 
   sign(): void {
@@ -29,7 +54,15 @@ export class NavbarComponent {
   }
 
   viewProfile(): void {
+    this.dropdownOpen = !this.dropdownOpen;
     this.router.navigate(['/dashboard']);
+
+  }
+
+  logout(): void {
+    this.dropdownOpen = !this.dropdownOpen;
+    this.myService.logout(); // Perform logout logic
+    this.cdRef.detectChanges();
   }
 
 

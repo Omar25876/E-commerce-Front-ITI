@@ -2,8 +2,8 @@
   <!-- Top: Breadcrumb + Buttons -->
   <div class="flex flex-row justify-between items-center mb-6">
     <p class="text-gray-600 text-sm sm:text-base">
-      {{product.category}} /
-      <span class="text-black font-semibold">{{product.name}}</span>
+      {{ categoryName || product.category }} /
+      <span class="text-black font-semibold">{{ product.name }}</span>
     </p>
     <div class="flex flex-row space-x-3">
       <button class="hover:scale-110 transition-transform duration-300">
@@ -22,15 +22,15 @@
       <img
         [src]="selectedImage"
         alt="product"
-        class="w-full h-auto rounded-lg shadow-lg object-contain bg-white p-6"
+        class="w-full h-3/5 rounded-lg shadow-lg object-contain bg-white p-6"
       />
-      <div class="flex flex-row justify-center mt-6 gap-4">
+      <div class="flex flex-row justify-center mt-6 gap-4 flex-wrap">
         <button
           *ngFor="let image of productImages"
-          class="w-20 h-20 hover:scale-105 transition-transform duration-300"
+          class="w-16 h-16 sm:w-20 sm:h-20 hover:scale-105 transition-transform duration-300"
           (click)="selectImage(image)"
         >
-          <img [src]="image" alt="thumb" class="rounded-md shadow-md" />
+          <img [src]="image" alt="thumb" class="rounded-md shadow-md object-contain w-full h-full" />
         </button>
       </div>
     </div>
@@ -39,41 +39,41 @@
     <div class="flex flex-col w-full md:w-1/2 space-y-6">
       <!-- Title + Rating -->
       <div class="flex flex-row justify-between items-center">
-        <h1 class="text-2xl font-bold text-gray-800">{{product.name}}</h1>
+        <h1 class="text-2xl font-bold text-gray-800">{{ product.name }}</h1>
         <div class="flex items-center space-x-1">
           <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
-            {{product.rating}}
+            {{ product.rating }}
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
               <path
                 d="M12 .587l3.668 7.431 8.332 1.151-6.064 5.798 1.43 8.275L12 18.896l-7.366 4.346 1.43-8.275L.001 9.169l8.332-1.151z"
               />
             </svg>
           </span>
-          <span class="text-sm text-gray-500">({{product.reviewsCount}})</span>
+          <span class="text-sm text-gray-500">({{ product.reviewsCount }})</span>
         </div>
       </div>
 
       <!-- Description -->
       <p class="text-gray-600 text-sm sm:text-base leading-relaxed">
-       {{product.description}}
+        {{ product.description }}
       </p>
 
       <hr class="border-gray-300" />
 
       <!-- Pricing -->
       <div class="space-y-2 text-sm">
-        <div class="flex flex-row justify-between ">
+        <div class="flex flex-row justify-between">
           <span class="text-gray-400">Was:</span>
-          <span class="line-through text-gray-500">{{product.oldPrice}} EGP</span>
+          <span class="line-through text-gray-500">{{ product.oldPrice }} EGP</span>
         </div>
         <div class="flex flex-row justify-between">
           <span class="text-black font-semibold">Now:</span>
-          <span class="text-xl font-bold text-green-600">{{product.price}}</span>
+          <span class="text-xl font-bold text-green-600">{{ product.price }}</span>
           <span class="text-gray-400 text-xs">(Inclusive Of VAT)</span>
         </div>
         <div class="flex flex-row justify-between">
           <span class="text-gray-400">Saving:</span>
-          <span class="text-red-500 font-semibold">{{product.discount}} EGP</span>
+          <span class="text-red-500 font-semibold">{{ product.discount }} EGP</span>
         </div>
       </div>
 
@@ -82,14 +82,14 @@
       <!-- Colors -->
       <div class="flex flex-col gap-3 items-center">
         <h3 class="block text-lg font-semibold text-gray-800 text-start">Choose a Color</h3>
-        <div class="flex flex-row gap-4">
+        <div class="flex flex-row gap-4 flex-wrap justify-center">
           <button
-          *ngFor="let color of productColors"
-          class="w-8 h-8 rounded-full cursor-pointer"
-          [style.backgroundColor]="color"
-          [class.border-2]="color === selectedColor"
-          [class.border-blue-500]="color === selectedColor"
-          (click)="selectColor(color)"
+            *ngFor="let color of productColors"
+            class="w-10 h-10 rounded-full cursor-pointer border-2"
+            [style.backgroundColor]="color"
+            [class.border-gray-500]="color !== selectedColor"
+            [class.border-blue-500]="color === selectedColor"
+            (click)="selectColor(color)"
           ></button>
         </div>
       </div>
@@ -97,21 +97,21 @@
       <hr class="border-gray-300" />
 
       <!-- Quantity + Add to Cart -->
-      <div class="flex flex-col gap-20 items-center">
-        <div class="flex flex-row justify-between items-center gap-50">
+      <div class="flex flex-col gap-10 items-center">
+        <div class="flex flex-row justify-between items-center gap-20">
           <div class="flex flex-row items-center border bg-gray-200 rounded-full px-4 py-2 gap-10 shadow-md">
-            <button class="text-xl font-bold hover:text-sky-500" (click)="decreaseQuantity()"><h6>-</h6></button>
+            <button class="text-xl font-bold hover:text-sky-500" (click)="decreaseQuantity()">-</button>
             <span class="text-lg font-semibold">{{ quantity }}</span>
             <button class="text-xl font-bold hover:text-sky-500" (click)="increaseQuantity()">+</button>
           </div>
           <p class="text-sm text-gray-500 text-right">
-            Only {{ (this.product.stock) - quantity }} items left!!<br />
+            Only {{ product.stock - quantity }} items left!!<br />
             Don’t Miss it
           </p>
         </div>
         <button
-          class="w-1/2 bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-500 hover:to-blue-700 text-white text-lg font-bold py-3 rounded-full transition duration-300 shadow-lg"
-          [disabled]="quantity === 0 || quantity > this.product.stock"
+          class="w-full sm:w-1/2 bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-500 hover:to-blue-700 text-white text-lg font-bold py-3 rounded-full transition duration-300 shadow-lg"
+          [disabled]="quantity === 0 || quantity > product.stock"
         >
           Add To Cart
         </button>

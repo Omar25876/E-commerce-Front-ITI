@@ -2,10 +2,12 @@ import { Component, OnInit, OnDestroy, AfterViewInit, Inject, PLATFORM_ID, ViewC
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import * as noUiSlider from 'nouislider';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-slidar',
-  imports: [CommonModule, FormsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule,HttpClientModule],
   templateUrl: './slidar.component.html',
   styles: [''],
 })
@@ -64,7 +66,7 @@ export class SlidarComponent implements OnInit, OnDestroy, AfterViewInit {
   startSliding() {
     this.interval = setInterval(() => {
       this.nextSlide();
-    }, 2000);
+    }, 3000);
   }
 
   nextSlide() {
