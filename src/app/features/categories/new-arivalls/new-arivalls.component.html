@@ -1,132 +1,23 @@
-<!--Button And HeadLine-->
-<div class="container my-5 mx-auto mb-5 pb-5 ">
-    <div class=" flex justify-between">
-        <h3 class="text-2xl font-bold ">New Arrival</h3>
-        <button [routerLink]="'/search'" class="bg-sky-300  text-center rounded-full font-bold text-white w-30 h-10">Shop Now</button>
-    </div>
-<div class="flex flex-row flex-wrap gap-3 my-3 space-x-1">
-@for (prduct of AllPRoduct; track $index) {
-<div class="flex  flex-col items-center justify-center w-60 rounded-lg shadow-lg bg-white m-x-10">
-    <!-- Product Image -->
-    <div
-      class="relative group w-full h-48 hover:bg-gray-500 hover:bg-opacity-10 transition-all duration-500 rounded-lg overflow-hidden"
-    >
-      <img
-        class="object-contain w-full h-full rounded-lg transition-transform duration-500 group-hover:scale-115"
-        src="Images/Home-Page/Sec-3 ph2.png"
-        alt="Product Image"
-      />
-      <div
-        class="absolute -bottom-5 flex flex-row w-full items-center justify-center space-x-4 opacity-0 transition-all duration-500 group-hover:bottom-5 group-hover:opacity-100 ease-in-out"
-      >
-        <!-- Add to Cart Button -->
-        <button
-          class="flex items-center justify-center w-10 h-10 bg-white border rounded-full shadow-lg hover:bg-gray-200 transition-all duration-300"
-        >
-          <svg
-            class="w-6 h-6 text-black"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.293 2.293a1 1 0 00.707 1.707H19M7 13L5.4 5M19 21a1 1 0 100-2 1 1 0 000 2zm-10 0a1 1 0 100-2 1 1 0 000 2z"
-            />
-          </svg>
-        </button>
-  
-        <!-- Wishlist Button -->
-        <button
-          class="flex items-center justify-center w-10 h-10 bg-white border rounded-full shadow-lg hover:bg-gray-200 transition-all duration-300"
-        >
-          <svg
-            class="w-6 h-6 text-red-500"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.364l-7.682-7.682a4.5 4.5 0 010-6.364z"
-            />
-          </svg>
-        </button>
-  
-        <!-- Quick View Button -->
-        <button
-          class="flex items-center justify-center w-10 h-10 bg-white border rounded-full shadow-lg hover:bg-gray-200 transition-all duration-300"
-        >
-          <svg
-            class="w-6 h-6 text-blue-500"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M15 10l4.553-2.276a1 1 0 00-.553-1.894L15 8m0 0L10.447 5.724a1 1 0 00-.894 0L5 8m10 2v6m0-6L10.447 8.276a1 1 0 00-.894 0L5 10m10 6l4.553 2.276a1 1 0 00.894 0L20 16m-5 0v6m0-6L10.447 18.276a1 1 0 01-.894 0L5 16"
-            />
-          </svg>
-        </button>
-      </div>
-    </div>
-  
-    <!-- Product Info -->
-    <div class="flex flex-col items-start w-full p-4 space-y-2">
-  
-        <span class="text-md font-semibold text-gray-800">
-          {{ prduct.name }}
-        </span>
-        
-        <div class="flex flex-row justify-between items-center w-full">
-  
-            <!-- السعر -->
-            <span class="text-md font-bold text-gray-800">
-              {{ prduct.price | number:'1.2-2' }} EGP
-            </span>
-          
-            <!-- التقييم والمراجعات -->
-            <div class="flex items-center space-x-2">
-              
-              <!-- التقييم بالنجمة -->
-              <div class="flex items-center bg-sky-400 rounded-full px-2 py-1">
-                <p class="text-sm font-medium text-white">
-                  {{ prduct.rate }}
-                </p>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="w-4 h-4 text-white ml-1"
-                  fill="white"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
-                  />
-                </svg>
-              </div>
-          
-              <!-- عدد المراجعات -->
-              <p class="text-sm text-gray-500">
-                ({{ prduct.numberOfReviews }})
-              </p>
-          
-            </div>
-          
-          </div>          
-      
-      </div>
+<!-- العنوان مع زر "Shop Now" -->
+<div class="container mx-auto mb-10">
+  <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+    <h3 class="text-2xl font-bold text-center sm:text-left">New Arrivals</h3>
+    <button class="bg-sky-400 hover:bg-sky-500 transition-all text-white font-bold rounded-full px-6 py-2">
+      Shop Now
+    </button>
   </div>
-}
 </div>
+
+<!-- إظهار مؤشر التحميل أثناء الانتظار -->
+<div *ngIf="isLoading" class="flex justify-center items-center w-full h-96">
+  <div class="animate-spin rounded-full h-20 w-20 border-t-4 border-blue-500"></div>
+</div>
+
+<!-- منتجات -->
+<div *ngIf="!isLoading" class="flex flex-wrap justify-center gap-8 my-5 pb-20">
+  <div
+    *ngFor="let product of AllPRoduct; let i = index"
+    class="flex flex-col items-center justify-center w-60 rounded-lg shadow-lg bg-white mb-6">
+   <app-product-card [myProduct]="product"></app-product-card>
+  </div>
 </div>

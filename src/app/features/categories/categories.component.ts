@@ -6,11 +6,11 @@ import { BrandComponent } from "./brand/brand.component";
 import { NavigationEnd, RouterModule, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { filter } from 'rxjs';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-categories',
+  standalone: true,
   imports: [
     SlidarComponent,
     NewArivallsComponent,
@@ -18,28 +18,11 @@ import { filter } from 'rxjs';
     BrandComponent,
     RouterModule,
     CommonModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
 ],
   templateUrl: './categories.component.html',
   styles: ``
 })
-export class CategoriesComponent implements OnInit {
-
-  url:string=''
-
-  constructor(private router: Router){}
-  ngOnInit(): void {
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
-        this.url = event.urlAfterRedirects;
-      });
-  }
-  shouldShowMainSections(): boolean {
-    return !this.router.url.includes('/categories/arrival') &&
-           !this.router.url.includes('/categories/all') &&
-           !this.router.url.includes('/categories/brands');
-  }
-  
-
+export class CategoriesComponent{
 }
