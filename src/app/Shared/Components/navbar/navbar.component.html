@@ -63,7 +63,7 @@
     <!-- Sign In/Sign Up -->
     <ng-container *ngIf="!islogin">
       <button
-        class="h-10 w-30 px-4 flex items-center justify-center border-2 border-white rounded-full shadow-md hover:shadow-lg transition duration-300"
+        class="h-10 w-35 px-2 flex items-center justify-center border-2 border-white rounded-full shadow-md hover:shadow-lg transition duration-300"
         (click)="sign()"
       >
         <span class="text-sm text-white font-bold">Sign In/Sign Up</span>
@@ -72,12 +72,57 @@
 
     <!-- User Icon -->
     <ng-container *ngIf="islogin">
-      <button
-        class="h-10 w-30 px-4 flex items-center justify-center border-2 border-white rounded-full shadow-md hover:shadow-lg transition duration-300"
-        (click)="viewProfile()"
-      >
-        <img class="h-6" src="Images/Icons/UserIcon.png" alt="User" />
-      </button>
+      <div class="relative flex flex-row items-center gap-2">
+        <!-- User Profile Image -->
+        <div class="w-10 h-10 bg-gray-300 rounded-full overflow-hidden">
+          <img
+            [src]="user.profileImageUrl || 'Images/Authentication/Main User Photo 2.svg'"
+            alt="User Profile"
+            class="w-full h-full object-cover"
+          />
+        </div>
+
+        <!-- Dropdown Button -->
+        <button
+          class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none"
+          (click)="toggleDropdown()"
+        >
+          {{user.lastName}}
+          <svg
+            class="w-5 h-5 ml-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div
+          *ngIf="dropdownOpen"
+          class="absolute top-12 right-0 z-50 mt-2 w-48 origin-top-right rounded-md shadow-lg bg-gradient-to-r from-sky-400 to-blue-600 ring-1 ring-black ring-opacity-5"
+        >
+          <div class="py-1">
+            <a
+              class="block px-4 py-2 text-white text-md hover:bg-gray-100 hover:text-gray-800"
+              (click)="viewProfile()"
+              >My Profile</a
+            >
+            <a
+
+              class="block px-4 py-2 text-white text-md hover:bg-gray-100 hover:text-gray-800"
+              (click)="logout()"
+              >Logout</a
+            >
+          </div>
+        </div>
+      </div>
     </ng-container>
   </div>
 </nav>

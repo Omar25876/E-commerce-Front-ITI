@@ -1,14 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Product } from '../../../models/productModel';
+import { CategoryService } from '../../../services/category.service';
+import { Category } from '../../../models/categoryModel';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-product-sec1',
   templateUrl: './product-sec1.component.html',
   styles: '',
-  imports: [CommonModule],
+  providers: [CategoryService],
+  imports: [CommonModule, HttpClientModule],
 })
-export class ProductSec1Component {
+export class ProductSec1Component implements OnInit {
   product: Product = {
     _id: '',
     name: '',
@@ -42,14 +46,20 @@ export class ProductSec1Component {
   selectedImage: string = '';
   productColors: string[] = [];
   selectedColor: string = '';
+  Categories: Category = {
+    _id: '',
+    categoryName: '',
+    brandNames: [],
+    __v: 0,
+  };
+  categoryName: string = '';
   quantity: number = 1;
 
-  constructor() {
+  constructor(private categoryService: CategoryService) {
     if (typeof window !== 'undefined' && window.localStorage) {
       const storedProduct = localStorage.getItem('product');
       if (storedProduct) {
         this.product = JSON.parse(storedProduct);
-
         // Ensure product.colors is defined and assign it to productColors
         this.productColors = this.product.imagesAndColors
           ? Object.keys(this.product.imagesAndColors)
@@ -61,13 +71,31 @@ export class ProductSec1Component {
                 .replace('/blob/', '/')
             )
           : [];
-        this.selectedColor = this.productColors.length > 0 ? this.productColors[0] : '';
+        this.selectedColor =
+          this.productColors.length > 0 ? this.productColors[0] : '';
         this.selectedImage = this.product.imagesAndColors[this.selectedColor]
           ? this.product.imagesAndColors[this.selectedColor]
               .replace('github.com', 'raw.githubusercontent.com')
               .replace('/blob/', '/')
           : '';
       }
+    }
+  }
+
+  ngOnInit(): void {
+    if (this.product.category) {
+      this.categoryService.getCategoryById(this.product.category).subscribe({
+        next: (category) => {
+          this.categoryName = category.categoryName;
+          console.log(this.categoryName);
+          console.log(category);
+        },
+        error: (err) => {
+          console.error('Error fetching category:', err);
+        },
+      });
+    } else {
+      console.error('Product category is undefined or invalid.');
     }
   }
 

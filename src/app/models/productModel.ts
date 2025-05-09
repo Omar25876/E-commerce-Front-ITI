@@ -26,7 +26,7 @@ export interface Product {
   reviewsCount: number;
   reviews: Review[];
   highlights: string[];
-  specs: Record<string, string>;
+  specs: Specs;
   modelNumber: string;
   modelName: string;
   whatsInTheBox: string[];

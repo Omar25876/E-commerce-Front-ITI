@@ -72,7 +72,7 @@ export class ProductService {
    * @param id - Product ID
    * @returns Observable<Product>
    */
-  getProductById(id: number): Observable<Product> {
+  getProductById(id: string): Observable<Product> {
     return this.myHttp.get<Product>(`${this.url}/${id}`);
   }
 
@@ -91,7 +91,7 @@ export class ProductService {
    * @param product - Updated product data
    * @returns Observable<Product>
    */
-  updateProduct(id: number, product: Product): Observable<Product> {
+  updateProduct(id: string, product: Product): Observable<Product> {
     return this.myHttp.put<Product>(`${this.url}/${id}`, product);
   }
 
@@ -100,7 +100,7 @@ export class ProductService {
    * @param id - Product ID
    * @returns Observable<void>
    */
-  deleteProduct(id: number): Observable<void> {
+  deleteProduct(id: string): Observable<void> {
     return this.myHttp.delete<void>(`${this.url}/${id}`);
   }
 }

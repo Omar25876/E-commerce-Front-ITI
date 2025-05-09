@@ -6,6 +6,7 @@ export interface Address {
 }
 
 export interface User {
+  _id: string;
   profileImageUrl: string;
   firstName: string;
   lastName: string;

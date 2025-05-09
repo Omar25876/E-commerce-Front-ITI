@@ -116,16 +116,6 @@
     >
       <div class="flex flex-row items-center space-x-2">
         <h1 class="text-xl font-bold text-gray-800">{{ review.user }}</h1>
-        <div class="hidden md:block h-5 w-px bg-gray-300"></div>
-        <img
-          *ngIf="false"
-          src="assets/Images/Prod-Page/correct.png"
-          alt="Verified"
-          class="w-4 h-4"
-        />
-        <h1 *ngIf="false" class="text-lg font-semibold text-gray-800">
-          Verified Purchase
-        </h1>
       </div>
       <div class="flex items-center space-x-2 w-full">
         <p class="text-md font-medium text-gray-600">{{ review.rating }}</p>
@@ -149,3 +139,50 @@
     </div>
   </div>
 </div>
+
+<!-- Add Review Section -->
+<div class="flex flex-col items-center">
+  <div class="flex flex-col w-1/2 bg-white m-5 p-6 space-y-4 rounded-lg shadow-md items-center">
+    <h2 class="text-xl font-bold text-gray-800 text-center">Add Your Review</h2>
+    <form (ngSubmit)="addReview()" class="space-y-4 w-2/3">
+      <!-- Review Input -->
+      <div>
+        <label for="review" class="block text-sm font-medium text-gray-700">Your Review</label>
+        <textarea
+          id="review"
+          [(ngModel)]="newReview.comment"
+          name="review"
+          rows="4"
+          class="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+          placeholder="Write your review here..."
+          required
+        ></textarea>
+      </div>
+
+      <!-- Rating Input -->
+      <div>
+        <label for="rating" class="block text-sm font-medium text-gray-700">Your Rating</label>
+        <select
+          id="rating"
+          [(ngModel)]="newReview.rating"
+          name="rating"
+          class="mt-1 block w-1/2 h-5 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+          required
+        >
+          <option value="" disabled>Select a rating</option>
+          <option *ngFor="let rating of [5, 4, 3, 2, 1]" [value]="rating">{{ rating }}</option>
+        </select>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="w-full bg-gradient-to-r from-sky-400 to-blue-600 text-white font-bold py-2 px-4 rounded-md hover:from-sky-500 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+      >
+        Submit Review
+      </button>
+    </form>
+  </div>
+  </div>
+
+

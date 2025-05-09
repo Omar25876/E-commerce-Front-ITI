@@ -50,7 +50,7 @@ export class AuthService {
   // Logout User
   logout(): void {
     localStorage.removeItem('userToken');
-    this.router.navigate(['/auth/login']);
+    this.router.navigateByUrl('/auth/login');
   }
 
   // Check if Token is Expired
