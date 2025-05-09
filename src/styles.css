@@ -4,7 +4,7 @@
 
 @layer utilities {
   .outlined-text {
-    -webkit-text-stroke: 0.5px #000;
+    -webkit-text-stroke: 0.5px #2F4199;
     color: transparent;
   }
 }
