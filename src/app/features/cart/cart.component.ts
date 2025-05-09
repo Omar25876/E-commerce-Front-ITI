@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './cart.component.html',
 })
 export class CartComponent {
@@ -12,20 +13,20 @@ export class CartComponent {
 
   cartProducts = [
     {
-      name: 'Wireless Headphones',
+      name: 'Sports X20',
       brand: 'Anker',
-      image: 'Images/Cart-Page/testCart1.webp',
-      price: 1200,
+      image: 'Images/Cart-Page/testCart1.png',
+      price: 120,
       quantity: 2,
-      color: 'White',
+      color: 'Green',
     },
     {
-      name: 'Wired Headphones',
+      name: 'Liberty 4 Pro',
       brand: 'JBL',
-      image: 'Images/Cart-Page/testCart2.jpg',
+      image: 'Images/Cart-Page/testCart2.png',
       price: 80,
       quantity: 1,
-      color: 'black',
+      color: 'Black',
     },
   ];
   getCartTotal() {
@@ -54,4 +55,6 @@ export class CartComponent {
     this.cartProducts = this.cartProducts.filter((p) => p !== product);
     if (this.selectedProduct === product) this.selectedProduct = null;
   }
+  goToCheckout() {}
+  continueShopping() {}
 }
