@@ -112,6 +112,7 @@
         <button
           class="w-full sm:w-1/2 bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-500 hover:to-blue-700 text-white text-lg font-bold py-3 rounded-full transition duration-300 shadow-lg"
           [disabled]="quantity === 0 || quantity > product.stock"
+          (click)="clickAddtoCart()"
         >
           Add To Cart
         </button>

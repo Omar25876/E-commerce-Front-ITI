@@ -3,14 +3,16 @@ import { Component, OnInit } from '@angular/core';
 import { Product } from '../../../models/productModel';
 import { CategoryService } from '../../../services/category.service';
 import { Category } from '../../../models/categoryModel';
-import { HttpClientModule } from '@angular/common/http';
+import { CartService } from '../../../services/cart.service';
+import { first } from 'rxjs';
 
 @Component({
   selector: 'app-product-sec1',
   templateUrl: './product-sec1.component.html',
   styles: '',
-  providers: [CategoryService],
-  imports: [CommonModule, HttpClientModule],
+  // providers: [CategoryService],
+  providers: [CategoryService, CartService],
+  imports: [CommonModule],
 })
 export class ProductSec1Component implements OnInit {
   product: Product = {
@@ -55,7 +57,10 @@ export class ProductSec1Component implements OnInit {
   categoryName: string = '';
   quantity: number = 1;
 
-  constructor(private categoryService: CategoryService) {
+  constructor(
+    private categoryService: CategoryService,
+    private cartService: CartService
+  ) {
     if (typeof window !== 'undefined' && window.localStorage) {
       const storedProduct = localStorage.getItem('product');
       if (storedProduct) {
@@ -123,6 +128,41 @@ export class ProductSec1Component implements OnInit {
   decreaseQuantity(): void {
     if (this.quantity > 1) {
       this.quantity--;
+    }
+  }
+  firstAddition = true;
+  clickAddtoCart(): void {
+    if (this.firstAddition) {
+      this.firstAddition = false;
+      let saveQ = this.quantity;
+
+      console.log('Trying to add item to cart...');
+
+      // Check if quantity is less than or equal to the stock before adding to cart
+      if (this.quantity > 0 && this.quantity <= (this.product.stock || 0)) {
+        this.cartService
+          .addItemToCart(
+            this.product._id,
+            saveQ,
+            this.product.price,
+            this.product.name,
+            this.selectedColor,
+            this.selectedImage,
+            this.product.brand
+          )
+          .subscribe({
+            next: (response) => {
+              console.log('Item added successfully:', response);
+            },
+            error: (error) => {
+              console.error('Error adding item to cart:', error);
+            },
+          });
+      } else {
+        // If the quantity is greater than stock, display an alert or message
+        console.error('Not enough stock available.');
+        // Optionally, you can show a user-friendly message in the UI here
+      }
     }
   }
 }
