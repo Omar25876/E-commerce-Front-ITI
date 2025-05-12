@@ -4,14 +4,15 @@ import { Product } from '../../../models/productModel';
 import { CategoryService } from '../../../services/category.service';
 import { Category } from '../../../models/categoryModel';
 import { CartService } from '../../../services/cart.service';
-import { first } from 'rxjs';
+import { CartProduct } from '../../../models/cartModel';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-product-sec1',
   templateUrl: './product-sec1.component.html',
   styles: '',
   // providers: [CategoryService],
-  providers: [CategoryService, CartService],
+  providers: [CategoryService, CartService, AuthService],
   imports: [CommonModule],
 })
 export class ProductSec1Component implements OnInit {
@@ -43,7 +44,7 @@ export class ProductSec1Component implements OnInit {
     createdAt: '',
     updatedAt: '',
   };
-
+  isOutOfStock: boolean = false;
   productImages: string[] = [];
   selectedImage: string = '';
   productColors: string[] = [];
@@ -55,11 +56,13 @@ export class ProductSec1Component implements OnInit {
     __v: 0,
   };
   categoryName: string = '';
-  quantity: number = 1;
-
+  enteredQuantity: number = 0;
+  productQuantityInCart: number = 0;
+  remainingProduct: number = 0;
   constructor(
     private categoryService: CategoryService,
-    private cartService: CartService
+    private cartService: CartService,
+    private authService: AuthService
   ) {
     if (typeof window !== 'undefined' && window.localStorage) {
       const storedProduct = localStorage.getItem('product');
@@ -102,8 +105,39 @@ export class ProductSec1Component implements OnInit {
     } else {
       console.error('Product category is undefined or invalid.');
     }
+    this.getQuantityInCart();
+    this.remainingProduct =
+      this.product.stock - this.enteredQuantity - this.productQuantityInCart;
   }
 
+  getQuantityInCart() {
+    let cartProducts: CartProduct[];
+    this.cartService.getCart(this.authService.getUserData()._id).subscribe({
+      next: (data) => {
+        cartProducts = data;
+        console.log('Cart data:', cartProducts);
+
+        const matchedProduct = cartProducts.find(
+          (prd: CartProduct) => prd.itemId === this.product._id
+        );
+
+        if (matchedProduct) {
+          this.productQuantityInCart = matchedProduct.quantity;
+          console.log('Matched product quantity:', this.productQuantityInCart);
+        } else {
+          this.productQuantityInCart = 0;
+          console.log('Product not found in cart.');
+        }
+
+        this.isOutOfStock = this.productQuantityInCart >= this.product.stock;
+        this.remainingProduct = this.product.stock - this.productQuantityInCart;
+        this.enteredQuantity = this.productQuantityInCart;
+      },
+      error: (err) => {
+        console.error('Error fetching cart:', err);
+      },
+    });
+  }
   selectImage(image: string): void {
     this.selectedImage = image;
   }
@@ -120,49 +154,52 @@ export class ProductSec1Component implements OnInit {
   }
 
   increaseQuantity(): void {
-    if (this.quantity < (this.product.stock || 0)) {
-      this.quantity++;
+    if (this.enteredQuantity < (this.product.stock || 0)) {
+      this.enteredQuantity++;
+       this.remainingProduct =
+      this.product.stock - this.enteredQuantity;
     }
   }
 
   decreaseQuantity(): void {
-    if (this.quantity > 1) {
-      this.quantity--;
+    if (this.enteredQuantity > 1) {
+      this.enteredQuantity--;
+       this.remainingProduct =
+      this.product.stock - this.enteredQuantity;
     }
   }
-  firstAddition = true;
   clickAddtoCart(): void {
-    if (this.firstAddition) {
-      this.firstAddition = false;
-      let saveQ = this.quantity;
+    console.log('Trying to add item to cart...');
 
-      console.log('Trying to add item to cart...');
+    // stock check
+    this.getQuantityInCart();
 
-      // Check if quantity is less than or equal to the stock before adding to cart
-      if (this.quantity > 0 && this.quantity <= (this.product.stock || 0)) {
-        this.cartService
-          .addItemToCart(
-            this.product._id,
-            saveQ,
-            this.product.price,
-            this.product.name,
-            this.selectedColor,
-            this.selectedImage,
-            this.product.brand
-          )
-          .subscribe({
-            next: (response) => {
-              console.log('Item added successfully:', response);
-            },
-            error: (error) => {
-              console.error('Error adding item to cart:', error);
-            },
-          });
-      } else {
-        // If the quantity is greater than stock, display an alert or message
-        console.error('Not enough stock available.');
-        // Optionally, you can show a user-friendly message in the UI here
-      }
+    console.log('▶ this.isOutOfStock', this.isOutOfStock);
+    console.log('▶ this.productQuantityInCart', this.productQuantityInCart);
+    console.log('▶ this.product.stock', this.product.stock);
+    if (this.isOutOfStock) {
+      console.log('No addition');
+
+      // console.log(storedProduct);
+      // disable addition button and make the text be Out of stock
+    } else {
+      console.log('yes addition');
+      this.cartService
+        .addItemToCart(
+          this.product._id,
+          this.enteredQuantity - this.productQuantityInCart,
+          this.product.price,
+          this.product.name,
+          this.selectedColor,
+          this.selectedImage,
+          this.product.brand
+        )
+        .subscribe({
+          next: (response) => {
+            console.log('Item added successfully:', response);
+            this.getQuantityInCart();
+          },
+        });
     }
   }
 }

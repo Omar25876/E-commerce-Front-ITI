@@ -13,7 +13,6 @@ export class CartService {
   userData: any;
   userId: string = '';
   constructor(private http: HttpClient, private authservice: AuthService) {
-    console.log('userdata cartservice');
     this.userData = this.authservice.getUserData();
     this.userId = this.userData._id;
   }
@@ -33,13 +32,6 @@ export class CartService {
     image: string,
     brandId: string
   ): Observable<any> {
-    console.log('in addItemToCart');
-    console.log('itemId:', itemId);
-    console.log('quantity:', quantity);
-    console.log('price:', price);
-    console.log('userId:', this.userId);
-    console.log('api:', `${this.apiUrl}/${this.userId}/items`);
-
     const payload = {
       itemId,
       quantity,

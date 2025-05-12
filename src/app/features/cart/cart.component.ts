@@ -5,6 +5,7 @@ import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
 import { CartProduct } from '../../models/cartModel';
 import { BrandService } from '../../services/brand.service';
+import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-cart',
@@ -17,33 +18,55 @@ export class CartComponent implements OnInit {
   cartProducts: CartProduct[] = [];
   selectedProduct: CartProduct | null = null;
   userData: any;
-
+  prd = {
+    _id: '',
+    stock: 0,
+  };
   constructor(
     private cartService: CartService,
     private authService: AuthService,
+    private productService: ProductService,
     private brandService: BrandService
   ) {}
+
+  prdWithStock: {
+    product: CartProduct;
+    stock: number;
+    isOutOfStock: boolean;
+  }[] = [];
 
   ngOnInit(): void {
     this.cartService.getCart(this.authService.getUserData()._id).subscribe({
       next: (data) => {
         this.cartProducts = data;
-        console.log('Cart data:', this.cartProducts);
         this.cartProducts.forEach((product) => {
-          console.log(product);
-          console.log(product.brandId);
           this.brandService.getBrandById(product.brandId).subscribe((brand) => {
             product.brand = brand.name;
-            console.log(product.brand);
+          });
+
+          this.productService.getProductById(product.itemId).subscribe({
+            next: (productOriginal) => {
+              const stock = productOriginal.stock;
+              const isOutOfStock = stock <= product.quantity;
+              this.prdWithStock.push({ product, stock, isOutOfStock });
+              console.log('this.prdWithStock', this.prdWithStock);
+            },
           });
         });
-      },
-      error: (err) => {
-        console.error('Failed to load cart:', err);
+        this.cartProducts = []
       },
     });
   }
 
+  getRemainingInStock(product: any) {
+    const item = this.prdWithStock.find(
+      (prd) => prd.product.itemId === product.itemId
+    );
+    if (item) {
+      item.isOutOfStock = item.stock <= item.product.quantity;
+      console.log(item);
+    }
+  }
   getCartTotal() {
     return this.cartProducts.reduce(
       (total, item) => total + item.price * item.quantity,
@@ -55,21 +78,22 @@ export class CartComponent implements OnInit {
     this.selectedProduct = this.selectedProduct === product ? null : product;
   }
 
-  increaseQty(product: CartProduct) {
-    product.quantity++;
+  increaseQty(item: any) {
+    item.product.quantity++;
     this.cartService
       .addItemToCart(
-        product.itemId,
+        item.product.itemId,
         1,
-        product.price,
-        product.name,
-        product.selectedColor,
-        product.image,
-        product.brandId
+        item.product.price,
+        item.product.name,
+        item.product.selectedColor,
+        item.product.image,
+        item.product.brandId
       )
       .subscribe({
         next: (response) => {
-          console.log('Item added successfully:', response);
+          // console.log('Item added successfully:', response);
+          this.getRemainingInStock(item.product);
         },
         error: (error) => {
           console.error('Error adding item to cart:', error);
@@ -77,39 +101,41 @@ export class CartComponent implements OnInit {
       });
   }
 
-  decreaseQty(product: CartProduct) {
-    if (product.quantity > 1) {
-      product.quantity--; // Optimistic UI update
+  decreaseQty(item: any) {
+    this.getRemainingInStock(item.product);
+    if (item.product.quantity > 1) {
+      item.product.quantity--;
       this.cartService
         .addItemToCart(
-          product.itemId,
+          item.product.itemId,
           -1,
-          product.price,
-          product.name,
-          product.selectedColor,
-          product.image,
-          product.brandId
+          item.product.price,
+          item.product.name,
+          item.product.selectedColor,
+          item.product.image,
+          item.product.brandId
         )
         .subscribe({
           next: (response) => {
-            console.log('Item decreased successfully:', response);
+            // console.log('Item decreased successfully:', response);
+            this.getRemainingInStock(item.product);
           },
           error: (error) => {
             console.error('Error decreasing item quantity:', error);
-            product.quantity++; // Rollback on error
           },
         });
     } else {
-      this.removeProduct(product);
+      this.removeProduct(item);
     }
   }
 
-  removeProduct(product: CartProduct) {
-    this.cartService.removeItemFromCart(product.itemId).subscribe({
+  removeProduct(item: any) {
+    this.getRemainingInStock(item.product);
+    this.cartService.removeItemFromCart(item.product.itemId).subscribe({
       next: (response) => {
         console.log('Product removed successfully:', response);
-        this.cartProducts = this.cartProducts.filter(
-          (p) => p.itemId !== product.itemId
+        this.prdWithStock = this.prdWithStock.filter(
+          (p) => p.product.itemId !== item.product.itemId
         );
       },
       error: (error) => {
