@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { CartService } from './../../../services/cart.service';
+import { CartProduct } from '../../../models/cartModel';
 @Component({
   selector: 'app-product-card',
   imports: [CommonModule],
+  providers: [CartService],
   templateUrl: './product-card.component.html',
   styles: '',
 })
@@ -13,7 +15,7 @@ export class ProductCardComponent {
 
   image: string = ''; // Default value for the product image
   rawUrl: string = '';
-  constructor(private router: Router) {}
+  constructor(private router: Router, private cartService: CartService) {}
 
   ngOnInit(): void {
     // Ensure myProduct and imagesAndColors are defined before accessing them
@@ -31,8 +33,54 @@ export class ProductCardComponent {
    * @param product - The product to add to the cart
    */
   addToCart(product: any): void {
-    console.log('Added to cart:', product);
-    // Add logic to handle adding the product to the cart
+    this.cartService.getCart().subscribe({
+      next: (data) => {
+        const cartProducts: CartProduct[] = data;
+        console.log('Cart data:', cartProducts);
+
+        // get product in cart
+        const matchedProduct = cartProducts.find(
+          (prd: CartProduct) => prd.itemId === product._id
+        );
+
+        if (
+          matchedProduct &&
+          matchedProduct.quantity !== 0 &&
+          matchedProduct.quantity !== undefined
+        ) {
+          // If the product is already in the cart and its quantity is not 0 or undefined, do nothing
+          console.log('Product already in cart, skipping add.');
+          return;
+        }
+
+        this.cartService
+          .addItemToCart(
+            product._id,
+            1,
+            product.price,
+            product.name,
+            product.selectedColor,
+            product.imagesAndColors[product.selectedColor.toLowerCase()]
+              .replace(
+                'https://github.com/',
+                'https://raw.githubusercontent.com/'
+              )
+              .replace('/blob/', '/'),
+            product.brand
+          )
+          .subscribe({
+            next: (response) => {
+              console.log('Item added to cart:', response);
+            },
+            error: (err) => {
+              console.error('Error adding item to cart:', err);
+            },
+          });
+      },
+      error: (err) => {
+        console.error('Error fetching cart:', err);
+      },
+    });
   }
 
   /**

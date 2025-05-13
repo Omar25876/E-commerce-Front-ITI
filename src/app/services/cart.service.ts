@@ -18,8 +18,8 @@ export class CartService {
   }
 
   // Get cart for a specific user
-  getCart(userId: string) {
-    return this.http.get<CartProduct[]>(`${this.apiUrl}/${userId}`);
+  getCart() {
+    return this.http.get<CartProduct[]>(`${this.apiUrl}/${this.userId}`);
   }
 
   // Add an item to the cart
@@ -41,7 +41,11 @@ export class CartService {
       image,
       brandId,
     };
-
+    console.log(
+      `cart service : ${this.apiUrl}/${this.userId}/items\n`,
+      'payload : ',
+      payload
+    );
     return this.http.post(`${this.apiUrl}/${this.userId}/items`, payload);
   }
 

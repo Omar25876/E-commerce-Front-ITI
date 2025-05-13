@@ -5,14 +5,13 @@ import { CategoryService } from '../../../services/category.service';
 import { Category } from '../../../models/categoryModel';
 import { CartService } from '../../../services/cart.service';
 import { CartProduct } from '../../../models/cartModel';
-import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-product-sec1',
   templateUrl: './product-sec1.component.html',
   styles: '',
   // providers: [CategoryService],
-  providers: [CategoryService, CartService, AuthService],
+  providers: [CategoryService, CartService],
   imports: [CommonModule],
 })
 export class ProductSec1Component implements OnInit {
@@ -62,7 +61,6 @@ export class ProductSec1Component implements OnInit {
   constructor(
     private categoryService: CategoryService,
     private cartService: CartService,
-    private authService: AuthService
   ) {
     if (typeof window !== 'undefined' && window.localStorage) {
       const storedProduct = localStorage.getItem('product');
@@ -112,7 +110,7 @@ export class ProductSec1Component implements OnInit {
 
   getQuantityInCart() {
     let cartProducts: CartProduct[];
-    this.cartService.getCart(this.authService.getUserData()._id).subscribe({
+    this.cartService.getCart().subscribe({
       next: (data) => {
         cartProducts = data;
         console.log('Cart data:', cartProducts);

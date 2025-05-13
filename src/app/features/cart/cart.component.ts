@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CartService } from '../../services/cart.service';
-import { AuthService } from '../../services/auth.service';
 import { CartProduct } from '../../models/cartModel';
 import { BrandService } from '../../services/brand.service';
 import { ProductService } from '../../services/product.service';
@@ -10,7 +9,6 @@ import { ProductService } from '../../services/product.service';
 @Component({
   selector: 'app-cart',
   standalone: true,
-  providers: [AuthService],
   imports: [CommonModule, RouterLink],
   templateUrl: './cart.component.html',
 })
@@ -24,7 +22,6 @@ export class CartComponent implements OnInit {
   };
   constructor(
     private cartService: CartService,
-    private authService: AuthService,
     private productService: ProductService,
     private brandService: BrandService
   ) {}
@@ -36,7 +33,11 @@ export class CartComponent implements OnInit {
   }[] = [];
 
   ngOnInit(): void {
-    this.cartService.getCart(this.authService.getUserData()._id).subscribe({
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const storedProduct = localStorage.getItem('product');
+      console.log('localstorage: ', storedProduct);
+    }
+    this.cartService.getCart().subscribe({
       next: (data) => {
         this.cartProducts = data;
         this.cartProducts.forEach((product) => {
@@ -53,7 +54,7 @@ export class CartComponent implements OnInit {
             },
           });
         });
-        this.cartProducts = []
+        this.cartProducts = [];
       },
     });
   }
