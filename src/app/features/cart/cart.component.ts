@@ -69,10 +69,11 @@ export class CartComponent implements OnInit {
     }
   }
   getCartTotal() {
-    return this.cartProducts.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
+    return this.prdWithStock.reduce((total, item) => {
+      const price = item.product?.price || 0;
+      const quantity = item.product?.quantity || 0;
+      return total + price * quantity;
+    }, 0);
   }
 
   selectProduct(product: any) {
