@@ -52,7 +52,7 @@ export class RegisterComponent {
     password: new FormControl<string | null>(null, [
       Validators.required,
       Validators.minLength(8),
-      Validators.pattern(/(?=.*[A-Z])$/)
+      Validators.pattern(/^(?=.*[A-Z]).*$/)
     ]),
     confirmPassword: new FormControl<string | null>(null, [
       Validators.required,

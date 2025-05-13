@@ -17,6 +17,8 @@ import { ProfileComponent } from './features/profile/profile.component';
 import { PersonalInfoComponent } from './features/profile/personal-info/personal-info.component';
 import { PaymentCardsComponent } from './features/profile/payment-cards/payment-cards.component';
 import { MyOrdersComponent } from './features/profile/my-orders/my-orders.component';
+import { authGuard } from './guards/auth.guard';
+import { CheckoutComponent } from './features/checkout/checkout.component';
 
 export const routes: Routes = [
   // Redirect to home by default
@@ -32,8 +34,10 @@ export const routes: Routes = [
   { path: 'search', loadComponent:()=>import('./Shared/Components/search/search.component').then(c=>c.SearchComponent), title: 'Search' },
 
   // Cart Route
-  { path: 'cart', component: CartComponent, title: 'Cart' },
+  {path: 'cart',component: CartComponent,canActivate: [authGuard],title: 'Cart'},
 
+  //Checkout Route
+  {path: 'checkout',component: CheckoutComponent,canActivate: [authGuard],title: 'Checkout'},
   // Product Route
   {
     path: 'product/:id',

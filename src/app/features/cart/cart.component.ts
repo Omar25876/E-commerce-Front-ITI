@@ -5,11 +5,12 @@ import { CartService } from '../../services/cart.service';
 import { CartProduct } from '../../models/cartModel';
 import { BrandService } from '../../services/brand.service';
 import { ProductService } from '../../services/product.service';
+import { RouterModule, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink,RouterOutlet],
   templateUrl: './cart.component.html',
 })
 export class CartComponent implements OnInit {

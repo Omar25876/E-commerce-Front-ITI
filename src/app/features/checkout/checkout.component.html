@@ -1,0 +1,81 @@
+<div class="flex justify-center">
+   <div class="w-[35%] flex flex-col gap-4 p-4 rounded-xl mb-5">
+      <p class="text-xl font-bold">Choose Payment Type:</p>
+
+      <div class="flex gap-4 ml-7 mt-2 items-center">
+        <input 
+          type="radio" 
+          id="COD" 
+          name="paymentType"
+          value="COD"
+          [(ngModel)]="selectedPayment" 
+          class="w-6 h-6 accent-gradient bg-gradient-to-r from-sky-400 to-blue-600"
+        />
+        <label for="COD" class="text-lg font-medium">Cash On Delivery (COD)</label>
+      </div>
+
+      <div class="flex gap-4 ml-7 items-center">
+        <input 
+          type="radio" 
+          id="Credit" 
+          name="paymentType"
+          value="Credit"
+          [(ngModel)]="selectedPayment"
+          class="w-6 h-6 accent-gradient bg-gradient-to-r from-purple-400 to-pink-600"
+        />
+        <label for="Credit" class="text-lg font-medium">Credit Card</label>
+      </div>
+      @if(selectedPayment=="Confuse"){
+        <img 
+        src="Images/Checkout Page/Confuse.png" 
+        class="w-full" 
+        alt="Payment Method"
+      />
+      }
+       @if(selectedPayment=="COD"){
+        <img 
+        src="Images/Checkout Page/Delivery.png" 
+        class="w-full" 
+        alt="Payment Method"
+      />
+      }
+      @if(selectedPayment=="Credit"){
+        <img 
+        src="Images/Checkout Page/Confuse.png" 
+        class="w-full" 
+        alt="Payment Method"
+      />
+      }
+      
+    </div>
+
+    
+    <div class="bg-white p-4 rounded-xl shadow-sm w-full lg:w-80 space-y-4 min-w-0">
+      <h3 class="font-semibold text-lg border-b pb-2">Order Summary</h3>
+      <div class="flex justify-between text-sm">
+        <span>4 Items</span>
+        <span>18,000 EGP</span>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Shipping</label>
+        <input type="text" class="w-full border px-3 py-1 rounded text-sm bg-gray-50" value="Standard Delivery - 30 EGP" readonly />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Promo Code</label>
+        <input type="text" class="w-full border px-3 py-1 rounded text-sm bg-gray-50" value="SoundJoy100" readonly />
+      </div>
+
+      <hr />
+
+      <div class="flex justify-between font-medium text-base">
+        <span>Total Cost</span>
+        <span>16,380 EGP</span>
+      </div>
+
+      <div class="bg-green-500 text-white text-center font-semibold py-2 rounded-md shadow">
+        Savings : 1,620 EGP
+      </div>
+    </div>
+</div>
