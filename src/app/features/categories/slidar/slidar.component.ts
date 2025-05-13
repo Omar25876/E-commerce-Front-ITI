@@ -1,4 +1,13 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, Inject, PLATFORM_ID, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  AfterViewInit,
+  Inject,
+  PLATFORM_ID,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import * as noUiSlider from 'nouislider';
@@ -7,17 +16,17 @@ import { HttpClientModule } from '@angular/common/http';
 @Component({
   selector: 'app-slidar',
   standalone: true,
-  imports: [CommonModule, FormsModule,HttpClientModule],
+  imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './slidar.component.html',
-  styles: [''],
+  styles: [``],
 })
 export class SlidarComponent implements OnInit, OnDestroy, AfterViewInit {
   Images = [
     'Images/Cat-Page/Slider/Banner-1.png',
     'Images/Cat-Page/Slider/Banner-2.png',
-    'Images/Cat-Page/Slider/Banner-3.png'
+    'Images/Cat-Page/Slider/Banner-3.png',
   ];
-  
+
   hoveredButton: 'prev' | 'next' | null = null;
   currentIndex = 0;
   interval: any;
@@ -30,6 +39,8 @@ export class SlidarComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
+  private isUpdated = false;
+
   ngOnInit(): void {
     if (this.isBrowser) {
       this.startSliding();
@@ -37,7 +48,7 @@ export class SlidarComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if (this.isBrowser && this.sliderRef) {
+    if (this.isBrowser && this.sliderRef?.nativeElement) {
       this.initializeSlider();
     }
   }
@@ -50,10 +61,10 @@ export class SlidarComponent implements OnInit, OnDestroy, AfterViewInit {
         start: [this.currentIndex],
         connect: [true, false],
         range: {
-          'min': 0,
-          'max': this.Images.length - 1
+          min: 0,
+          max: this.Images.length - 1,
         },
-        step: 1
+        step: 1,
       });
 
       this.sliderInstance.on('update', (values: any) => {
@@ -63,45 +74,52 @@ export class SlidarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  startSliding() {
+  startSliding(): void {
+    this.stop(); // مهم جدًا لمنع التكرار
     this.interval = setInterval(() => {
       this.nextSlide();
     }, 3000);
   }
 
-  nextSlide() {
+  stop(): void {
+    if (this.interval) {
+      clearInterval(this.interval);
+      this.interval = null;
+    }
+  }
+
+  nextSlide(): void {
     this.currentIndex = (this.currentIndex + 1) % this.Images.length;
     this.restartSlider();
   }
 
-  prevSlide() {
-    this.currentIndex = (this.currentIndex - 1 + this.Images.length) % this.Images.length;
+  prevSlide(): void {
+    this.currentIndex =
+      (this.currentIndex - 1 + this.Images.length) % this.Images.length;
     this.restartSlider();
   }
 
-  restartSlider() {
+  restartSlider(): void {
+    this.stop();
+    this.isUpdated = true;
     this.updateNoUISlider();
-    // clearInterval(this.interval);
+    this.isUpdated = false;
     this.startSliding();
-
   }
 
-  stop() {
-    clearInterval(this.interval);
-  }
-
-  goToSlide(index: number) {
+  goToSlide(index: number): void {
+    if (this.isUpdated) return;
     this.currentIndex = index;
     this.restartSlider();
   }
 
   updateNoUISlider(): void {
-    if (this.sliderInstance) {
+    if (this.sliderInstance?.set) {
       this.sliderInstance.set(this.currentIndex);
     }
   }
 
   ngOnDestroy(): void {
-    clearInterval(this.interval);
+    this.stop();
   }
 }

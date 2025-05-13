@@ -26,7 +26,7 @@ export const routes: Routes = [
   { path: 'categories', component: CategoriesComponent, title: 'Categories' },
 
   //search
-  { path: 'search', component: SearchComponent, title: 'Search' },
+  { path: 'search', loadComponent:()=>import('./Shared/Components/search/search.component').then(c=>c.SearchComponent), title: 'Search' },
 
   // Cart Route
   { path: 'cart', component: CartComponent, title: 'Cart' },

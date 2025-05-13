@@ -3,4 +3,5 @@ export interface Category {
   categoryName: string;
   brandNames: string[];
   __v: number;
+  selected?: boolean;
 }

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-card',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './product-card.component.html',
   styles: '',

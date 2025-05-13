@@ -1,159 +1,82 @@
-<!-- Category Card -->
-<div class="card mx-5 mt-32 my-3 shadow-lg rounded-xl overflow-hidden w-64">
-  <div class="bg-sky-500 flex flex-row py-2 justify-between">
-    <h3 class="text-2xl font-bold text-white mx-3">Category</h3>
-    <button class="flex items-center  w-10 h-10 ">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24"
-        stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
-      </svg>
-    </button>
+<!-- Filter Section -->
+<div class="filter-section w-[300px]">
+  
+  <!-- Category Card -->
+  <div class="card mx-5 mt-32 my-3 shadow-lg rounded-xl overflow-hidden w-64">
+    <div class="bg-sky-500 flex flex-row py-2 justify-between">
+      <h3 class="text-2xl font-bold text-white mx-3">Category</h3>
+      <button class="flex items-center w-10 h-10" (click)="iscategoryopen = !iscategoryopen">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="iscategoryopen ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7'" />
+        </svg>
+      </button>
+    </div>
+    <div *ngIf="iscategoryopen" class="mx-5 p-5 my-3">
+      <div class="flex flex-row flex-wrap space-x-5" *ngFor="let category of categories">
+        <input type="checkbox" [checked]="categoryChecked(category)" (change)="OnCategoryChange(category, $event)">
+        <h3>{{category.categoryName}}</h3>
+      </div>
+    </div>
   </div>
-  <div class="mx-5 p-5 my-3 ">
-    <div class="flex flex-row flex-wrap space-x-5">
-      <input type="checkbox">
-      <h3>Over-Ear Devices</h3>
-    </div>
 
-    <div class="flex flex-row flex-wrap space-x-5 my-3">
-      <input type="checkbox">
-      <h3>On-Ear Devices</h3>
+  <!-- Brand Card -->
+  <div class="card mx-5 my-3 shadow-lg rounded-xl overflow-hidden w-64">
+    <div class="bg-sky-500 flex flex-row py-2 justify-between">
+      <h3 class="text-2xl font-bold text-white mx-3">Brand</h3>
+      <button class="flex items-center w-10 h-10" (click)="isbrandopen = !isbrandopen">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="isbrandopen ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7'" />
+        </svg>
+      </button>
     </div>
-
-    <div class="flex flex-row flex-wrap space-x-5 my-3">
-      <input type="checkbox">
-      <h3>In-Ear Devices</h3>
+    <div *ngIf="isbrandopen" class="mx-5 p-5 my-3">
+      <div class="flex flex-row flex-wrap space-x-5" *ngFor="let brand of brands">
+        <input type="checkbox" [checked]="brandChecked(brand)" (change)="OnBrandChange(brand, $event)">
+        <h3>{{brand.name}}</h3>
+      </div>
     </div>
+  </div>
 
-    <div class="flex flex-row flex-wrap space-x-5 my-3">
-      <input type="checkbox">
-      <h3>Speaker</h3>
+  <!-- Rating Card -->
+  <div class="card mx-5 my-3 shadow-lg rounded-xl overflow-hidden w-64">
+    <div class="bg-sky-500 flex flex-row py-2 justify-between">
+      <h3 class="text-2xl font-bold text-white mx-3">Rating</h3>
+      <button class="flex items-center w-10 h-10" (click)="isratingopen = !isratingopen">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="isratingopen ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7'" />
+        </svg>
+      </button>
+    </div>
+    <div *ngIf="isratingopen" class="mx-5 p-5 my-3">
+      <div class="flex flex-row flex-wrap space-x-3 my-3" *ngFor="let star of Stars; let i = index">
+        <input type="checkbox" (change)="onRatingChange(star, $event)" [checked]="selectedRatings.includes(star)">
+        <ng-container *ngFor="let s of Stars">
+          <svg width="20" height="20" viewBox="0 0 24 24" [attr.fill]="s <= star ? 'lightgreen' : '#D3D3D3'" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L14.95 8.63L22 9.24L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.24L9.05 8.63L12 2Z" />
+          </svg>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <!-- Price Card -->
+  <div class="card mx-5 my-3 shadow-lg rounded-xl overflow-hidden w-64 mb-60">
+    <div class="bg-sky-500 flex flex-row py-2 justify-between">
+      <h3 class="text-2xl font-bold text-white mx-3">Price</h3>
+      <button class="flex items-center w-10 h-10" (click)="ispriceopen = !ispriceopen">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="ispriceopen ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7'" />
+        </svg>
+      </button>
+    </div>
+    <div *ngIf="ispriceopen" class="p-5 flex flex-row justify-center gap-4">
+      <input min="0" style="width: 30%; height: 20%;" class="outline-2 outline-black" type="number" [(ngModel)]="minPrice" (ngModelChange)="onminPriceChange($event)" [ngClass]="{'input-error': errorprice}">
+      <h3 class="font-extrabold fs-3">To</h3>
+      <input min="0" style="width: 30%; height: 20%;" class="outline-2 outline-black" type="number" [(ngModel)]="maxPrice" (ngModelChange)="onmaxPriceChange($event)" [ngClass]="{'input-error': errorprice}">
+      <h3 class="font-extrabold fs-3 text-sky-500">Go</h3>
+    </div>
+    <div *ngIf="errorprice" class="error-message text-red-700 mx-auto px-5">
+      Max price should be greater than Min price
     </div>
   </div>
 </div>
-
-<!-- Category Brand -->
-<div class="card mx-5 my-3  shadow-lg rounded-xl overflow-hidden w-64">
-  <div class="bg-sky-500 flex flex-row py-2 justify-between">
-    <h3 class="text-2xl font-bold text-white mx-3">Brand</h3>
-    <button class="flex items-center  w-10 h-10 ">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24"
-        stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
-      </svg>
-    </button>
-  </div>
-  <div class="mx-5 p-5 my-3 ">
-    <div class="flex flex-row flex-wrap space-x-5">
-      <input type="checkbox">
-      <h3>Samsung</h3>
-    </div>
-
-    <div class="flex flex-row flex-wrap space-x-5 my-3">
-      <input type="checkbox">
-      <h3>Anker</h3>
-    </div>
-
-    <div class="flex flex-row flex-wrap space-x-5 my-3">
-      <input type="checkbox">
-      <h3>JPL</h3>
-    </div>
-
-    <div class="flex flex-row flex-wrap space-x-5 my-3">
-      <input type="checkbox">
-      <h3>Bose</h3>
-    </div>
-
-    <div class="flex flex-row flex-wrap space-x-5 my-3">
-      <input type="checkbox">
-      <h3>Sony</h3>
-    </div>
-  </div>
-</div>
-
-<!-- Rating -->
-<div class="card mx-5 my-3 shadow-lg rounded-xl overflow-hidden w-64">
-  <div class="bg-sky-500 flex flex-row py-2 justify-between">
-    <h3 class="text-2xl font-bold text-white mx-3">Rating</h3>
-    <button class="flex items-center  w-10 h-10 ">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24"
-        stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
-      </svg>
-    </button>
-  </div>
-  <div class="mx-5 p-5 my-3 ">
-    <div class="flex flex-row flex-wrap space-x-3 my-3">
-      <input type="checkbox">
-      @for (star of Stars; track $index)
-      {
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="green" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2L14.95 8.63L22 9.24L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.24L9.05 8.63L12 2Z" />
-      </svg>
-      }
-    </div>
-
-    <div class="flex flex-row flex-wrap space-x-3 my-3">
-      <input type="checkbox">
-      <ng-container *ngFor="let star of Stars; let i = index">
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          [attr.fill]="i < 4 ? 'lightgreen' : '#D3D3D3'"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M12 2L14.95 8.63L22 9.24L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.24L9.05 8.63L12 2Z" />
-        </svg>
-      </ng-container>
-    </div>
-    
-
-    <div class="flex flex-row flex-wrap space-x-3 my-3">
-      <input type="checkbox">
-      <ng-container *ngFor="let star of Stars; let i = index">
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          [attr.fill]="i < 3 ? '#FFA500' : '#D3D3D3'"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M12 2L14.95 8.63L22 9.24L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.24L9.05 8.63L12 2Z" />
-        </svg>
-      </ng-container>
-    </div>
-
-    <div class="flex flex-row flex-wrap space-x-3 my-3">
-      <input type="checkbox">
-      <ng-container *ngFor="let star of Stars; let i = index">
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          [attr.fill]="i < 2 ? '#FFCC80' : '#D3D3D3'"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M12 2L14.95 8.63L22 9.24L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.24L9.05 8.63L12 2Z" />
-        </svg>
-      </ng-container>
-    </div>
-
-    <div class="flex flex-row flex-wrap space-x-3 my-3">
-      <input type="checkbox">
-      <ng-container *ngFor="let star of Stars; let i = index">
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          [attr.fill]="i < 1 ? 'red' : '#D3D3D3'"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M12 2L14.95 8.63L22 9.24L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.24L9.05 8.63L12 2Z" />
-        </svg>
-      </ng-container>
-    </div>
-
-  </div>
-</div>
-
