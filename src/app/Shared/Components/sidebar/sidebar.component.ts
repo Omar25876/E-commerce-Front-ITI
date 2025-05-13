@@ -39,9 +39,10 @@ export class SidebarComponent implements OnInit {
 
   private priceChange$ = new Subject<void>();
   errorprice: boolean = false;
-
+  get BrandId() : string[] {
+    return this.brands.map((brand) => brand._id);
+  }
   constructor(
-    private productService: ProductService,
     private categoryService: CategoryService,
     private brandService: BrandService
   ) { }
@@ -74,6 +75,9 @@ export class SidebarComponent implements OnInit {
     this.brandService.getAllBrands().subscribe({
       next: (data) => {
         this.brands = data;
+
+        const brandIds = this.BrandId;
+        console.log(brandIds);
       },
       error: (error) => {
         console.error('Error loading brands', error);
