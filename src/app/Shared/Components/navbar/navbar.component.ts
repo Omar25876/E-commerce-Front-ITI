@@ -6,10 +6,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { User } from '../../../models/userModel';
 import { FormsModule } from '@angular/forms';
+import { EventEmitter } from '@angular/core';
+import { SearchService } from '../../../services/search.service';
 
 @Component({
   selector: 'app-navbar',
-  providers:[AuthService],
+  providers: [AuthService],
   imports: [
     CommonModule,
     RouterModule,
@@ -40,13 +42,29 @@ export class NavbarComponent {
     createdAt: '',
     updatedAt: '',
   };
- searchTerm: string = '';
 
-  constructor(private myService: AuthService, private router: Router,private cdRef: ChangeDetectorRef,) {
+  constructor(private myService: AuthService, private router: Router, private cdRef: ChangeDetectorRef,private searchservice:SearchService) {
     this.islogin = this.myService.isLoggedIn();
     this.user = this.myService.getUserData();
     console.log(this.user);
   }
+
+  //Search
+  searchTerm: string = '';
+onSearchChange(query: string): void {
+  this.searchTerm = query;
+  this.searchservice.setSearchTerm(this.searchTerm);
+  if(this.searchTerm.trim() === '') {
+  this.router.navigate(['/search']);
+  }
+  console.log(this.searchTerm);
+}
+GoToPage(): void {
+  if(this.router.url !== '/search') {
+    this.router.navigate(['/search']);
+  }
+}
+
 
   toggleDropdown(): void {
     this.dropdownOpen = !this.dropdownOpen;
@@ -68,10 +86,6 @@ export class NavbarComponent {
     this.cdRef.detectChanges();
   }
 
-  OnSearchChange(query: string): void {
-    this.searchTerm = query;
-    console.log(this.searchTerm);
-  }
 
 
 }

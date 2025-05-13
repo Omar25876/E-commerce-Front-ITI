@@ -5,6 +5,8 @@ import { Product } from '../../../models/productModel';
 import { ProductCardComponent } from "../product-card/product-card.component";
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';  
+import { SearchService } from '../../../services/search.service';
 
 @Component({
   selector: 'app-search-content',
@@ -20,7 +22,7 @@ import { CommonModule } from '@angular/common';
   styles: ``,
 })
 export class SearchContentComponent implements OnInit, OnChanges {
-  constructor(private productservice: ProductService) { }
+  constructor(private productservice: ProductService,private searchservice:SearchService) { }
 
   currentpage: number = 1;
   itemsPerPage: number = 8;
@@ -31,7 +33,7 @@ export class SearchContentComponent implements OnInit, OnChanges {
 
   @Input() filters: any;
   @Input() searchTerm: string = '';
-
+  private searchTermSubject: Subject<string> = new Subject<string>();
   get categoriesName(): string {
     if (this.filters?.selectedCategories?.length > 0) {
       return this.filters.selectedCategories.map((c: { categoryName: any }) => c.categoryName).join(', ');
@@ -42,13 +44,32 @@ export class SearchContentComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['filters']) {
       this.fetchProducts();
-    } else if (changes['searchTerm']) {
-      this.filteredProducts = this.filterProducts(this.AllProducts);
-    }
+    } 
   }
 
   ngOnInit(): void {
     this.fetchProducts();
+    this.searchservice.searchTerm$.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      switchMap(searchTerm => {
+        this.isLoading = true;
+        this.searchTerm = searchTerm;
+        console.log('searchTerm', this.searchTerm);
+        return this.productservice.getAllProductsbyFilters();
+      })
+    ).subscribe({
+      next: (data) => {
+        this.AllProducts = data || [];
+        this.filteredProducts = this.filterProducts(this.AllProducts);
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching products:', error);
+        this.isLoading = false;
+      }
+    })
+
   }
 
   fetchProducts() {
@@ -82,8 +103,9 @@ export class SearchContentComponent implements OnInit, OnChanges {
 
     let filtered = [...products];
 
+
     // Search term filter
-    if (this.searchTerm) {
+    if (this.searchTerm && this.searchTerm.trim() !== '') {
       const lowerSearch = this.searchTerm.toLowerCase();
       filtered = filtered.filter(product =>
         product.name?.toLowerCase().includes(lowerSearch)
