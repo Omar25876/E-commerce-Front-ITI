@@ -3,6 +3,10 @@ export interface Address {
   street: string;
   buildingNumber: string;
   apartmentNumber: string;
+  floor: string;
+  entrance: string;
+  zipCode: string;
+  country: string;
 }
 
 export interface User {
@@ -13,7 +17,7 @@ export interface User {
   email: string;
   address: Address;
   phone: string;
-  gender: 'male' | 'female';
+  gender: string;
   isAdmin: boolean;
   createdAt: string;
   updatedAt: string;

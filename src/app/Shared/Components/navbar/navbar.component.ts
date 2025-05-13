@@ -1,10 +1,12 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { User } from '../../../models/userModel';
+import { FormsModule } from '@angular/forms';
+import { json } from 'stream/consumers';
 
 @Component({
   selector: 'app-navbar',
@@ -12,6 +14,7 @@ import { User } from '../../../models/userModel';
   imports: [
     CommonModule,
     RouterModule,
+    FormsModule,
     HttpClientModule
   ],
   templateUrl: './navbar.component.html',
@@ -31,6 +34,10 @@ export class NavbarComponent {
       street: '',
       buildingNumber: '',
       apartmentNumber: '',
+      floor: '',
+      entrance: '',
+      zipCode: '',
+      country: '',
     },
     phone: '',
     gender: 'male',
@@ -38,11 +45,14 @@ export class NavbarComponent {
     createdAt: '',
     updatedAt: '',
   };
+ searchTerm: string = '';
 
   constructor(private myService: AuthService, private router: Router,private cdRef: ChangeDetectorRef,) {
     this.islogin = this.myService.isLoggedIn();
+    console.log(this.islogin);
     this.user = this.myService.getUserData();
-    console.log(this.user);
+
+    console.log(JSON.stringify(this.user));
   }
 
   toggleDropdown(): void {
@@ -63,6 +73,11 @@ export class NavbarComponent {
     this.dropdownOpen = !this.dropdownOpen;
     this.myService.logout(); // Perform logout logic
     this.cdRef.detectChanges();
+  }
+
+  OnSearchChange(query: string): void {
+    this.searchTerm = query;
+    console.log(this.searchTerm);
   }
 
 
