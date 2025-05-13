@@ -41,6 +41,7 @@ export class NavbarComponent {
 
   constructor(private myService: AuthService, private router: Router,private cdRef: ChangeDetectorRef,) {
     this.islogin = this.myService.isLoggedIn();
+    console.log(this.islogin);
     this.user = this.myService.getUserData();
     console.log(this.user);
   }

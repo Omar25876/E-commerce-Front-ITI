@@ -3,14 +3,19 @@ import { Component, OnInit } from '@angular/core';
 import { Product, Review } from '../../../../models/productModel';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../../../services/product.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AuthInterceptor } from '../../../../services/auth.interceptor';
 
 @Component({
   selector: 'app-prod-reviews',
   templateUrl: './prod-reviews.component.html',
   styles: '',
-  providers: [ProductService],
+  providers: [ProductService,{
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },],
   imports: [CommonModule, FormsModule, HttpClientModule],
 })
 export class ProdReviewsComponent implements OnInit {
@@ -50,14 +55,10 @@ export class ProdReviewsComponent implements OnInit {
   reviews: Review[] = [];
   filteredReviews: Review[] = [];
   ratingCounts: { [key: number]: number } = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }; // Object to store counts for each rating
-  newReview: Review = {
-    user: '',
-    rating: 0,
+  newReview: { comment: string; rating: number } = {
     comment: '',
-    _id: '',
-    createdAt: '',
+    rating: 0,
   };
-  user: any;
   ngOnInit() {
     if (typeof window !== 'undefined' && window.localStorage) {
       const storedProduct = localStorage.getItem('product');
@@ -67,8 +68,6 @@ export class ProdReviewsComponent implements OnInit {
         this.filteredReviews = [...this.reviews]; // Initialize filtered reviews
         this.calculateRatingCounts(); // Calculate the counts for each rating
       }
-      this.user = JSON.parse(localStorage.getItem('userData') || '{}');
-      console.log(this.user);
     }
   }
 
@@ -121,29 +120,15 @@ export class ProdReviewsComponent implements OnInit {
 
   addReview(): void {
     if (this.newReview.comment && this.newReview.rating) {
-      // Assign user and review metadata
-      this.newReview.user = this.user._id || 'Anonymous'; // Fallback to 'Anonymous' if user ID is not available
-      this.newReview.createdAt = new Date().toISOString(); // Use ISO format for consistency
-      this.newReview._id = Date.now().toString() + this.newReview.user;
 
-      // Update product reviews and rating
-      this.product.reviews.push(this.newReview);
-      console.log(this.product);
-      // this.product.reviewsCount++;
-      // this.product.rating =
-      //   (this.product.rating * (this.product.reviewsCount - 1) + this.newReview.rating) /
-      //   this.product.reviewsCount;
-
-      // Update the product on the server
-      this.productService.updateProduct(this.product._id, this.product).subscribe({
+      this.productService.addReviewToProduct(this.product._id, this.newReview).subscribe({
         next: (res) => {
           console.log('Product updated successfully:', res);
-
-          // Update the UI
-          // this.reviews.unshift(this.newReview); // Add the new review to the top of the reviews list
-          // this.filteredReviews = [...this.reviews]; // Refresh the filtered reviews
-          // this.calculateRatingCounts(); // Recalculate the rating counts
-          // this.newReview = { _id: '', user: '', comment: '', rating: 0, createdAt: '' }; // Reset the form
+          this.router.navigate(['/product/'+this.product._id+"/reviews"]);
+          this.reviews = res.product.reviews;
+          this.filteredReviews = [...this.reviews];
+          this.calculateRatingCounts();
+          this.newReview = { comment: '', rating: 0 };
         },
         error: (err) => {
           console.error('Error updating product:', err);
@@ -154,3 +139,5 @@ export class ProdReviewsComponent implements OnInit {
     }
   }
 }
+
+

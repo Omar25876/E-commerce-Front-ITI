@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +9,11 @@ import { Router } from '@angular/router';
 export class AuthService {
   private URL = 'http://localhost:5000/api';
 
-  constructor(private myHTTPClient: HttpClient, private router: Router) {}
+  constructor(
+    private myHTTPClient: HttpClient,
+    private router: Router,
+    private storage: StorageService
+  ) {}
 
   // Register User
   registerUser(userData: any) {
@@ -22,24 +27,17 @@ export class AuthService {
 
   // Save Token to Local Storage
   saveToken(token: string): void {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.setItem('userToken', token);
-    }
+    this.storage.setItem('token', token);
   }
 
   // Get Token from Local Storage
   getToken(): string | null {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      return localStorage.getItem('userToken');
-    }
-    return null;
+    return this.storage.getItem<string>('token');
   }
 
   // Remove Token from Local Storage
   removeToken(): void {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.removeItem('userToken');
-    }
+    this.storage.removeItem('token');
   }
 
   // Check if User is Logged In
@@ -49,7 +47,8 @@ export class AuthService {
 
   // Logout User
   logout(): void {
-    localStorage.removeItem('userToken');
+    this.removeToken();
+    this.removeUserData();
     this.router.navigateByUrl('/auth/login');
   }
 
@@ -60,39 +59,35 @@ export class AuthService {
       return true;
     }
     try {
-      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the token payload
       const expDate = new Date(0);
-      expDate.setUTCSeconds(decodedToken.exp);
+      expDate.setUTCSeconds(decodedToken.exp); // Extract expiration date
 
-      return expDate < new Date();
+      return expDate < new Date(); // Check if the token is expired
     } catch (error) {
       console.error('Error decoding token:', error);
       return true;
     }
   }
 
+  // Save User Data to Local Storage
   saveUserData(userData: any): void {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.setItem('userData', JSON.stringify(userData));
-    }
+    this.storage.setItem('userData', userData);
   }
 
+  // Get User Data from Local Storage
   getUserData(): any {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      const userData = localStorage.getItem('userData');
-      return userData ? JSON.parse(userData) : null;
-    }
-    return null;
+    return this.storage.getItem<any>('userData');
   }
 
+  // Remove User Data from Local Storage
   removeUserData(): void {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.removeItem('userData');
-    }
+    this.storage.removeItem('userData');
   }
+
+  // Get User Role
   getUserRole(): string | null {
     const userData = this.getUserData();
     return userData ? userData.role : null;
   }
-
 }

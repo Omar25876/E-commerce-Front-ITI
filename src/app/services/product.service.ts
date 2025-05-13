@@ -46,25 +46,29 @@ export class ProductService {
       .set('maxPrice', maxPrice.toString());
 
     // First request to get total pages
-    return this.myHttp.get<ProductResponse>(this.url, { params: initialParams }).pipe(
-      switchMap((response) => {
-        const total = response.total;
-        const totalPages = Math.ceil(total / limit);
+    return this.myHttp
+      .get<ProductResponse>(this.url, { params: initialParams })
+      .pipe(
+        switchMap((response) => {
+          const total = response.total;
+          const totalPages = Math.ceil(total / limit);
 
-        // Generate requests for all pages
-        const requests: Observable<ProductResponse>[] = [];
-        for (let page = 1; page <= totalPages; page++) {
-          const pageParams = initialParams.set('page', page.toString());
-          requests.push(this.myHttp.get<ProductResponse>(this.url, { params: pageParams }));
-        }
+          // Generate requests for all pages
+          const requests: Observable<ProductResponse>[] = [];
+          for (let page = 1; page <= totalPages; page++) {
+            const pageParams = initialParams.set('page', page.toString());
+            requests.push(
+              this.myHttp.get<ProductResponse>(this.url, { params: pageParams })
+            );
+          }
 
-        return forkJoin(requests);
-      }),
-      map((responses) => {
-        // Combine all product arrays into one flat array
-        return responses.flatMap((res) => res.products);
-      })
-    );
+          return forkJoin(requests);
+        }),
+        map((responses) => {
+          // Combine all product arrays into one flat array
+          return responses.flatMap((res) => res.products);
+        })
+      );
   }
 
   /**
@@ -102,5 +106,9 @@ export class ProductService {
    */
   deleteProduct(id: string): Observable<void> {
     return this.myHttp.delete<void>(`${this.url}/${id}`);
+  }
+
+  addReviewToProduct(id: string, review: any): Observable<any> {
+    return this.myHttp.post<any>(`${this.url}/${id}/reviews`, review);
   }
 }

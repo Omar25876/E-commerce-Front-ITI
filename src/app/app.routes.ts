@@ -13,6 +13,10 @@ import { ProductComponent } from './features/product/product.component';
 import { ProdDescribComponent } from './features/product/product-sec3/prod-describ/prod-describ.component';
 import { ProdFaqComponent } from './features/product/product-sec3/prod-faq/prod-faq.component';
 import { ProdReviewsComponent } from './features/product/product-sec3/prod-reviews/prod-reviews.component';
+import { ProfileComponent } from './features/profile/profile.component';
+import { PersonalInfoComponent } from './features/profile/personal-info/personal-info.component';
+import { PaymentCardsComponent } from './features/profile/payment-cards/payment-cards.component';
+import { MyOrdersComponent } from './features/profile/my-orders/my-orders.component';
 
 export const routes: Routes = [
   // Redirect to home by default
@@ -22,7 +26,6 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent, title: 'Home' },
 
   //Categories Route
-
   { path: 'categories', component: CategoriesComponent, title: 'Categories' },
 
   //search
@@ -71,6 +74,14 @@ export const routes: Routes = [
       { path: 'register', component: RegisterComponent, title: 'Register' },
     ],
   },
+
+  // profile route
+  {path: 'dashboard', component: ProfileComponent, title: 'Profile', children: [
+    {path: '', redirectTo: 'personal-info', pathMatch: 'full'},
+    {path: 'personal-info', component: PersonalInfoComponent, title: 'Personal Info'},
+    {path: 'payment-cards', component: PaymentCardsComponent, title: 'Payment Cards'},
+    {path: 'orders', component: MyOrdersComponent, title: 'Orders'},
+  ]},
 
   // Wildcard Route (404 Page)
   { path: '**', component: ErrorComponent, title: '404 Not Found' },
