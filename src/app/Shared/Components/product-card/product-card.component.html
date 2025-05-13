@@ -1,1 +1,95 @@
-<p>product-card works!</p>
+<div class="flex group flex-col items-center justify-center w-60 rounded-lg shadow-lg bg-white m-x-10">
+  <!-- Product Image -->
+  <div
+    class="relative group w-full h-48 group-hover:bg-gray-500 group-hover:bg-opacity-10 transition-all duration-500 rounded-lg overflow-hidden"
+  >
+    <img
+      class="object-contain w-full h-full rounded-lg transition-transform duration-500 group-hover:scale-115"
+      src="{{rawUrl}}"
+      [alt]="myProduct.name"
+    />
+    <div
+      class="absolute -bottom-5 flex flex-row w-full items-center justify-center space-x-4 opacity-0 transition-all duration-500 group-hover:bottom-5 group-hover:opacity-100 ease-in-out"
+    >
+      <!-- Add to Cart Button -->
+      <button
+        class="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-lg hover:bg-sky-400 transition-all duration-300"
+        (click)="addToCart(myProduct)"
+      >
+        <svg
+          class="w-6 h-6 text-black"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.293 2.293a1 1 0 00.707 1.707H19M7 13L5.4 5M19 21a1 1 0 100-2 1 1 0 000 2zm-10 0a1 1 0 100-2 1 1 0 000 2z"
+          />
+        </svg>
+      </button>
+
+      <!-- Wishlist Button -->
+      <button
+        class="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-lg hover:bg-sky-400 transition-all duration-300"
+        (click)="addToWishlist(myProduct)"
+      >
+        <svg
+          class="w-6 h-6 text-red-500"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.364l-7.682-7.682a4.5 4.5 0 010-6.364z"
+          />
+        </svg>
+      </button>
+
+      <!-- Quick View Button -->
+      <button
+        class="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-lg hover:bg-sky-400 transition-all duration-300"
+        (click)="quickView()"
+      >
+        <svg
+          class="w-6 h-6 text-gray-500"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M15 10l4.553-2.276a1 1 0 00-.553-1.894L15 8m0 0L10.447 5.724a1 1 0 00-.894 0L5 8m10 2v6m0-6L10.447 8.276a1 1 0 00-.894 0L5 10m10 6l4.553 2.276a1 1 0 00.894 0L20 16m-5 0v6m0-6L10.447 18.276a1 1 0 01-.894 0L5 16"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Product Info -->
+  <div class="flex flex-col items-start w-full p-4 space-y-2">
+    <span class="text-md font-semibold text-gray-800">{{ myProduct.name}}</span>
+    <span class="text-md font-bold text-gray-800">{{ myProduct.price}} EGP</span>
+    <div class="flex items-center space-x-1">
+      <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
+        {{myProduct.rating}}
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+          <path
+            d="M12 .587l3.668 7.431 8.332 1.151-6.064 5.798 1.43 8.275L12 18.896l-7.366 4.346 1.43-8.275L.001 9.169l8.332-1.151z"
+          />
+        </svg>
+      </span>
+      <span class="text-sm text-gray-500">({{myProduct.reviewsCount}})</span>
+      <div class="flex flex-row justify-between ml-5">
+        <span class="line-through text-gray-500">{{myProduct.oldPrice}} EGP</span>
+      </div>
+    </div>
+  </div>
+</div>

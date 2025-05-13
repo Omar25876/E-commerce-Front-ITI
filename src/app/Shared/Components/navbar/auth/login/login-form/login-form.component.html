@@ -1,0 +1,121 @@
+<!-- Right Side Form -->
+<div class="w-full bg-white p-8 space-y-6">
+  <!-- Social Login -->
+  <div class="text-center space-y-4">
+    <p class="text-gray-600 font-medium">Sign in With</p>
+    <div class="flex justify-center space-x-4">
+      <img
+        src="https://img.icons8.com/color/48/facebook.png"
+        class="w-8 h-8 cursor-pointer hover:scale-110 transition duration-300"
+        alt="Facebook"
+      />
+      <img
+        src="https://img.icons8.com/color/48/google-logo.png"
+        class="w-8 h-8 cursor-pointer hover:scale-110 transition duration-300"
+        alt="Google"
+      />
+      <img
+        src="https://img.icons8.com/color/48/twitter--v1.png"
+        class="w-8 h-8 cursor-pointer hover:scale-110 transition duration-300"
+        alt="Twitter"
+      />
+    </div>
+    <div class="flex items-center justify-between space-x-2">
+      <hr class="border border-gray-300 w-full" />
+      <span class="text-gray-400 text-sm">OR</span>
+      <hr class="border border-gray-300 w-full" />
+    </div>
+  </div>
+
+  <!-- Form Fields -->
+  <form [formGroup]="myForm" (ngSubmit)="onSubmit()" class="space-y-4">
+    <!-- Email Field -->
+    <input
+      type="email"
+      placeholder="Email Address"
+      formControlName="email"
+      class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-400 shadow-sm"
+    />
+    <div *ngIf="myForm.controls['email'].touched && myForm.controls['email'].invalid" class="text-red-500 text-xs">
+      <span *ngIf="myForm.controls['email'].hasError('required')">Email is required.</span>
+      <span *ngIf="myForm.controls['email'].hasError('email')">Invalid email format.</span>
+    </div>
+
+    <!-- Password Field -->
+    <div class="relative">
+      <input
+        [type]="showPassword ? 'text' : 'password'"
+        formControlName="password"
+        placeholder="Password"
+        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-400 shadow-sm"
+      />
+      <button
+        type="button"
+        (click)="togglePasswordVisibility()"
+        class="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+      >
+        <svg
+          *ngIf="!showPassword"
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-5 h-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+          />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-.274.857-.68 1.655-1.196 2.364M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+          />
+        </svg>
+        <svg
+          *ngIf="showPassword"
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-5 h-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M3.98 8.223a10.477 10.477 0 00-.518 1.777M12 5c4.477 0 8.268 2.943 9.542 7-.274.857-.68 1.655-1.196 2.364M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+          />
+        </svg>
+      </button>
+    </div>
+    <div *ngIf="myForm.controls['password'].touched && myForm.controls['password'].invalid" class="text-red-500 text-xs">
+      <span *ngIf="myForm.controls['password'].hasError('required')">Password is required.</span>
+      <span *ngIf="myForm.controls['password'].hasError('minlength')">Password must be at least 8 characters.</span>
+    </div>
+
+    <!-- Remember Me and Forgot Password -->
+    <div class="flex items-center justify-between text-sm text-gray-600">
+      <label class="flex items-center">
+        <input type="checkbox" class="mr-2 accent-sky-500" /> Remember me
+      </label>
+      <a
+        routerLink="forgetPassword"
+        class="hover:underline text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600"
+      >
+        Forgot Password?
+      </a>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      [disabled]="myForm.invalid"
+      class="w-full bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-500 hover:to-blue-600 text-white font-semibold py-2 rounded-md shadow-md transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      LOGIN
+    </button>
+  </form>
+</div>

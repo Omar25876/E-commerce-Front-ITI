@@ -1,0 +1,13 @@
+<!-- product-page.component.html -->
+
+<div class="page flex flex-row flex-wrap">
+  <div class="flex flex-row w-full">
+
+    <!-- Sidebar -->
+    <app-sidebar (filtersChanged)="onFiltersChanged($event)"></app-sidebar>
+
+    <!-- Search Content -->
+    <app-search-content [searchTerm]="searchTerm" [filters]="activeFilters"></app-search-content>
+
+  </div>
+</div>

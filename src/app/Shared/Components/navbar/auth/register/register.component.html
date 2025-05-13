@@ -1,0 +1,314 @@
+<div class="flex flex-col md:flex-row w-full">
+  <!-- Left Side Image -->
+  <div class="hidden md:flex w-full md:w-1/2 items-center justify-center p-6">
+    <img
+      src="Images/Authentication/SignUp.png"
+      alt="Sign Up Illustration"
+      class="w-full max-w-xs object-cover"
+    />
+  </div>
+
+  <!-- Right Side Form -->
+  <div class="w-full md:w-1/2 bg-white p-8 space-y-6">
+    <!-- Social Signup -->
+    <div class="text-center space-y-4">
+      <p class="text-gray-600 font-medium">Sign Up With</p>
+      <div class="flex justify-center space-x-4">
+        <img
+          src="https://img.icons8.com/color/48/facebook.png"
+          class="w-8 h-8 cursor-pointer hover:scale-110 transition duration-300"
+          alt="Facebook"
+        />
+        <img
+          src="https://img.icons8.com/color/48/google-logo.png"
+          class="w-8 h-8 cursor-pointer hover:scale-110 transition duration-300"
+          alt="Google"
+        />
+        <img
+          src="https://img.icons8.com/color/48/twitter--v1.png"
+          class="w-8 h-8 cursor-pointer hover:scale-110 transition duration-300"
+          alt="Twitter"
+        />
+      </div>
+      <div class="flex items-center justify-between space-x-2">
+        <hr class="border border-gray-300 w-full" />
+        <span class="text-gray-400 text-sm">OR</span>
+        <hr class="border border-gray-300 w-full" />
+      </div>
+    </div>
+
+    <!-- Form Fields -->
+    <form [formGroup]="myForm" (ngSubmit)="onSubmit()" class="space-y-4">
+      <!-- Name Fields -->
+      <div class="flex space-x-4">
+        <input
+          type="text"
+          formControlName="firstName"
+          placeholder="First Name"
+          class="w-1/2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-400 shadow-sm"
+        />
+        <input
+          type="text"
+          formControlName="lastName"
+          placeholder="Last Name"
+          class="w-1/2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-400 shadow-sm"
+        />
+      </div>
+      <div
+        *ngIf="
+          myForm.controls['firstName'].touched &&
+          myForm.controls['firstName'].invalid
+        "
+        class="text-red-500 text-xs"
+      >
+        <span *ngIf="myForm.controls['firstName'].hasError('required')"
+          >First name is required.</span
+        >
+        <span *ngIf="myForm.controls['firstName'].hasError('minlength')"
+          >First name must be at least 3 characters.</span
+        >
+        <span *ngIf="myForm.controls['firstName'].hasError('maxlength')"
+          >First name cannot exceed 20 characters.</span
+        >
+        <span *ngIf="myForm.controls['firstName'].hasError('pattern')"
+          >First name must contain only letters.</span
+        >
+      </div>
+      <div
+        *ngIf="
+          myForm.controls['lastName'].touched &&
+          myForm.controls['lastName'].invalid
+        "
+        class="text-red-500 text-xs"
+      >
+        <span *ngIf="myForm.controls['lastName'].hasError('required')"
+          >Last name is required.</span
+        >
+        <span *ngIf="myForm.controls['lastName'].hasError('minlength')"
+          >Last name must be at least 3 characters.</span
+        >
+        <span *ngIf="myForm.controls['lastName'].hasError('maxlength')"
+          >Last name cannot exceed 20 characters.</span
+        >
+        <span *ngIf="myForm.controls['lastName'].hasError('pattern')"
+          >Last name must contain only letters.</span
+        >
+      </div>
+
+      <!-- Email Field -->
+      <input
+        type="email"
+        formControlName="email"
+        placeholder="Email Address"
+        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-400 shadow-sm"
+      />
+      <div
+        *ngIf="
+          myForm.controls['email'].touched && myForm.controls['email'].invalid
+        "
+        class="text-red-500 text-xs"
+      >
+        <span *ngIf="myForm.controls['email'].hasError('required')"
+          >Email is required.</span
+        >
+        <span *ngIf="myForm.controls['email'].hasError('email')"
+          >Invalid email format.</span
+        >
+      </div>
+
+      <!-- Password Fields -->
+      <div class="relative">
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          formControlName="password"
+          placeholder="Password"
+          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-400 shadow-sm"
+        />
+        <button
+          type="button"
+          (click)="togglePasswordVisibility()"
+          class="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+        >
+          <svg
+            *ngIf="!showPassword"
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-.274.857-.68 1.655-1.196 2.364M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+          <svg
+            *ngIf="showPassword"
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3.98 8.223a10.477 10.477 0 00-.518 1.777M12 5c4.477 0 8.268 2.943 9.542 7-.274.857-.68 1.655-1.196 2.364M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+        </button>
+      </div>
+      <div
+        *ngIf="
+          myForm.controls['password'].touched &&
+          myForm.controls['password'].invalid
+        "
+        class="text-red-500 text-xs"
+      >
+        <span *ngIf="myForm.controls['password'].hasError('required')"
+          >Password is required.</span
+        >
+        <span *ngIf="myForm.controls['password'].hasError('minlength')"
+          >Password must be at least 8 characters long.</span
+        >
+        <span *ngIf="myForm.controls['password'].hasError('pattern')"
+          >must contain at least one uppercase letter.</span
+        >
+      </div>
+
+      <div class="relative">
+        <input
+          [type]="showConfirmPassword ? 'text' : 'password'"
+          formControlName="confirmPassword"
+          placeholder="Confirm Password"
+          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-400 shadow-sm"
+          (input)="checkPasswordMatch()"
+        />
+        <button
+          type="button"
+          (click)="toggleConfirmPasswordVisibility()"
+          class="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+        >
+          <svg
+            *ngIf="!showConfirmPassword"
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-.274.857-.68 1.655-1.196 2.364M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+          <svg
+            *ngIf="showConfirmPassword"
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3.98 8.223a10.477 10.477 0 00-.518 1.777M12 5c4.477 0 8.268 2.943 9.542 7-.274.857-.68 1.655-1.196 2.364M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+        </button>
+      </div>
+      <div
+        *ngIf="
+          (myForm.controls['confirmPassword'].touched &&
+            myForm.controls['confirmPassword'].invalid) ||
+          passwordMismatch
+        "
+        class="text-red-500 text-xs"
+      >
+        <span *ngIf="myForm.controls['confirmPassword'].hasError('required')"
+          >Confirm password is required.</span
+        >
+        <span *ngIf="passwordMismatch">Passwords do not match.</span>
+      </div>
+
+      <!-- Phone Field -->
+      <input
+        type="text"
+        formControlName="phone"
+        placeholder="Phone Number"
+        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-400 shadow-sm"
+      />
+      <div
+        *ngIf="
+          myForm.controls['phone'].touched && myForm.controls['phone'].invalid
+        "
+        class="text-red-500 text-xs"
+      >
+        <span *ngIf="myForm.controls['phone'].hasError('required')"
+          >Phone number is required.</span
+        >
+        <span *ngIf="myForm.controls['phone'].hasError('pattern')"
+          >Phone number must be 11 digits and start with
+          (010|011|012|015).</span
+        >
+      </div>
+
+      <!-- Gender -->
+      <div class="flex items-center space-x-4 text-sm text-gray-600">
+        <label class="font-medium">Gender:</label>
+        <label class="flex items-center space-x-1">
+          <input
+            type="radio"
+            formControlName="gender"
+            value="male"
+            class="accent-sky-400"
+          />
+          <span>Male</span>
+        </label>
+        <label class="flex items-center space-x-1">
+          <input
+            type="radio"
+            formControlName="gender"
+            value="female"
+            class="accent-sky-400"
+          />
+          <span>Female</span>
+        </label>
+      </div>
+      <div
+        *ngIf="
+          myForm.controls['gender'].touched && myForm.controls['gender'].invalid
+        "
+        class="text-red-500 text-xs"
+      >
+        Gender is required.
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        [disabled]="myForm.invalid || passwordMismatch"
+        class="w-full bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-500 hover:to-blue-600 text-white font-semibold py-2 rounded-md shadow-md transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        REGISTER
+      </button>
+    </form>
+  </div>
+</div>

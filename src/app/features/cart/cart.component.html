@@ -1,0 +1,160 @@
+<div class="max-w-5xl mb-8 mx-auto p-6 rounded-lg shadow-lg">
+  <h2 class="[font-family:Manrope] mb-9 text-center text-3xl font-bold">
+    Your Shopping Cart
+  </h2>
+
+  <div class="space-y-6">
+    @for (item of prdWithStock; track item.product.name) {
+    <div
+      class="flex w-[100%] h-[15vh] rounded-lg gap-8 hover:shadow-lg items-center"
+      (click)="selectProduct(item.product)"
+    >
+      <div
+        class="[font-family:Manrope] bg-[#e9e9e97a] w-[100%] h-[100%] flex items-center justify-between rounded-xl cursor-pointer p-3"
+      >
+        <!-- Left content (product info) -->
+        <div class="flex items-center space-x-4 p-4">
+          <!-- image + Circle -->
+          <div class="relative flex justify-center w-20 h-20">
+            <div class="w-20 h-20 rounded-full bg-white shadow-md"></div>
+
+            <!-- Image (slightly bigger and on top) -->
+            <img
+              class="absolute bottom-3 h-[100%]"
+              [src]="item.product.image"
+              alt="{{ item.product.name }}"
+            />
+          </div>
+
+          <!-- Product Name And Brand -->
+          <div class="flex flex-col gap-2">
+            <h3 class="text-lg font-bold">
+              {{ item.product.name }}
+            </h3>
+            <p class="text-sm">{{ item.product.brand }}</p>
+          </div>
+        </div>
+
+        <!-- Color display -->
+        <p class="text-md font-bold capitalize">
+          {{ item.product.selectedColor.toLowerCase() }}
+        </p>
+
+        <!-- Quantity & Price -->
+        <div class="flex items-center p-4 gap-15">
+          <!-- Quantity controls -->
+          <div class="text-lg flex items-center gap-2">
+            <!-- Decrease button -->
+            <button
+              class="w-10 h-10 flex items-center justify-center rounded-full text-3xl font-bold transition-colors duration-200 cursor-pointer text-gray-800 disabled:cursor-not-allowed"
+              (click)="decreaseQty(item); $event.stopPropagation()"
+              [attr.aria-label]="'Decrease quantity of ' + item.product.name"
+            >
+              &minus;
+            </button>
+
+            <!-- Quantity display -->
+            <span
+              class="flex items-center justify-center w-10 h-10 rounded-full bg-white font-semibold border border-gray-300 shadow-sm"
+            >
+              {{ item.product.quantity }}
+            </span>
+
+            <!-- Increase button -->
+            <button
+              class="w-10 h-10 flex items-center justify-center rounded-full text-3xl font-bold transition-colors duration-200 cursor-pointer text-gray-800 disabled:cursor-not-allowed disabled:text-gray-400"
+              (click)="increaseQty(item); $event.stopPropagation()"
+              [disabled]="item.isOutOfStock"
+              [attr.aria-label]="'Increase quantity of ' + item.product.name"
+            >
+              &plus;
+            </button>
+
+            <!-- Out of stock label -->
+            <span
+              *ngIf="item.isOutOfStock"
+              class="text-sm text-red-500 font-medium ml-2"
+            >
+              Stock Limit Reached
+            </span>
+          </div>
+
+          <!-- Price -->
+          <span class="font-manrope text-[25px] outlined-text">
+            {{ item.product.price | number }} EGP
+          </span>
+        </div>
+      </div>
+
+      <!-- X Button -->
+      <div
+        class="justify-self-end bg-white"
+        [class.opacity-100]="selectedProduct === item.product"
+        [style.display]="selectedProduct === item.product ? 'inline' : 'none'"
+      >
+        <button
+          (click)="removeProduct(item); $event.stopPropagation()"
+          class="cursor-pointer bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-500 w-15 h-15 rounded-full flex items-center justify-center"
+          [attr.aria-label]="'Remove ' + item.product.name + ' from cart'"
+        >
+          <span class="font-bold text-4xl text-white">✕</span>
+        </button>
+      </div>
+    </div>
+    }
+  </div>
+  @if (prdWithStock) {
+  <div class="[font-family:Manrope] mt-7 pt-4">
+    <div
+      class="flex justify-between items-center text-xl font-bold text-gray-900 mb-5"
+    >
+      <div class="ml-5 mr-5"><h3>Subtotal</h3></div>
+      <div class="flex items-center gap-3">
+        <button
+          class="mr-3 bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-500 font-bold text-white px-5 py-2.5 rounded-full text-sm"
+        >
+          Promo Code ?
+        </button>
+        <h3>{{ getCartTotal() | number }} EGP</h3>
+      </div>
+    </div>
+    <hr class="border-gray-300 my-5" />
+    <p class="text-sm text-black text-center">
+      Shipping, taxes, and discounts calculated at checkout.
+    </p>
+
+    <div class="mt-6 flex justify-between items-center">
+      <a
+        routerLink="/home"
+        class="cursor-pointer text-black-600 font-bold text-lg"
+      >
+        &larr; Continue Shopping
+      </a>
+
+      <a
+        routerLink="/checkout"
+        class="pl-7 pr-7 w-70 text-xl rounded-full cursor-pointer bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-500 hover:to-blue-700 duration-200 text-white font-semibold py-2 px-4 shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 flex items-center justify-center"
+      >
+        Go to Checkout ➔
+      </a>
+    </div>
+  </div>
+  }@else {
+  <div class="flex flex-col gap-5 items-center">
+    <img
+      class="h-[50vh] opacity-65"
+      src="Images/Cart-Page/Empty Cart.png"
+      alt="Empty Cart Photo"
+    />
+    <div class="flex justify-between w-[100%] items-center">
+      <p class="text-2xl font-light m-10">Your Shopping Cart is Empty !</p>
+      <a
+        routerLink="/home"
+        class="pl-7 pr-7 w-60 text-xl rounded-full cursor-pointer bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-500 hover:to-blue-700 duration-200 text-white font-semibold py-2 px-4 shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 flex items-center justify-center"
+      >
+        Return To Home
+      </a>
+    </div>
+  </div>
+  }
+</div>

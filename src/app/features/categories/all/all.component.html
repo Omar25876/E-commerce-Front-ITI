@@ -1,0 +1,55 @@
+<!-- العنوان الرئيسي -->
+<div class="flex items-center justify-center mx-auto my-10 px-4">
+  <div class="flex-grow border-t-4 border-sky-400 mx-28"></div>
+  <h3 class="text-2xl font-bold tracking-wider mx-4 whitespace-nowrap text-center">ALL TYPES OF HEADPHONES</h3>
+  <div class="flex-grow border-t-4 border-sky-400 mx-28"></div>
+</div>
+
+<!-- بطاقات الأقسام -->
+<div class="flex flex-wrap justify-center gap-16 sm:gap-20 md:gap-26 my-10">
+  <button
+    *ngFor="let section of AllSections; let i = index"
+    [routerLink]="'/search'"
+    class="relative w-60 h-40 bg-gray-200 rounded-3xl flex flex-col items-center justify-center shadow-md hover:scale-105 transition-all"
+  >
+    <!-- الصورة -->
+    <div class="absolute -top-8 w-20 h-20 flex items-center justify-center">
+      <img [src]="section.img" alt="" class="w-full h-full object-contain" />
+    </div>
+
+    <!-- العنوان -->
+    <h2 class="font-bold text-2xl pt-12 text-center">{{ section.title }}</h2>
+
+    <!-- السهم -->
+    <div
+      class="absolute bottom-2 right-2 bg-sky-400 rounded-full w-7 h-7 flex items-center justify-center text-white text-xl font-bold"
+    >
+      <span>&gt;</span>
+    </div>
+  </button>
+</div>
+<!-- العنوان مع زر "Shop Now" -->
+<div class="container mx-auto mb-10">
+  <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+    <h3 class="text-2xl font-bold text-center sm:text-left">All Headphones</h3>
+    <button class="bg-sky-400 hover:bg-sky-500 transition-all text-white font-bold rounded-full px-6 py-2"
+    [routerLink]="'/search'"
+    >
+      Shop Now
+    </button>
+  </div>
+</div>
+
+<!-- إظهار مؤشر التحميل أثناء الانتظار -->
+<div *ngIf="isLoading" class="flex justify-center items-center w-full h-96">
+  <div class="animate-spin rounded-full h-20 w-20 border-t-4 border-blue-500"></div>
+</div>
+
+<!-- منتجات -->
+<div *ngIf="!isLoading" class="flex flex-wrap justify-center gap-8 my-5 pb-20">
+  <div
+    *ngFor="let product of AllPRoduct; let i = index"
+    class="flex flex-col items-center justify-center w-60 rounded-lg shadow-lg bg-white mb-6">
+    <app-product-card [myProduct]="product"></app-product-card>
+  </div>
+</div>

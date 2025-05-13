@@ -1,0 +1,36 @@
+<div class="p-6 max-w-4xl mx-auto text-gray-800 space-y-8">
+  <!-- Product Description -->
+  <div>
+    <h2 class="text-xl font-semibold mb-4">Product Description</h2>
+    <p class="text-sm leading-relaxed text-gray-700">
+      {{ product.description }}
+    </p>
+  </div>
+
+  <!-- Highlights -->
+  <div>
+    <h2 class="text-xl font-semibold mb-4">Highlights</h2>
+    <ul class="list-disc ml-6 text-sm text-gray-700 space-y-1">
+      <li *ngFor="let highlight of product.highlights">{{ highlight }}</li>
+    </ul>
+  </div>
+
+  <!-- Specifications -->
+  <div>
+    <h2 class="text-xl font-semibold mb-4">Specifications</h2>
+    <div class="grid grid-cols-2 text-sm border border-gray-200">
+      <ng-container *ngFor="let spec of getSpecs()">
+        <div class="bg-gray-50 px-4 py-2 font-medium">{{ spec.key }}</div>
+        <div class="px-4 py-2">{{ spec.value }}</div>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- What's in the box -->
+  <div>
+    <h2 class="text-xl font-semibold mb-4">What’s in the box</h2>
+    <ul class="list-disc ml-6 text-sm text-gray-700">
+      <li *ngFor="let item of product.whatsInTheBox">{{ item }}</li>
+    </ul>
+  </div>
+</div>

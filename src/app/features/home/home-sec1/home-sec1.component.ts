@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-home-sec1',
   imports: [],
   templateUrl: './home-sec1.component.html',
-  styleUrl: './home-sec1.component.css'
+  styles: ''
 })
 export class HomeSec1Component {
 
