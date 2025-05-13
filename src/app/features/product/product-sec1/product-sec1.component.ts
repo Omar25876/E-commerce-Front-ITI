@@ -55,7 +55,7 @@ export class ProductSec1Component implements OnInit {
     __v: 0,
   };
   categoryName: string = '';
-  enteredQuantity: number = 0;
+  enteredQuantity: number = 1;
   productQuantityInCart: number = 0;
   remainingProduct: number = 0;
   constructor(

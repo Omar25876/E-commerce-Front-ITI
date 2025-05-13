@@ -1,1 +1,98 @@
-<p>my-orders works!</p>
+<div class="p-4 sm:p-6">
+  <h2 class="text-2xl font-bold mb-4">My Orders</h2>
+
+  <div class="bg-gray-100 rounded-2xl p-4 sm:p-6 flex flex-col lg:flex-row gap-6">
+    <!-- Left Side -->
+    <div class="flex-1 space-y-4 min-w-0">
+      <!-- Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <span class="text-lg font-medium">Order ID :</span>
+          <select class="border rounded px-3 py-1 text-gray-600 bg-white focus:ring-2 focus:ring-sky-400 focus:border-sky-400 transition">
+            <option>Order#1235</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-lg font-medium">Order Status :</span>
+          <span class="bg-sky-400 text-white text-sm font-semibold px-3 py-1 rounded-full shadow">Pending</span>
+        </div>
+      </div>
+
+      <!-- Product List -->
+      <div class="bg-white p-4 rounded-xl shadow-sm space-y-6">
+        <!-- Product Item -->
+        <div class="flex flex-col sm:flex-row gap-4 items-center">
+          <img src="https://m.media-amazon.com/images/I/51J9DgZXh8L._AC_SL1500_.jpg" alt="Liberty 4 Pro" class="w-20 h-20 rounded-full object-cover border-2 border-blue-100 shadow" />
+          <div class="flex-1 min-w-0">
+            <h3 class="font-semibold truncate">Liberty 4 Pro</h3>
+            <p class="text-gray-500">Anker</p>
+            <p class="text-sm">Quantity : 1</p>
+          </div>
+          <div class="text-sm text-right min-w-[120px]">
+            <p class="line-through text-gray-500">Price : 1,200 EGP</p>
+            <p class="font-semibold text-blue-700">After Sale : 800 EGP</p>
+            <p>Color : Light Blue</p>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4 items-center">
+          <img src="https://m.media-amazon.com/images/I/51qKx+l1MyL._AC_SL1000_.jpg" alt="ULT TOWER" class="w-20 h-20 rounded-full object-cover border-2 border-blue-100 shadow" />
+          <div class="flex-1 min-w-0">
+            <h3 class="font-semibold truncate">ULT TOWER</h3>
+            <p class="text-gray-500">Sony</p>
+            <p class="text-sm">Quantity : 2</p>
+          </div>
+          <div class="text-sm text-right min-w-[120px]">
+            <p>Price : 5,300 EGP</p>
+            <p class="font-semibold text-blue-700">After Sale : 5,300 EGP</p>
+            <p>Color : Black</p>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4 items-center">
+          <img src="https://m.media-amazon.com/images/I/61t3NsZPqbL._AC_SL1500_.jpg" alt="Clip 5" class="w-20 h-20 rounded-full object-cover border-2 border-blue-100 shadow" />
+          <div class="flex-1 min-w-0">
+            <h3 class="font-semibold truncate">Clip 5</h3>
+            <p class="text-gray-500">JBL</p>
+            <p class="text-sm">Quantity : 3</p>
+          </div>
+          <div class="text-sm text-right min-w-[120px]">
+            <p class="line-through text-gray-500">Price : 3,000 EGP</p>
+            <p class="font-semibold text-blue-700">After Sale : 2,500 EGP</p>
+            <p>Color : Black</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side: Summary -->
+    <div class="bg-white p-4 rounded-xl shadow-sm w-full lg:w-80 space-y-4 min-w-0">
+      <h3 class="font-semibold text-lg border-b pb-2">Order Summary</h3>
+      <div class="flex justify-between text-sm">
+        <span>4 Items</span>
+        <span>18,000 EGP</span>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Shipping</label>
+        <input type="text" class="w-full border px-3 py-1 rounded text-sm bg-gray-50" value="Standard Delivery - 30 EGP" readonly />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Promo Code</label>
+        <input type="text" class="w-full border px-3 py-1 rounded text-sm bg-gray-50" value="SoundJoy100" readonly />
+      </div>
+
+      <hr />
+
+      <div class="flex justify-between font-medium text-base">
+        <span>Total Cost</span>
+        <span>16,380 EGP</span>
+      </div>
+
+      <div class="bg-green-500 text-white text-center font-semibold py-2 rounded-md shadow">
+        Savings : 1,620 EGP
+      </div>
+    </div>
+  </div>
+</div>

@@ -16,7 +16,7 @@ export interface PaymentCard {
   expiryDate: string;
 }
 
-export interface User {
+export interface UserInfo {
   profileImageUrl: string;
   firstName: string;
   lastName: string;
@@ -31,5 +31,5 @@ export interface User {
 }
 
 export interface UserResponse {
-  user: User;
+  user: UserInfo;
 }

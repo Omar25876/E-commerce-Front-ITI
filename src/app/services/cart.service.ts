@@ -14,7 +14,12 @@ export class CartService {
   userId: string = '';
   constructor(private http: HttpClient, private authservice: AuthService) {
     this.userData = this.authservice.getUserData();
+    if (this.userData && this.userData._id) {
     this.userId = this.userData._id;
+  } else {
+    console.warn('CartService: No user data available.');
+    // Optional: Redirect to login or show an error
+  }
   }
 
   // Get cart for a specific user

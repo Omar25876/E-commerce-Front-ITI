@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { User } from '../../../models/userModel';
 import { FormsModule } from '@angular/forms';
+import { json } from 'stream/consumers';
 
 @Component({
   selector: 'app-navbar',
@@ -33,6 +34,10 @@ export class NavbarComponent {
       street: '',
       buildingNumber: '',
       apartmentNumber: '',
+      floor: '',
+      entrance: '',
+      zipCode: '',
+      country: '',
     },
     phone: '',
     gender: 'male',
@@ -46,7 +51,8 @@ export class NavbarComponent {
     this.islogin = this.myService.isLoggedIn();
     console.log(this.islogin);
     this.user = this.myService.getUserData();
-    console.log(this.user);
+
+    console.log(JSON.stringify(this.user));
   }
 
   toggleDropdown(): void {
