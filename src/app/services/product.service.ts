@@ -35,15 +35,35 @@ export class ProductService {
     sort: string = 'rating',
     minPrice: number = 0,
     maxPrice: number = 999999,
-    limit: number = 10
+    limit: number = 10,
+    categories?: string[] ,
+    brands?: string[] ,
+    ratings?: number[] 
   ): Observable<Product[]> {
-    const initialParams = new HttpParams()
+    let initialParams = new HttpParams()
       .set('page', '1')
       .set('limit', limit.toString())
       .set('sort', sort)
       .set('type', type)
       .set('minPrice', minPrice.toString())
       .set('maxPrice', maxPrice.toString());
+
+      if(categories && categories.length > 0) {
+        categories.forEach((category) =>{
+          initialParams=initialParams.append('categories', category);
+        })
+      }
+
+      if(brands&& brands.length > 0) {
+        brands.forEach((brand)=>{
+          initialParams=initialParams.append('brands', brand);
+        })
+      }
+      if(ratings && ratings.length > 0) {
+        ratings.forEach((rating)=>{
+          initialParams=initialParams.append('ratings', rating.toString());
+        })
+      }
 
     // First request to get total pages
     return this.myHttp

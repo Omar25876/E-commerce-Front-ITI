@@ -5,6 +5,8 @@ import { ProductService } from '../../../services/product.service';
 import { ProductCardComponent } from '../../../Shared/Components/product-card/product-card.component';
 import { Product } from '../../../models/productModel';
 import { RouterModule } from '@angular/router';
+import { BrandService } from '../../../services/brand.service';
+import { Brand } from '../../../models/brandModel';
 
   interface Brandss{
     img:string,
@@ -44,9 +46,9 @@ export class BrandComponent implements OnInit {
   
   isLoading:boolean=true
 
-  constructor(private productservices:ProductService){}
+  constructor(private productservice:ProductService){}
   ngOnInit(): void {
-    this.productservices.getAllProductsbyFilters().subscribe({
+    this.productservice.getAllProductsbyFilters().subscribe({
       next:(data)=>{
         this.AllPRoduct=data;
         console.log('Success',data);

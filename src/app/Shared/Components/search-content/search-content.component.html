@@ -1,0 +1,79 @@
+<!-- Page Content -->
+<div class="content-section flex-1 p-5 mt-32 px-22">
+  <!-- Header -->
+  <div class="flex justify-between items-center flex-wrap gap-x-96 mb-5">
+    <h3 class="text-xl font-semibold text-gray-700">
+      <span>{{ paginatedProducts.length }} Results Of </span>
+      <span [ngClass]="{
+        'text-sky-500': filters?.selectedCategories?.length > 0,
+        'text-gray-500': !filters?.selectedCategories?.length
+      }">
+        {{ categoriesName }}
+      </span>
+    </h3>
+
+    <!-- Sort Dropdown -->
+    <div class="flex items-center gap-2">
+      <h3 class="text-lg font-semibold text-gray-700">Sort By</h3>
+      <select
+        name="filter"
+        id="filter"
+        [(ngModel)]="sortBy"
+        (ngModelChange)="OnSortChange($event)"
+        class="bg-gray-100 px-3 py-2 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+      >
+        <option value="default" disabled hidden>Recommended</option>
+        <option value="rating">Rating: High to Low</option>
+        <option value="PriceLowToHigh">Price: Low to High</option>
+        <option value="PriceHighToLow">Price: High to Low</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Product Cards -->
+  <div *ngIf="!isLoading" class="flex flex-wrap justify-center gap-6 my-5 pb-20">
+    <div
+      *ngFor="let product of paginatedProducts"
+      class="product-card flex flex-col items-center justify-center w-60 rounded-lg shadow-lg bg-white mb-6 transform transition-all hover:scale-105 hover:shadow-xl"
+    >
+      <app-product-card [myProduct]="product"></app-product-card>
+    </div>
+  </div>
+</div>
+
+<!-- Loader -->
+<div *ngIf="isLoading" class="flex justify-center items-center w-full h-96">
+  <div class="animate-spin rounded-full h-20 w-20 border-t-4 border-blue-500"></div>
+</div>
+
+<!-- Pagination Controls -->
+<div *ngIf="!isLoading && paginatedProducts.length > 0" class="flex justify-center mt-4 gap-3 mb-3">
+  <!-- Previous Button -->
+  <button
+    (click)="changePage(currentpage - 1)"
+    [disabled]="currentpage === 1"
+    class="w-10 h-10 text-black disabled:opacity-25 text-2xl"
+  >
+    &lt;
+  </button>
+
+  <!-- Page Numbers -->
+  <button
+    *ngFor="let page of [].constructor(totalPages); let i = index"
+    (click)="changePage(i + 1)"
+    [class.bg-sky-500]="currentpage === i + 1"
+    [class.text-white]="currentpage === i + 1"
+    class="w-10 h-10 rounded-full border border-gray-400 text-gray-700 hover:bg-sky-500 hover:text-white text-2xl"
+  >
+    {{ i + 1 }}
+  </button>
+
+  <!-- Next Button -->
+  <button
+    (click)="changePage(currentpage + 1)"
+    [disabled]="currentpage === totalPages"
+    class="w-10 h-10 text-black disabled:opacity-25 text-2xl"
+  >
+    &gt;
+  </button>
+</div>

@@ -1,10 +1,11 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { User } from '../../../models/userModel';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-navbar',
@@ -12,6 +13,7 @@ import { User } from '../../../models/userModel';
   imports: [
     CommonModule,
     RouterModule,
+    FormsModule,
     HttpClientModule
   ],
   templateUrl: './navbar.component.html',
@@ -38,6 +40,7 @@ export class NavbarComponent {
     createdAt: '',
     updatedAt: '',
   };
+ searchTerm: string = '';
 
   constructor(private myService: AuthService, private router: Router,private cdRef: ChangeDetectorRef,) {
     this.islogin = this.myService.isLoggedIn();
@@ -64,6 +67,11 @@ export class NavbarComponent {
     this.dropdownOpen = !this.dropdownOpen;
     this.myService.logout(); // Perform logout logic
     this.cdRef.detectChanges();
+  }
+
+  OnSearchChange(query: string): void {
+    this.searchTerm = query;
+    console.log(this.searchTerm);
   }
 
 
