@@ -38,44 +38,81 @@
         class="w-full" 
         alt="Payment Method"
       />
-      }
-      @if(selectedPayment=="Credit"){
-        <img 
-        src="Images/Checkout Page/Confuse.png" 
-        class="w-full" 
-        alt="Payment Method"
-      />
-      }
-      
+        }
+        @if(selectedPayment=="Credit"){
+          <!-- Card Template -->
+          <div
+            class=" w-[60%] mt-4 mx-auto my-auto relative group bg-gradient-to-r from-blue-800 to-blue-500 text-white rounded-xl p-6 space-y-3 shadow-lg transition-transform duration-200 hover:scale-105 hover:shadow-2xl"
+          >
+            <div class="flex justify-between items-center">
+              <span class="text-lg font-semibold">Credit Card</span>
+              <span class="text-sm">Bank Masr</span>
+            </div>
+            <div class="text-2xl font-mono tracking-widest select-none">XXXX XXXX XXXX 1234</div>
+            <div class="text-sm">CVV</div>
+            <div class="flex justify-between text-xs items-end">
+              <div class="font-semibold">Ibrahim Medhat</div>
+              <div class="text-right">
+                <span class="block">VALID</span>
+                <span class="block">THRU ▶ 12/30</span>
+              </div>
+            </div>
+            <!-- Action Buttons -->
+            <div class="absolute -bottom-5 left-1/2 transform -translate-x-1/2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none group-hover:pointer-events-auto">
+              <button class="bg-white text-black p-2 rounded-full shadow-md hover:bg-gray-200">
+                ✏️
+              </button>
+              <button class="bg-red-600 text-white p-2 rounded-full shadow-md hover:bg-red-700">
+                ❌
+              </button>
+            </div>
+          </div>
+            }
+
     </div>
 
     
-    <div class="bg-white p-4 rounded-xl shadow-sm w-full lg:w-80 space-y-4 min-w-0">
+    <div class="bg-[#F6F6F6] mb-6 p-6 rounded-xl shadow-sm w-full lg:w-80 space-y-4 min-w-0">
       <h3 class="font-semibold text-lg border-b pb-2">Order Summary</h3>
       <div class="flex justify-between text-sm">
-        <span>4 Items</span>
-        <span>18,000 EGP</span>
+        <span>{{prdWithStock.length}} Items</span>
+        <span>{{cartTotal||0}} EGP</span>
       </div>
 
       <div>
         <label class="block text-sm font-medium mb-1">Shipping</label>
-        <input type="text" class="w-full border px-3 py-1 rounded text-sm bg-gray-50" value="Standard Delivery - 30 EGP" readonly />
+        <!-- Add this in your template -->
+        <select 
+          [(ngModel)]="selectedDelivery" 
+          class="w-full border px-2 pr-2.5 py-1 rounded text-sm bg-gray-50"
+        >
+          <option [value]="30">Standard Delivery - 30 EGP</option>
+          <option [value]="50" selected>Fast Delivery - 50 EGP</option>
+        </select>
+
       </div>
 
       <div>
         <label class="block text-sm font-medium mb-1">Promo Code</label>
-        <input type="text" class="w-full border px-3 py-1 rounded text-sm bg-gray-50" value="SoundJoy100" readonly />
+        <input type="text" class="w-full border px-3 py-1 rounded text-sm bg-gray-50" [(ngModel)]="Promo"/>
+        <button class="mt-2 bg-gradient-to-r from-sky-400 to-blue-600 py-2 px-3 text-md text-white font-bold rounded-sm" (click)="AppyPromo()">Apply</button>
+        @if(PromoCheck && Clicked){
+           <label class="ml-4 text-md text-green-500 font-bold">Applied</label>
+        }
+        @if(!PromoCheck && Promo.length>0 &&Clicked){
+           <label class="ml-4 text-md text-red-700 font-bold">Wrong Promo Code</label>
+        }
       </div>
 
       <hr />
 
       <div class="flex justify-between font-medium text-base">
         <span>Total Cost</span>
-        <span>16,380 EGP</span>
+        <span>{{ GetTotal() || 0 }} EGP</span>
       </div>
 
-      <div class="bg-green-500 text-white text-center font-semibold py-2 rounded-md shadow">
-        Savings : 1,620 EGP
-      </div>
+      <button class=" w-full bg-gradient-to-r from-sky-400 to-blue-600 text-white text-center font-bold py-2 rounded-md shadow">
+        Checkout
+      </button>
     </div>
 </div>
