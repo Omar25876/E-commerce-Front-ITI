@@ -44,7 +44,8 @@
       <input
         type="text"
         [(ngModel)]="searchTerm"
-        (ngModelChange)="OnSearchChange($event)"
+        (ngModelChange)="onSearchChange($event)"
+        (focus)="GoToPage()"
         placeholder="Search"
         class="outline-none bg-transparent w-24 sm:w-32 lg:w-64 text-sm"
       />
