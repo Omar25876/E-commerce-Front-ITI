@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable,BehaviorSubject } from 'rxjs';
 import { AuthService } from './auth.service';
 import { CartProduct } from '../models/cartModel';
 
@@ -12,6 +12,23 @@ export class CartService {
 
   userData: any;
   userId: string = '';
+
+  private prdWithStockSubject = new BehaviorSubject<any[]>([]);
+  prdWithStock$ = this.prdWithStockSubject.asObservable();
+
+  setPrdWithStock(prdWithStock: any[]) {
+    this.prdWithStockSubject.next(prdWithStock);
+  }
+
+  getCartTotal(prdWithStock: any[]): number {
+    return prdWithStock.reduce((total, item) => {
+      const price = item.product?.price || 0;
+      const quantity = item.product?.quantity || 0;
+      return total + price * quantity;
+    }, 0);
+  }
+  
+
   constructor(private http: HttpClient, private authservice: AuthService) {
     this.userData = this.authservice.getUserData();
     if (this.userData && this.userData._id) {

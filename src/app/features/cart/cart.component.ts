@@ -5,6 +5,7 @@ import { CartService } from '../../services/cart.service';
 import { CartProduct } from '../../models/cartModel';
 import { BrandService } from '../../services/brand.service';
 import { ProductService } from '../../services/product.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-cart',
@@ -15,48 +16,59 @@ import { ProductService } from '../../services/product.service';
 export class CartComponent implements OnInit {
   cartProducts: CartProduct[] = [];
   selectedProduct: CartProduct | null = null;
+  isLoading = true;
   userData: any;
-  prd = {
-    _id: '',
-    stock: 0,
-  };
-  constructor(
-    private cartService: CartService,
-    private productService: ProductService,
-    private brandService: BrandService
-  ) {}
-
+  
   prdWithStock: {
     product: CartProduct;
     stock: number;
     isOutOfStock: boolean;
   }[] = [];
 
-  ngOnInit(): void {
+  constructor(
+    private cartService: CartService,
+    private productService: ProductService,
+    private brandService: BrandService
+  ) {}
+
+  async ngOnInit(): Promise<void> {
     if (typeof window !== 'undefined' && window.localStorage) {
       const storedProduct = localStorage.getItem('product');
-      console.log('localstorage: ', storedProduct);
     }
-    this.cartService.getCart().subscribe({
-      next: (data) => {
-        this.cartProducts = data;
-        this.cartProducts.forEach((product) => {
-          this.brandService.getBrandById(product.brandId).subscribe((brand) => {
-            product.brand = brand.name;
-          });
+    await this.loadCartData();
+  }
 
-          this.productService.getProductById(product.itemId).subscribe({
-            next: (productOriginal) => {
-              const stock = productOriginal.stock;
-              const isOutOfStock = stock <= product.quantity;
-              this.prdWithStock.push({ product, stock, isOutOfStock });
-              console.log('this.prdWithStock', this.prdWithStock);
-            },
-          });
+  async loadCartData(): Promise<void> {
+    this.isLoading = true;
+    try {
+      const cartData = await firstValueFrom(this.cartService.getCart());
+      this.cartProducts = cartData;
+      
+      // Clear previous data
+      this.prdWithStock = [];
+      
+      // Process all cart items in parallel
+      await Promise.all(this.cartProducts.map(async (product) => {
+        const [brand, productOriginal] = await Promise.all([
+          firstValueFrom(this.brandService.getBrandById(product.brandId)),
+          firstValueFrom(this.productService.getProductById(product.itemId))
+        ]);
+        
+        product.brand = brand.name;
+        
+        this.prdWithStock.push({
+          product,
+          stock: productOriginal.stock,
+          isOutOfStock: productOriginal.stock <= product.quantity
         });
-        this.cartProducts = [];
-      },
-    });
+      }));
+      
+      this.cartService.setPrdWithStock(this.prdWithStock);
+    } catch (error) {
+      console.error('Error loading cart data:', error);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   getRemainingInStock(product: any) {
@@ -65,9 +77,9 @@ export class CartComponent implements OnInit {
     );
     if (item) {
       item.isOutOfStock = item.stock <= item.product.quantity;
-      console.log(item);
     }
   }
+
   getCartTotal() {
     return this.prdWithStock.reduce((total, item) => {
       const price = item.product?.price || 0;
@@ -80,10 +92,10 @@ export class CartComponent implements OnInit {
     this.selectedProduct = this.selectedProduct === product ? null : product;
   }
 
-  increaseQty(item: any) {
+  async increaseQty(item: any) {
     item.product.quantity++;
-    this.cartService
-      .addItemToCart(
+    try {
+      await firstValueFrom(this.cartService.addItemToCart(
         item.product.itemId,
         1,
         item.product.price,
@@ -91,24 +103,20 @@ export class CartComponent implements OnInit {
         item.product.selectedColor,
         item.product.image,
         item.product.brandId
-      )
-      .subscribe({
-        next: (response) => {
-          // console.log('Item added successfully:', response);
-          this.getRemainingInStock(item.product);
-        },
-        error: (error) => {
-          console.error('Error adding item to cart:', error);
-        },
-      });
+      ));
+      this.getRemainingInStock(item.product);
+    } catch (error) {
+      console.error('Error adding item to cart:', error);
+      item.product.quantity--; // Rollback on error
+    }
   }
 
-  decreaseQty(item: any) {
+  async decreaseQty(item: any) {
     this.getRemainingInStock(item.product);
     if (item.product.quantity > 1) {
       item.product.quantity--;
-      this.cartService
-        .addItemToCart(
+      try {
+        await firstValueFrom(this.cartService.addItemToCart(
           item.product.itemId,
           -1,
           item.product.price,
@@ -116,33 +124,38 @@ export class CartComponent implements OnInit {
           item.product.selectedColor,
           item.product.image,
           item.product.brandId
-        )
-        .subscribe({
-          next: (response) => {
-            // console.log('Item decreased successfully:', response);
-            this.getRemainingInStock(item.product);
-          },
-          error: (error) => {
-            console.error('Error decreasing item quantity:', error);
-          },
-        });
+        ));
+        this.getRemainingInStock(item.product);
+      } catch (error) {
+        console.error('Error decreasing item quantity:', error);
+        item.product.quantity++; 
+      }
     } else {
-      this.removeProduct(item);
+      await this.removeProduct(item);
     }
   }
 
-  removeProduct(item: any) {
+  async removeProduct(item: any) {
     this.getRemainingInStock(item.product);
-    this.cartService.removeItemFromCart(item.product.itemId).subscribe({
-      next: (response) => {
-        console.log('Product removed successfully:', response);
-        this.prdWithStock = this.prdWithStock.filter(
-          (p) => p.product.itemId !== item.product.itemId
-        );
-      },
-      error: (error) => {
-        console.error('Error removing product:', error);
-      },
-    });
+    try {
+      await firstValueFrom(this.cartService.removeItemFromCart(item.product.itemId));
+      this.prdWithStock = this.prdWithStock.filter(
+        (p) => p.product.itemId !== item.product.itemId
+      );
+      // Update cart products to reflect removal
+      this.cartProducts = this.cartProducts.filter(
+        (p) => p.itemId !== item.product.itemId
+      );
+    } catch (error) {
+      console.error('Error removing product:', error);
+    }
+  }
+
+  trackByItemId(index: number, item: any): string {
+    return item.product.itemId;
+  }
+  show(){
+    console.log("My PrdwithStock");
+    console.log(this.prdWithStock);
   }
 }

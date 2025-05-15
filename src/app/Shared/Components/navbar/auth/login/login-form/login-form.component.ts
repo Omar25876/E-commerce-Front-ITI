@@ -4,6 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../../../../services/auth.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { MessageService } from '../../../../../../services/message.service';
 
 @Component({
   selector: 'app-login-form',
@@ -18,7 +19,7 @@ export class LoginFormComponent {
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router ,private MsgSer:MessageService) {}
 
   myForm = new FormGroup({
     email: new FormControl<string | null>(null, [
@@ -43,7 +44,13 @@ export class LoginFormComponent {
             // Save the token and navigate to the dashboard
             this.authService.saveToken(res.token);
             this.authService.saveUserData(res.user);
-            this.router.navigate(['/dashboard']);
+            
+            if(this.authService.getUserData().isAdmin)
+              this.router.navigate(['/admin']);
+            else
+              this.router.navigate(['/dashboard']);
+            
+            this.MsgSer.show(`Welcome Back ${res.user.firstName} ${res.user.lastName} , Great to See You Again.`)
           } else {
             console.error('No token received');
           }

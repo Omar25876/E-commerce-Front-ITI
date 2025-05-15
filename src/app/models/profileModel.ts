@@ -14,6 +14,7 @@ export interface PaymentCard {
   cardNumber: string;
   cardHolderName: string;
   expiryDate: string;
+  cvv:string;
 }
 
 export interface UserInfo {
