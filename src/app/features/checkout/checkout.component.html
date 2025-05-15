@@ -1,5 +1,5 @@
 <div class="flex justify-center">
-   <div class="w-[35%] flex flex-col gap-4 p-4 rounded-xl mb-5">
+   <div class="w-[37%] flex flex-col gap-4 p-4 rounded-xl mb-5">
       <p class="text-xl font-bold">Choose Payment Type:</p>
 
       <div class="flex gap-4 ml-7 mt-2 items-center">
@@ -42,32 +42,68 @@
         @if(selectedPayment=="Credit"){
           <!-- Card Template -->
           <div
-            class=" w-[60%] mt-4 mx-auto my-auto relative group bg-gradient-to-r from-blue-800 to-blue-500 text-white rounded-xl p-6 space-y-3 shadow-lg transition-transform duration-200 hover:scale-105 hover:shadow-2xl"
+            class=" max-w-[65%] mt-4 mx-auto relative group bg-gradient-to-r from-blue-800 to-blue-500 text-white rounded-xl p-6 space-y-3 shadow-lg transition-transform duration-200 hover:scale-105 hover:shadow-2xl"
           >
-            <div class="flex justify-between items-center">
-              <span class="text-lg font-semibold">Credit Card</span>
+            <div class="flex ml-1 justify-between items-center">
+              <span class="text-xl font-semibold">Credit Card</span>
               <span class="text-sm">Bank Masr</span>
             </div>
-            <div class="text-2xl font-mono tracking-widest select-none">XXXX XXXX XXXX 1234</div>
-            <div class="text-sm">CVV</div>
+            <img src="Images/Icons/sim card.png" class="max-w-[50px] ml-1"/>
+            <input 
+              type="text" 
+              readonly
+              class="w-[100%] text-2xl font-mono mb-0 tracking-widest px-1 py-1 border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent" 
+              [value]="CurrentCard.cardNumber ? 'XXXX XXXX XXXX '+CurrentCard.cardNumber.slice(-4):'0000 0000 0000 0000'"/>
+            <input
+              class="text-sm px-1 py-1 border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent"
+              [value]="(CurrentCard.cvv||CurrentCard.cvv=='') ? 'CVV' : '000'" 
+              readonly
+              />
+
             <div class="flex justify-between text-xs items-end">
-              <div class="font-semibold">Ibrahim Medhat</div>
-              <div class="text-right">
-                <span class="block">VALID</span>
-                <span class="block">THRU ▶ 12/30</span>
+              <input 
+                type="text" 
+                class="font-semibold px-1 py-1 border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent" 
+                [value]="CurrentCard.cardHolderName" 
+                readonly/>
+
+              <div class="flex flex-col items-end">
+                <span class="w-fit">VALID</span>
+                <div class="flex gap-1">
+                  <span>THRU ▶</span>
+                  <input 
+                    type="text" 
+                    [value]="CurrentCard.expiryDate" 
+                    readonly
+                    class="w-[33px] border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent" />
+                </div>
               </div>
             </div>
-            <!-- Action Buttons -->
-            <div class="absolute -bottom-5 left-1/2 transform -translate-x-1/2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none group-hover:pointer-events-auto">
-              <button class="bg-white text-black p-2 rounded-full shadow-md hover:bg-gray-200">
-                ✏️
-              </button>
-              <button class="bg-red-600 text-white p-2 rounded-full shadow-md hover:bg-red-700">
-                ❌
-              </button>
-            </div>
+            
           </div>
-            }
+          
+          <div class="flex gap-4 mx-auto mt-2">
+              <div class="p-[2px] rounded bg-gradient-to-r from-blue-800 to-blue-500 inline-block shadow-md">
+                <button
+                (click)="Prev()" 
+                class="bg-white rounded px-4 py-2 text-lg text-blue-800 hover:bg-gradient-to-r from-blue-800 to-blue-500 transition hover:text-white hover:font-bold">
+                  Prev
+                </button>
+              </div>
+              <div class="p-[2px] rounded bg-gradient-to-r from-blue-800 to-blue-500 inline-block shadow-md">
+                <button class="bg-white rounded px-4 py-2 text-lg text-blue-800 hover:bg-gradient-to-r from-blue-800 to-blue-500 transition hover:text-white hover:font-bold" disabled>
+                  {{CardBut}}
+                </button>
+              </div>
+              <div class="p-[2px] rounded bg-gradient-to-r from-blue-800 to-blue-500 inline-block shadow-md">
+                <button 
+                (click)="Next()"
+                class="bg-white rounded px-4 py-2 text-lg text-blue-800 hover:bg-gradient-to-r from-blue-800 to-blue-500 transition hover:text-white hover:font-bold">
+                  Next
+                </button>
+              </div>
+          </div>
+        }
 
     </div>
 
@@ -82,15 +118,104 @@
       <div>
         <label class="block text-sm font-medium mb-1">Shipping</label>
         <!-- Add this in your template -->
-        <select 
-          [(ngModel)]="selectedDelivery" 
-          class="w-full border px-2 pr-2.5 py-1 rounded text-sm bg-gray-50"
-        >
-          <option [value]="30">Standard Delivery - 30 EGP</option>
-          <option [value]="50" selected>Fast Delivery - 50 EGP</option>
-        </select>
-
+          <select 
+            [(ngModel)]="selectedDelivery" 
+            class="w-full border px-2 pr-2.5 py-1 rounded text-sm bg-gray-50"
+            >
+            <option [value]="30">Standard Delivery - 30 EGP</option>
+            <option [value]="50">Fast Delivery - 50 EGP</option>
+          </select>
       </div>
+
+      <div>
+      <label class="block text-sm font-medium mb-1">Shipping Address</label>
+
+      <!-- City & Street -->
+      <div class="flex gap-2.5">
+        <!-- City Select -->
+        <select 
+          [(ngModel)]="user.address.city"
+          [disabled]="HasAAddress()"
+          name="city"
+          required
+          #cityRef="ngModel"
+          class="w-[50%] border px-1 pr-2.5 py-1 rounded text-sm bg-gray-50"
+        >
+          <option value="" disabled selected>Select City</option>
+          <option value="Cairo">Cairo</option>
+          <option value="Alex">Alex</option>
+          <option value="El-Fayoum">El-Fayoum</option>
+          <option value="Suez">Suez</option>
+          <option value="Aswan">Aswan</option>
+          <option value="Sohag">Sohag</option>
+        </select>
+      
+        <!-- Street Input (Only letters allowed) -->
+        <input 
+          type="text"
+          name="street"
+          required
+          pattern="^[A-Za-z\s\-]+$"
+          [(ngModel)]="user.address.street"
+          [disabled]="HasAAddress()"
+          #streetRef="ngModel"
+          class="w-[50%] px-2 border py-1 rounded text-sm bg-gray-50"
+          placeholder="Street"
+        />
+      </div>
+      <div class="text-red-500 text-xs mt-1">
+        <div *ngIf="cityRef.invalid && cityRef.touched">City is required.</div>
+        <div *ngIf="streetRef.invalid && streetRef.touched">
+          Street is required and must contain only letters.
+        </div>
+      </div>
+    
+      <!-- Building & Apartment Number -->
+      <div class="flex gap-2.5 mt-2">
+        <!-- Building Number -->
+        <input 
+          type="number"
+          name="bnum"
+          required
+          min="1"
+          [disabled]="HasAAddress()"
+          [(ngModel)]="user.address.buildingNumber"
+          #bnumRef="ngModel"
+          class="w-[50%] px-2 border py-1 rounded text-sm bg-gray-50"
+          placeholder="Building Num"
+        />
+      
+        <!-- Apartment Number -->
+        <input 
+          type="text"
+          name="apart"
+          required
+          min="1"
+          [disabled]="HasAAddress()"
+          [(ngModel)]="user.address.apartmentNumber"
+          #apartRef="ngModel"
+          class="w-[50%] px-2 border py-1 rounded text-sm bg-gray-50"
+          placeholder="Apart Num"
+        />
+      </div>
+      <div class="text-red-500 text-xs mt-1">
+        <div *ngIf="bnumRef.invalid && bnumRef.touched">
+          Building number is required and must be a number.
+        </div>
+        <div *ngIf="apartRef.invalid && apartRef.touched">
+          Apartment number is required
+        </div>
+      </div>
+
+      <button 
+        *ngIf="!HasAAddress()" 
+        class="mt-2 bg-gradient-to-r from-sky-400 to-blue-600 py-2 px-3 text-md text-white font-bold rounded-sm"
+        (click)="AppyPromo()">
+        Save
+      </button>
+    
+    
+    </div>
 
       <div>
         <label class="block text-sm font-medium mb-1">Promo Code</label>
@@ -111,7 +236,9 @@
         <span>{{ GetTotal() || 0 }} EGP</span>
       </div>
 
-      <button class=" w-full bg-gradient-to-r from-sky-400 to-blue-600 text-white text-center font-bold py-2 rounded-md shadow">
+      <button 
+        (click)="Checkout()"
+        class=" w-full bg-gradient-to-r from-sky-400 to-blue-600 text-white text-center font-bold py-2 rounded-md shadow">
         Checkout
       </button>
     </div>

@@ -5,6 +5,7 @@ import { CategoryService } from '../../../services/category.service';
 import { Category } from '../../../models/categoryModel';
 import { CartService } from '../../../services/cart.service';
 import { CartProduct } from '../../../models/cartModel';
+import { MessageService } from '../../../services/message.service';
 
 @Component({
   selector: 'app-product-sec1',
@@ -61,6 +62,7 @@ export class ProductSec1Component implements OnInit {
   constructor(
     private categoryService: CategoryService,
     private cartService: CartService,
+    private MsgSer:MessageService
   ) {
     if (typeof window !== 'undefined' && window.localStorage) {
       const storedProduct = localStorage.getItem('product');
@@ -199,5 +201,10 @@ export class ProductSec1Component implements OnInit {
           },
         });
     }
+    if(this.productQuantityInCart>0)
+      this.MsgSer.show(`${this.product.name}'s Quantity increased`);
+    if(this.productQuantityInCart==0 && !this.isOutOfStock)
+      this.MsgSer.show(`${this.product.name} Added To Cart`);
+    
   }
 }

@@ -10,6 +10,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../../services/auth.service';
+import { MessageService } from '../../../../../services/message.service';
 
 @Component({
   selector: 'app-register',
@@ -19,7 +20,7 @@ import { AuthService } from '../../../../../services/auth.service';
   styles: '',
 })
 export class RegisterComponent {
-  constructor(private myService: AuthService, private router: Router) {}
+  constructor(private myService: AuthService, private router: Router,private MsgSer:MessageService) {}
 
   passwordMismatch: boolean = false;
   showPassword = false;
@@ -77,6 +78,7 @@ export class RegisterComponent {
         next: (res) => {
           console.log(res);
           this.router.navigate(['/auth/login']);
+          this.MsgSer.show("Registration Completed. Now you can log in.");
         },
         error: (err) => {
           console.error(err);

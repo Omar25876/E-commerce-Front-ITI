@@ -34,7 +34,6 @@ export class CartComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     if (typeof window !== 'undefined' && window.localStorage) {
       const storedProduct = localStorage.getItem('product');
-      console.log('localstorage: ', storedProduct);
     }
     await this.loadCartData();
   }
@@ -154,5 +153,9 @@ export class CartComponent implements OnInit {
 
   trackByItemId(index: number, item: any): string {
     return item.product.itemId;
+  }
+  show(){
+    console.log("My PrdwithStock");
+    console.log(this.prdWithStock);
   }
 }

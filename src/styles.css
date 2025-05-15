@@ -7,4 +7,24 @@
     -webkit-text-stroke: 0.5px #2F4199;
     color: transparent;
   }
+@keyframes message-slide {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  10%,
+  90% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+.animate-message-slide {
+  animation: message-slide 3s ease-in-out forwards;
+}
+
 }

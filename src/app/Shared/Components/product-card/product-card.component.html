@@ -13,11 +13,11 @@
     >
       <!-- Add to Cart Button -->
       <button
-        class="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-lg hover:bg-sky-400 transition-all duration-300"
+        class="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-lg hover:bg-sky-400 transition-all duration-300 "
         (click)="addToCart(myProduct)"
       >
         <svg
-          class="w-6 h-6 text-black"
+          class="w-6 h-6 text-black hover:text-white"
           fill="none"
           stroke="currentColor"
           stroke-width="2"
@@ -31,24 +31,15 @@
         </svg>
       </button>
 
-      <!-- Wishlist Button -->
+      <!-- Compare Button -->
       <button
         class="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-lg hover:bg-sky-400 transition-all duration-300"
-        (click)="addToWishlist(myProduct)"
+        (click)="addToComparelist(myProduct)"
       >
-        <svg
-          class="w-6 h-6 text-red-500"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.364l-7.682-7.682a4.5 4.5 0 010-6.364z"
-          />
+        <svg class="w-6 h-6 text-gray-800 dark:text-black hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.651 7.65a7.131 7.131 0 0 0-12.68 3.15M18.001 4v4h-4m-7.652 8.35a7.13 7.13 0 0 0 12.68-3.15M6 20v-4h4"/>
         </svg>
+
       </button>
 
       <!-- Quick View Button -->
@@ -57,7 +48,7 @@
         (click)="quickView()"
       >
         <svg
-          class="w-6 h-6 text-gray-500"
+          class="w-6 h-6 text-black hover:text-white "
           fill="none"
           stroke="currentColor"
           stroke-width="2"
