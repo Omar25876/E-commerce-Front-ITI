@@ -1,18 +1,17 @@
-import { ChangeDetectorRef, Component, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
-import { HttpClientModule } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { User } from '../../../models/userModel';
-import { FormsModule } from '@angular/forms';
-import { EventEmitter } from '@angular/core';
 import { SearchService } from '../../../services/search.service';
-import { json } from 'stream/consumers';
+import { ImageService } from '../../../services/image.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
-  providers: [AuthService],
+  standalone: true,
   imports: [
     CommonModule,
     RouterModule,
@@ -22,9 +21,14 @@ import { json } from 'stream/consumers';
   templateUrl: './navbar.component.html',
   styles: ''
 })
-export class NavbarComponent {
-  islogin: boolean = false;
-  dropdownOpen: boolean = false;
+export class NavbarComponent implements OnInit, OnDestroy {
+  isLoggedIn = false;
+  dropdownOpen = false;
+  searchTerm = '';
+  imageUrl = '';
+
+  private destroy$ = new Subject<void>();
+
   user: User = {
     _id: '',
     profileImageUrl: '',
@@ -43,35 +47,51 @@ export class NavbarComponent {
     },
     phone: '',
     gender: 'male',
-    isAdmin: true,
+    isAdmin: false,
     createdAt: '',
     updatedAt: '',
   };
 
-  constructor(private myService: AuthService, private router: Router, private cdRef: ChangeDetectorRef,private searchservice:SearchService) {
-    this.islogin = this.myService.isLoggedIn();
-    console.log(this.islogin);
-    this.user = this.myService.getUserData();
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private searchService: SearchService,
+    private imageService: ImageService
+  ) {}
 
-    console.log(JSON.stringify(this.user));
+  ngOnInit(): void {
+    this.authService.isLoggedIn$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((status) => {
+        this.isLoggedIn = status;
+        if (status) {
+          const userData = this.authService.getUserData();
+          if (userData) {
+            this.user = userData;
+          }
+        }
+      });
+
+    this.imageService.imageUrl$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((url) => {
+        this.imageUrl = url || this.user.profileImageUrl;
+      });
   }
 
-  //Search
-  searchTerm: string = '';
-onSearchChange(query: string): void {
-  this.searchTerm = query;
-  this.searchservice.setSearchTerm(this.searchTerm);
-  if(this.searchTerm.trim() === '') {
-  this.router.navigate(['/search']);
+  onSearchChange(query: string): void {
+    this.searchTerm = query;
+    this.searchService.setSearchTerm(query);
+    if (query.trim() === '') {
+      this.router.navigate(['/search']);
+    }
   }
-  console.log(this.searchTerm);
-}
-GoToPage(): void {
-  if(this.router.url !== '/search') {
-    this.router.navigate(['/search']);
-  }
-}
 
+  GoToPage(): void {
+    if (this.router.url !== '/search') {
+      this.router.navigate(['/search']);
+    }
+  }
 
   toggleDropdown(): void {
     this.dropdownOpen = !this.dropdownOpen;
@@ -82,17 +102,18 @@ GoToPage(): void {
   }
 
   viewProfile(): void {
-    this.dropdownOpen = !this.dropdownOpen;
+    this.toggleDropdown();
     this.router.navigate(['/dashboard']);
-
   }
 
   logout(): void {
-    this.dropdownOpen = !this.dropdownOpen;
-    this.myService.logout(); // Perform logout logic
-    this.cdRef.detectChanges();
+    this.toggleDropdown();
+    this.authService.logout();
+    this.router.navigate(['/auth/login']);
   }
 
-
-
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

@@ -26,6 +26,7 @@ import { AdminOrdersComponent } from './features/admin/admin-orders/admin-orders
 import { AdminAddComponent } from './features/admin/admin-add/admin-add.component';
 import { adminGuard } from './guards/admin.guard';
 import { userGuard } from './guards/user.guard';
+import { CompareComponent } from './features/compare/compare.component';
 
 export const routes: Routes = [
   // Redirect to home by default
@@ -45,6 +46,7 @@ export const routes: Routes = [
 
   //Checkout Route
   {path: 'checkout',component: CheckoutComponent,canActivate: [authGuard],title: 'Checkout'},
+  {path:'compare',loadComponent:()=>import('./features/compare/compare.component').then(c=>CompareComponent),title:'Compare'},
   
   {
     path: 'admin',

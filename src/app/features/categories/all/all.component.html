@@ -6,7 +6,7 @@
 </div>
 
 <!-- بطاقات الأقسام -->
-<div class="flex flex-wrap justify-center gap-16 sm:gap-20 md:gap-26 my-10">
+<div class="flex flex-wrap justify-center gap-12 sm:gap-15 md:gap-20 my-10">
   <button
     *ngFor="let section of AllSections; let i = index"
     [routerLink]="'/search'"
@@ -22,7 +22,7 @@
 
     <!-- السهم -->
     <div
-      class="absolute bottom-2 right-2 bg-sky-400 rounded-full w-7 h-7 flex items-center justify-center text-white text-xl font-bold"
+      class="absolute bottom-2 right-2 bg-gradient-to-r from-sky-400 to-blue-600 hover:bg-blue-600 rounded-full w-7 h-7 flex items-center justify-center text-white text-xl font-bold"
     >
       <span>&gt;</span>
     </div>
@@ -32,7 +32,7 @@
 <div class="container mx-auto mb-10">
   <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
     <h3 class="text-2xl font-bold text-center sm:text-left">All Headphones</h3>
-    <button class="bg-sky-400 hover:bg-sky-500 transition-all text-white font-bold rounded-full px-6 py-2"
+    <button class="bg-gradient-to-r from-sky-400 to-blue-600 hover:bg-blue-600 transition-all text-white font-bold rounded-full px-6 py-2"
     [routerLink]="'/search'"
     >
       Shop Now

@@ -10,7 +10,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   templateUrl: './product.component.html',
   styles: ``
 })
-export class ProductComponent  {
-
-
+export class ProductComponent {
+  constructor() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }

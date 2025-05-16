@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CartService } from './../../../services/cart.service';
 import { CartProduct } from '../../../models/cartModel';
 import { MessageService } from '../../../services/message.service';
+import { CompareService } from '../../../services/compare.service';
 @Component({
   selector: 'app-product-card',
   standalone: true,
@@ -17,7 +18,13 @@ export class ProductCardComponent {
 
   image: string = ''; // Default value for the product image
   rawUrl: string = '';
-  constructor(private router: Router, private cartService: CartService,private MsgSer:MessageService) {}
+  constructor(
+    private router: Router,
+     private cartService: CartService,
+     private MsgSer:MessageService,
+    private compareservice:CompareService,
+
+    ) {}
 
   ngOnInit(): void {
     // Ensure myProduct and imagesAndColors are defined before accessing them
@@ -38,8 +45,6 @@ export class ProductCardComponent {
     this.cartService.getCart().subscribe({
       next: (data) => {
         const cartProducts: CartProduct[] = data;
-        console.log('Cart data:', cartProducts);
-
         // get product in cart
         const matchedProduct = cartProducts.find(
           (prd: CartProduct) => prd.itemId === product._id
@@ -74,7 +79,7 @@ export class ProductCardComponent {
           .subscribe({
             next: (response) => {
               this.MsgSer.show(`${product.name} Added To Cart`);
-              console.log('Item added to cart:', response);
+
             },
             error: (err) => {
               this.MsgSer.show(`Error Adding ${product.name} To Cart`);
@@ -93,6 +98,7 @@ export class ProductCardComponent {
    * @param product - The product to add to the wishlist
    */
   addToComparelist(product: any): void {
+    this.compareservice.addToCompare(product)
     console.log('Added to CompareList:', product);
     // Add logic to handle adding the product to the wishlist
   }
