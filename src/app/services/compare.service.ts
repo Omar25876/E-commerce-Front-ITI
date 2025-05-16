@@ -1,7 +1,7 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { MessageService } from './message.service';
 import { BehaviorSubject } from 'rxjs';
-import { json } from 'stream/consumers';
 
 @Injectable({
   providedIn: 'root'
@@ -9,18 +9,29 @@ import { json } from 'stream/consumers';
 export class CompareService {
   private compareProducts = new BehaviorSubject<any[]>([]);
   compareProducts$ = this.compareProducts.asObservable();
+  private isBrowser: boolean;
 
-  constructor(private msg: MessageService) {
-    const stored = localStorage.getItem('CompareList');
-    if (stored) {
-      this.compareProducts.next(JSON.parse(stored))
+  constructor(
+    private msg: MessageService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+
+    if (this.isBrowser) {
+      const stored = localStorage.getItem('CompareList');
+      if (stored) {
+        this.compareProducts.next(JSON.parse(stored));
+      }
     }
   }
 
-  private updateStorage(product: any[]) {
-    localStorage.setItem('CompareList', JSON.stringify(product))
-    this.compareProducts.next(product)
+  private updateStorage(products: any[]) {
+    if (this.isBrowser) {
+      localStorage.setItem('CompareList', JSON.stringify(products));
+    }
+    this.compareProducts.next(products);
   }
+
   setCompareProducts(products: any[]) {
     this.updateStorage(products);
   }
@@ -41,7 +52,6 @@ export class CompareService {
       this.msg.show(`${product.name} is already in the compare list.`);
     }
   }
-
 
   getCompare() {
     return this.compareProducts.getValue();

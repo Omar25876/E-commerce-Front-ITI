@@ -130,10 +130,10 @@ export class SearchContentComponent implements OnInit, OnChanges {
 
     // Brand filter (case-insensitive)
     if (this.filters.selectedBrands && this.filters.selectedBrands.length > 0) {
-      const BrandsId = this.filters.selectedBrands.map((b: { _id: string }) => b._id?.toLowerCase());
+      const brandName = this.filters.selectedBrands.map((b: { name: string }) => b.name?.toLowerCase());
       // console.log('brandName',name);
       filtered = filtered.filter(product =>
-        product.brand?.toLowerCase() === BrandsId.find((brand: string) => brand === product.brand?.toLowerCase())
+        product.brand?.toLowerCase() === brandName.find((brand: string) => brand === product.brand?.toLowerCase())
       );
     }
 
