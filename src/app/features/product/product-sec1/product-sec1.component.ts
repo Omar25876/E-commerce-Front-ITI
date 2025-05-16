@@ -11,7 +11,6 @@ import { MessageService } from '../../../services/message.service';
   selector: 'app-product-sec1',
   templateUrl: './product-sec1.component.html',
   styles: '',
-  // providers: [CategoryService],
   providers: [CategoryService, CartService],
   imports: [CommonModule],
 })
@@ -59,16 +58,19 @@ export class ProductSec1Component implements OnInit {
   enteredQuantity: number = 1;
   productQuantityInCart: number = 0;
   remainingProduct: number = 0;
+  TotalQuantity:number=0;
+
   constructor(
     private categoryService: CategoryService,
     private cartService: CartService,
-    private MsgSer:MessageService
+    private MsgSer: MessageService
   ) {
     if (typeof window !== 'undefined' && window.localStorage) {
       const storedProduct = localStorage.getItem('product');
+      console.log("storedProduct :");
+      console.log(storedProduct);
       if (storedProduct) {
         this.product = JSON.parse(storedProduct);
-        // Ensure product.colors is defined and assign it to productColors
         this.productColors = this.product.imagesAndColors
           ? Object.keys(this.product.imagesAndColors)
           : [];
@@ -91,53 +93,29 @@ export class ProductSec1Component implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.product.category) {
-      this.categoryService.getCategoryById(this.product.category).subscribe({
-        next: (category) => {
-          this.categoryName = category.categoryName;
-          console.log(this.categoryName);
-          console.log(category);
-        },
-        error: (err) => {
-          console.error('Error fetching category:', err);
-        },
-      });
-    } else {
-      console.error('Product category is undefined or invalid.');
-    }
     this.getQuantityInCart();
-    this.remainingProduct =
-      this.product.stock - this.enteredQuantity - this.productQuantityInCart;
   }
 
   getQuantityInCart() {
-    let cartProducts: CartProduct[];
-    this.cartService.getCart().subscribe({
-      next: (data) => {
-        cartProducts = data;
-        console.log('Cart data:', cartProducts);
+  const cartProducts = this.cartService.getCartFromLocalStorage();
 
-        const matchedProduct = cartProducts.find(
-          (prd: CartProduct) => prd.itemId === this.product._id
-        );
+  // get the quantity whatever the color is
+  const matchingProducts = cartProducts.filter(
+    (prd: CartProduct) => prd.itemId === this.product._id
+  );
+  
+  this.productQuantityInCart = matchingProducts.reduce(
+    (total, prd) => total + prd.quantity,0
+  );
 
-        if (matchedProduct) {
-          this.productQuantityInCart = matchedProduct.quantity;
-          console.log('Matched product quantity:', this.productQuantityInCart);
-        } else {
-          this.productQuantityInCart = 0;
-          console.log('Product not found in cart.');
-        }
+  this.isOutOfStock = this.productQuantityInCart >= this.product.stock;
+  this.remainingProduct = this.product.stock - this.productQuantityInCart;
+  console.log("Remaining Product:0");
+  console.log(this.remainingProduct);
+  this.enteredQuantity = 0;
+}
 
-        this.isOutOfStock = this.productQuantityInCart >= this.product.stock;
-        this.remainingProduct = this.product.stock - this.productQuantityInCart;
-        this.enteredQuantity = this.productQuantityInCart;
-      },
-      error: (err) => {
-        console.error('Error fetching cart:', err);
-      },
-    });
-  }
+
   selectImage(image: string): void {
     this.selectedImage = image;
   }
@@ -145,7 +123,6 @@ export class ProductSec1Component implements OnInit {
   selectColor(color: string): void {
     this.selectedColor = color;
 
-    // Update the selected image based on the selected color
     if (this.product.imagesAndColors[color]) {
       this.selectedImage = this.product.imagesAndColors[color]
         .replace('github.com', 'raw.githubusercontent.com')
@@ -156,55 +133,71 @@ export class ProductSec1Component implements OnInit {
   increaseQuantity(): void {
     if (this.enteredQuantity < (this.product.stock || 0)) {
       this.enteredQuantity++;
-       this.remainingProduct =
-      this.product.stock - this.enteredQuantity;
     }
   }
 
   decreaseQuantity(): void {
     if (this.enteredQuantity > 1) {
       this.enteredQuantity--;
-       this.remainingProduct =
-      this.product.stock - this.enteredQuantity;
     }
   }
-  clickAddtoCart(): void {
-    console.log('Trying to add item to cart...');
 
-    // stock check
-    this.getQuantityInCart();
+ clickAddtoCart(): void {
+  console.log('Trying to add item to cart...');
 
-    console.log('▶ this.isOutOfStock', this.isOutOfStock);
-    console.log('▶ this.productQuantityInCart', this.productQuantityInCart);
-    console.log('▶ this.product.stock', this.product.stock);
-    if (this.isOutOfStock) {
-      console.log('No addition');
+  const cartProducts = this.cartService.getCartFromLocalStorage();
+  
+  const matchedProduct = cartProducts.find(
+    (prd: CartProduct) =>
+      prd.itemId === this.product._id && prd.selectedColor === this.selectedColor
+  );
 
-      // console.log(storedProduct);
-      // disable addition button and make the text be Out of stock
+  const quantityInCart = matchedProduct ? matchedProduct.quantity : 0;
+
+  const quantityToAdd = this.enteredQuantity - quantityInCart;
+
+  if (this.product.stock <= quantityInCart) {
+    console.log('No addition, product is out of stock');
+    this.MsgSer.show(`Sorry, ${this.product.name}(${this.product.selectedColor}) is out of stock.`);
+    return;
+  }
+
+  if (quantityToAdd <= 0) {
+    this.MsgSer.show(`Quantity already in cart is up to date.`);
+    return;
+  }
+
+  try {
+    // Add to local storage cart
+     this.cartService.addItemToCart(
+      this.product._id,
+      quantityToAdd,
+      this.product.price,
+      this.product.name,
+      this.selectedColor,
+      this.selectedImage,
+      this.product.brand,
+      this.product.stock
+    );
+
+    // Update UI state
+    this.productQuantityInCart = quantityInCart + quantityToAdd;
+
+    if (quantityInCart > 0) {
+      this.MsgSer.show(`${this.product.name}(${this.product.selectedColor})'s quantity increased.`);
+      this.TotalQuantity += quantityToAdd;
+      this.remainingProduct= this.product.stock - this.TotalQuantity;
+      this.enteredQuantity=0;
     } else {
-      console.log('yes addition');
-      this.cartService
-        .addItemToCart(
-          this.product._id,
-          this.enteredQuantity - this.productQuantityInCart,
-          this.product.price,
-          this.product.name,
-          this.selectedColor,
-          this.selectedImage,
-          this.product.brand
-        )
-        .subscribe({
-          next: (response) => {
-            console.log('Item added successfully:', response);
-            this.getQuantityInCart();
-          },
-        });
+      this.MsgSer.show(`${this.product.name}(${this.selectedColor}) added to cart.`);
+      this.TotalQuantity +=quantityToAdd;
+      this.remainingProduct= this.product.stock - this.TotalQuantity;
+      this.enteredQuantity=0;
     }
-    if(this.productQuantityInCart>0)
-      this.MsgSer.show(`${this.product.name}'s Quantity increased`);
-    if(this.productQuantityInCart==0 && !this.isOutOfStock)
-      this.MsgSer.show(`${this.product.name} Added To Cart`);
-    
+  } catch (err) {
+    console.error('Error adding item to cart:', err);
+    this.MsgSer.show(`Error adding ${this.product.name}(${this.selectedColor}) to cart.`);
   }
+}
+
 }

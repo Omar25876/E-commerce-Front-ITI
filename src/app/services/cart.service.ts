@@ -1,78 +1,89 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable,BehaviorSubject } from 'rxjs';
-import { AuthService } from './auth.service';
 import { CartProduct } from '../models/cartModel';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
-  private apiUrl = 'http://localhost:5000/api/cart';
+  private apiUrl = 'http://localhost:5000/api';
 
-  userData: any;
-  userId: string = '';
+  constructor(private http: HttpClient) {}
 
-  private prdWithStockSubject = new BehaviorSubject<any[]>([]);
-  prdWithStock$ = this.prdWithStockSubject.asObservable();
-
-  setPrdWithStock(prdWithStock: any[]) {
-    this.prdWithStockSubject.next(prdWithStock);
+  getCartFromLocalStorage(): CartProduct[] {
+    const cartData = localStorage.getItem('cartProducts');
+    return cartData ? JSON.parse(cartData) : [];
   }
 
-  getCartTotal(prdWithStock: any[]): number {
-    return prdWithStock.reduce((total, item) => {
-      const price = item.product?.price || 0;
-      const quantity = item.product?.quantity || 0;
-      return total + price * quantity;
-    }, 0);
+  saveCartToLocalStorage(cartProducts: CartProduct[]) {
+    localStorage.setItem('cartProducts', JSON.stringify(cartProducts));
   }
-  
-
-  constructor(private http: HttpClient, private authservice: AuthService) {
-    this.userData = this.authservice.getUserData();
-    if (this.userData && this.userData._id) {
-    this.userId = this.userData._id;
-  } else {
-    console.warn('CartService: No user data available.');
-    // Optional: Redirect to login or show an error
-  }
+  EmptyCart(){
+    localStorage.removeItem('cartProducts');
   }
 
-  // Get cart for a specific user
-  getCart() {
-    return this.http.get<CartProduct[]>(`${this.apiUrl}/${this.userId}`);
-  }
-
-  // Add an item to the cart
-  addItemToCart(
+  async addItemToCart(
     itemId: string,
     quantity: number,
     price: number,
     name: string,
     selectedColor: any,
     image: string,
-    brandId: string
-  ): Observable<any> {
-    const payload = {
-      itemId,
-      quantity,
-      name,
-      price,
-      selectedColor,
-      image,
-      brandId,
-    };
-    console.log(
-      `cart service : ${this.apiUrl}/${this.userId}/items\n`,
-      'payload : ',
-      payload
+    brandId: string,
+    stock:number
+  ): Promise<void> {
+    const cart = this.getCartFromLocalStorage();
+    const existingItemIndex = cart.findIndex(
+      item => item.itemId === itemId && item.selectedColor === selectedColor
     );
-    return this.http.post(`${this.apiUrl}/${this.userId}/items`, payload);
+
+    if (existingItemIndex !== -1) {
+      cart[existingItemIndex].quantity += quantity;
+      this.saveCartToLocalStorage(cart);
+      return;
+    }
+
+    try {
+      // Fetch brand name from API
+      const brand = await firstValueFrom(
+        this.http.get<{name: string}>(`${this.apiUrl}/brand/${brandId}`)
+      );
+
+      const newItem: CartProduct = {
+        itemId,
+        quantity,
+        price,
+        name,
+        selectedColor,
+        image,
+        brandId,
+        brand: brand.name,
+        stock
+      };
+
+      cart.push(newItem);
+      this.saveCartToLocalStorage(cart);
+    } catch (error) {
+      console.error('Failed to fetch brand:', error);
+    }
   }
 
-  // remove an item from the cart
-  removeItemFromCart(itemId: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${this.userId}/items/${itemId}`);
+  removeItemFromCart(itemId: string, selectedColor: any): void {
+  let cart = this.getCartFromLocalStorage();
+  cart = cart.filter(
+    item => !(item.itemId === itemId && JSON.stringify(item.selectedColor) === JSON.stringify(selectedColor))
+  );
+  this.saveCartToLocalStorage(cart);
+}
+
+
+  getCartTotal(): number {
+    const cart = this.getCartFromLocalStorage();
+    return cart.reduce((total, item) => {
+      const price = item.price || 0;
+      const quantity = item.quantity || 0;
+      return total + price * quantity;
+    }, 0);
   }
 }

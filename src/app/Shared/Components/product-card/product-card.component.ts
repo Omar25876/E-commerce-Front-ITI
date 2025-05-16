@@ -1,110 +1,94 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CartService } from './../../../services/cart.service';
 import { CartProduct } from '../../../models/cartModel';
 import { MessageService } from '../../../services/message.service';
+
 @Component({
   selector: 'app-product-card',
   standalone: true,
   imports: [CommonModule],
   providers: [CartService],
   templateUrl: './product-card.component.html',
-  styles: '',
 })
-export class ProductCardComponent {
-  @Input() myProduct: any; // Input property to receive product data
-
-  image: string = ''; // Default value for the product image
+export class ProductCardComponent implements OnInit {
+  @Input() myProduct: any;
+  image: string = '';
   rawUrl: string = '';
-  constructor(private router: Router, private cartService: CartService,private MsgSer:MessageService) {}
+
+  constructor(
+    private router: Router,
+    private cartService: CartService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {
-    // Ensure myProduct and imagesAndColors are defined before accessing them
-    if (this.myProduct && this.myProduct.imagesAndColors) {
+    this.setDefaultImage();
+  }
+
+  private setDefaultImage(): void {
+    if (this.myProduct?.imagesAndColors) {
       const firstColorKey = Object.keys(this.myProduct.imagesAndColors)[0];
-      this.image = this.myProduct.imagesAndColors[firstColorKey] || ''; // Set the first image
+      this.image = this.myProduct.imagesAndColors[firstColorKey] || '';
       this.rawUrl = this.image
         .replace('github.com', 'raw.githubusercontent.com')
         .replace('/blob/', '/');
     }
   }
 
-  /**
-   * Add the product to the cart
-   * @param product - The product to add to the cart
-   */
   addToCart(product: any): void {
-    this.cartService.getCart().subscribe({
-      next: (data) => {
-        const cartProducts: CartProduct[] = data;
-        console.log('Cart data:', cartProducts);
+    try {
+      const cart: CartProduct[] = this.cartService.getCartFromLocalStorage();
 
-        // get product in cart
-        const matchedProduct = cartProducts.find(
-          (prd: CartProduct) => prd.itemId === product._id
-        );
+      // Check if product is already in cart
+      const alreadyInCart = cart.find((p) => p.itemId === product._id && p.quantity > 0);
 
-        if (
-          matchedProduct &&
-          matchedProduct.quantity !== 0 &&
-          matchedProduct.quantity !== undefined
-        ) {
-          // If the product is already in the cart and its quantity is not 0 or undefined, do nothing
-          console.log('Product already in cart, skipping add.');
-          this.MsgSer.show(product.name+" Is Already in The Cart");
-          return;
-        }
+      if (alreadyInCart) {
+        this.messageService.show(`${product.name}(${product.selectedColor}) is already in the cart.`);
+        return;
+      }
 
-        this.cartService
-          .addItemToCart(
-            product._id,
-            1,
-            product.price,
-            product.name,
-            product.selectedColor,
-            product.imagesAndColors[product.selectedColor.toLowerCase()]
-              .replace(
-                'https://github.com/',
-                'https://raw.githubusercontent.com/'
-              )
-              .replace('/blob/', '/'),
-            product.brand
-          )
-          .subscribe({
-            next: (response) => {
-              this.MsgSer.show(`${product.name} Added To Cart`);
-              console.log('Item added to cart:', response);
-            },
-            error: (err) => {
-              this.MsgSer.show(`Error Adding ${product.name} To Cart`);
-              console.error('Error adding item to cart:', err);
-            },
-          });
-      },
-      error: (err) => {
-        console.error('Error fetching cart:', err);
-      },
-    });
+      const imageUrl = this.getProductImageUrl(product);
+
+      // Add item to cart synchronously
+      console.log(product);
+      this.cartService.addItemToCart(
+        product._id,
+        1,
+        product.price,
+        product.name,
+        product.selectedColor,
+        imageUrl,
+        product.brand,
+        product.stock
+      );
+
+      this.messageService.show(`${product.name}(${product.selectedColor}) added to cart.`);
+    } catch (err) {
+      console.error('Error adding item to cart:', err);
+      this.messageService.show(`Error adding ${product.name} to cart.`);
+    }
   }
 
-  /**
-   * Add the product to the wishlist
-   * @param product - The product to add to the wishlist
-   */
+  private getProductImageUrl(product: any): string {
+    const image = product.imagesAndColors?.[product.selectedColor?.toLowerCase()];
+    return image
+      ? image
+          .replace('https://github.com/', 'https://raw.githubusercontent.com/')
+          .replace('/blob/', '/')
+      : '';
+  }
+
+  // Other methods remain unchanged
   addToComparelist(product: any): void {
     console.log('Added to CompareList:', product);
-    // Add logic to handle adding the product to the wishlist
   }
 
-  /**
-   * Navigate to the product's quick view page
-   */
   quickView(): void {
-    console.log('Quick view:', this.myProduct);
     if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.setItem('product', JSON.stringify(this.myProduct)); // Store product in localStorage
-      this.router.navigate(['/product', this.myProduct._id]); // Navigate to the product page
+      localStorage.setItem('product', JSON.stringify(this.myProduct));
+      this.router.navigate(['/product', this.myProduct._id]);
     }
   }
 }

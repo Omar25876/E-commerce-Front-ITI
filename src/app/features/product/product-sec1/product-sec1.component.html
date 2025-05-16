@@ -143,12 +143,12 @@
               class="text-xl font-bold px-2"
               [ngClass]="{
                 'hover:text-sky-500 text-black':
-                  !isOutOfStock && enteredQuantity < product.stock,
+                  !isOutOfStock && enteredQuantity < remainingProduct,
                 'text-gray-400 cursor-not-allowed':
-                  isOutOfStock || enteredQuantity >= product.stock
+                  isOutOfStock || enteredQuantity >= remainingProduct
               }"
               (click)="increaseQuantity()"
-              [disabled]="isOutOfStock || enteredQuantity >= product.stock"
+              [disabled]="isOutOfStock || enteredQuantity >= remainingProduct"
             >
               +
             </button>
@@ -163,22 +163,24 @@
             </ng-template>
           </p>
         </div>
-        <button
-          class="w-full sm:w-1/2 text-lg font-bold py-3 rounded-full transition duration-300 shadow-lg"
-          [ngClass]="{
-            'bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-500 hover:to-blue-700 text-white':
-              !isOutOfStock,
-            'bg-gray-400 cursor-not-allowed': isOutOfStock
-          }"
-          [disabled]="
-            isOutOfStock ||
-            enteredQuantity === 0 ||
-            enteredQuantity > product.stock
-          "
-          (click)="clickAddtoCart()"
-        >
-          {{ isOutOfStock ? "Out of Stock" : "Add To Cart" }}
-        </button>
+            <button
+              class="w-full sm:w-1/2 text-lg font-bold py-3 rounded-full transition duration-300 shadow-lg"
+              [ngClass]="{
+                'bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-500 hover:to-blue-700 text-white':
+                  !isOutOfStock && remainingProduct > 0,
+                'bg-gray-400 cursor-not-allowed':
+                  isOutOfStock || remainingProduct === 0
+              }"
+              [disabled]="
+                isOutOfStock ||
+                enteredQuantity === 0 ||
+                remainingProduct === 0
+              "
+              (click)="clickAddtoCart()"
+            >
+              {{ remainingProduct > 0 ? 'Add To Cart' : 'Out of Stock' }}
+            </button>
+
       </div>
     </div>
   </div>
