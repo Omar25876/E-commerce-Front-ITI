@@ -1,38 +1,92 @@
 <div class="p-6">
   <h2 class="text-2xl font-bold mb-4">My Payment Cards</h2>
 
-  <div class="bg-gray-100 p-6 rounded-2xl grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div
+    class="bg-gray-100 p-6 rounded-2xl grid grid-cols-1 md:grid-cols-2 gap-6"
+  >
     <!-- Card Template -->
     <div
-        *ngFor="let card of data"  class="relative group bg-gradient-to-tr from-blue-800 to-blue-500 text-white rounded-xl p-6 space-y-3 shadow-lg transition-transform duration-200 hover:scale-105 hover:shadow-2xl"
+      *ngFor="let card of cardList"
+      class="relative group bg-gradient-to-tr from-blue-800 to-blue-500 text-white rounded-xl p-6 space-y-3 shadow-lg transition-transform duration-200 hover:scale-105 hover:shadow-2xl"
     >
       <div class="flex justify-between items-center">
         <span class="text-lg font-semibold">Credit Card</span>
         <span class="text-sm">Bank Masr</span>
       </div>
-      <div class="text-2xl font-mono tracking-widest select-none">XXXX XXXX XXXX {{card.cardNumber.slice(-4)}}</div>
+
+      <!-- Card Number -->
+      <input
+        type="text"
+        [readOnly]="!card.editable"
+        [placeholder]="card.cardNumber ? 'XXXX XXXX XXXX ' + card.cardNumber.slice(-4) : '0000 0000 0000 0000'"
+        class="w-full text-2xl font-mono mb-0 text-center px-1 py-1 border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent"
+        [(ngModel)]="cardNumber"
+      />
+
       <div class="text-sm flex justify-between items-center">
-       <span class="text-sm">CVV</span>
-        <img src="Images/Profile/sim card.png" alt="Sim Card" class="w-8 h-6">
+        <!-- CVV -->
+        <input
+          class="text-sm px-1 py-1 border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent"
+          [(ngModel)]="cvv"
+          [readOnly]="!card.editable"
+          placeholder="{{ card.cvv || 'CVV' }}"
+        />
+        <img src="Images/Profile/sim card.png" alt="Sim Card" class="w-8 h-6" />
       </div>
+
       <div class="flex justify-between text-xs items-end">
-        <div class="font-semibold">{{card.cardHolderName}}</div>
+        <!-- Card Holder Name -->
+        <input
+          type="text"
+          [placeholder]="card.cardHolderName || 'Card Holder'"
+          class="font-semibold px-1 py-1 border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent"
+          [(ngModel)]="cardHolderName"
+          [readOnly]="!card.editable"
+        />
         <div class="text-right">
           <span class="block">VALID</span>
-          <span class="block">THRU ▶ {{card.expiryDate}}</span>
+          <span>THRU ▶</span>
+          <!-- Expiry Date -->
+          <input
+            type="text"
+            [placeholder]="card.expiryDate || 'MM/YY'"
+            [(ngModel)]="expiryDate"
+            [readOnly]="!card.editable"
+            class="w-[50px] border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent"
+          />
         </div>
       </div>
+
       <!-- Action Buttons -->
-      <div class="absolute bottom-2/7 left-1/2 transform -translate-x-1/2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none group-hover:pointer-events-auto">
-        <button class="w-12 h-12 bg-white text-black p-2 rounded-full shadow-md hover:bg-gray-200">
+      <div
+        class="absolute bottom-2/7 left-1/2 transform -translate-x-1/2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none group-hover:pointer-events-auto"
+        *ngIf="!card.editable"
+      >
+        <button
+          class="w-12 h-12 bg-white text-black p-2 rounded-full shadow-md hover:bg-gray-200"
+          (click)="editCard(card)"
+        >
           ✏️
         </button>
-        <button class="w-12 h-12 bg-red-300 text-white p-2 rounded-full shadow-md hover:bg-red-700">
+        <button
+          class="w-12 h-12 bg-red-300 text-white p-2 rounded-full shadow-md hover:bg-red-700"
+          (click)="removeCard(card)"
+        >
           ❌
         </button>
       </div>
+
+      <div
+        class="absolute bottom-1/7 left-1/2 transform -translate-x-1/2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none group-hover:pointer-events-auto"
+        *ngIf="card.editable"
+      >
+        <button
+          class="w-12 h-12 bg-white text-black p-2 rounded-full shadow-md hover:bg-gray-200"
+          (click)="confirmEdit(card)"
+        >
+          ✔️
+        </button>
+      </div>
     </div>
-
-
   </div>
 </div>

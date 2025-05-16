@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { CartService } from './../../../services/cart.service';
 import { CartProduct } from '../../../models/cartModel';
 import { MessageService } from '../../../services/message.service';
-
+import { CompareService } from '../../../services/compare.service';
 @Component({
   selector: 'app-product-card',
   standalone: true,
@@ -16,12 +16,13 @@ export class ProductCardComponent implements OnInit {
   @Input() myProduct: any;
   image: string = '';
   rawUrl: string = '';
-
   constructor(
     private router: Router,
-    private cartService: CartService,
-    private messageService: MessageService
-  ) {}
+     private cartService: CartService,
+     private MsgSer:MessageService,
+    private compareservice:CompareService,
+
+    ) {}
 
   ngOnInit(): void {
     this.setDefaultImage();
@@ -45,7 +46,7 @@ export class ProductCardComponent implements OnInit {
       const alreadyInCart = cart.find((p) => p.itemId === product._id && p.quantity > 0);
 
       if (alreadyInCart) {
-        this.messageService.show(`${product.name}(${product.selectedColor}) is already in the cart.`);
+        this.MsgSer.show(`${product.name}(${product.selectedColor}) is already in the cart.`);
         return;
       }
 
@@ -64,10 +65,10 @@ export class ProductCardComponent implements OnInit {
         product.stock
       );
 
-      this.messageService.show(`${product.name}(${product.selectedColor}) added to cart.`);
+      this.MsgSer.show(`${product.name}(${product.selectedColor}) added to cart.`);
     } catch (err) {
       console.error('Error adding item to cart:', err);
-      this.messageService.show(`Error adding ${product.name} to cart.`);
+      this.MsgSer.show(`Error adding ${product.name} to cart.`);
     }
   }
 
@@ -82,6 +83,7 @@ export class ProductCardComponent implements OnInit {
 
   // Other methods remain unchanged
   addToComparelist(product: any): void {
+    this.compareservice.addToCompare(product)
     console.log('Added to CompareList:', product);
   }
 

@@ -24,6 +24,10 @@ export class AccountService {
     return this.myHttp.delete(this.url);
   }
 
+  deletePaymentCard(id: string) {
+    return this.myHttp.delete(`${this.url}/payment-card/${id}`);
+  }
+
 
 
 }
