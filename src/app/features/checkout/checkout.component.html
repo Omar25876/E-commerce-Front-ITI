@@ -3,21 +3,21 @@
       <p class="text-xl font-bold">Choose Payment Type:</p>
 
       <div class="flex gap-4 ml-7 mt-2 items-center">
-        <input 
-          type="radio" 
-          id="COD" 
+        <input
+          type="radio"
+          id="COD"
           name="paymentType"
           value="COD"
-          [(ngModel)]="selectedPayment" 
+          [(ngModel)]="selectedPayment"
           class="w-6 h-6 accent-gradient bg-gradient-to-r from-sky-400 to-blue-600"
         />
         <label for="COD" class="text-lg font-medium">Cash On Delivery (COD)</label>
       </div>
 
       <div class="flex gap-4 ml-7 items-center">
-        <input 
-          type="radio" 
-          id="Credit" 
+        <input
+          type="radio"
+          id="Credit"
           name="paymentType"
           value="Credit"
           [(ngModel)]="selectedPayment"
@@ -26,16 +26,16 @@
         <label for="Credit" class="text-lg font-medium">Credit Card</label>
       </div>
       @if(selectedPayment=="Confuse"){
-        <img 
-        src="Images/Checkout Page/Confuse.png" 
-        class="w-full" 
+        <img
+        src="Images/Checkout Page/Confuse.png"
+        class="w-full"
         alt="Payment Method"
       />
       }
        @if(selectedPayment=="COD"){
-        <img 
-        src="Images/Checkout Page/Delivery.png" 
-        class="w-full" 
+        <img
+        src="Images/Checkout Page/Delivery.png"
+        class="w-full"
         alt="Payment Method"
       />
         }
@@ -49,43 +49,43 @@
               <span class="text-sm">Bank Masr</span>
             </div>
             <img src="Images/Icons/sim card.png" class="max-w-[50px] ml-1"/>
-            <input 
-              type="text" 
+            <input
+              type="text"
               readonly
-              class="w-[100%] text-2xl font-mono mb-0 tracking-widest px-1 py-1 border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent" 
+              class="w-[100%] text-2xl font-mono mb-0 tracking-widest px-1 py-1 border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent"
               [value]="CurrentCard.cardNumber ? 'XXXX XXXX XXXX '+CurrentCard.cardNumber.slice(-4):'0000 0000 0000 0000'"/>
             <input
               class="text-sm px-1 py-1 border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent"
-              [value]="(CurrentCard.cvv||CurrentCard.cvv=='') ? 'CVV' : '000'" 
+              [value]="(CurrentCard.cvv||CurrentCard.cvv=='') ? 'CVV' : '000'"
               readonly
               />
 
             <div class="flex justify-between text-xs items-end">
-              <input 
-                type="text" 
-                class="font-semibold px-1 py-1 border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent" 
-                [value]="CurrentCard.cardHolderName" 
+              <input
+                type="text"
+                class="font-semibold px-1 py-1 border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent"
+                [value]="CurrentCard.cardHolderName"
                 readonly/>
 
               <div class="flex flex-col items-end">
                 <span class="w-fit">VALID</span>
                 <div class="flex gap-1">
                   <span>THRU ▶</span>
-                  <input 
-                    type="text" 
-                    [value]="CurrentCard.expiryDate" 
+                  <input
+                    type="text"
+                    [value]="CurrentCard.expiryDate"
                     readonly
                     class="w-[33px] border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent" />
                 </div>
               </div>
             </div>
-            
+
           </div>
-          
+
           <div class="flex gap-4 mx-auto mt-2">
               <div class="p-[2px] rounded bg-gradient-to-r from-blue-800 to-blue-500 inline-block shadow-md">
                 <button
-                (click)="Prev()" 
+                (click)="Prev()"
                 class="bg-white rounded px-4 py-2 text-lg text-blue-800 hover:bg-gradient-to-r from-blue-800 to-blue-500 transition hover:text-white hover:font-bold">
                   Prev
                 </button>
@@ -96,7 +96,7 @@
                 </button>
               </div>
               <div class="p-[2px] rounded bg-gradient-to-r from-blue-800 to-blue-500 inline-block shadow-md">
-                <button 
+                <button
                 (click)="Next()"
                 class="bg-white rounded px-4 py-2 text-lg text-blue-800 hover:bg-gradient-to-r from-blue-800 to-blue-500 transition hover:text-white hover:font-bold">
                   Next
@@ -107,7 +107,7 @@
 
     </div>
 
-    
+
     <div class="bg-[#F6F6F6] mb-6 p-6 rounded-xl shadow-sm w-full lg:w-80 space-y-4 min-w-0">
       <h3 class="font-semibold text-lg border-b pb-2">Order Summary</h3>
       <div class="flex justify-between text-sm">
@@ -118,8 +118,8 @@
       <div>
         <label class="block text-sm font-medium mb-1">Shipping</label>
         <!-- Add this in your template -->
-          <select 
-            [(ngModel)]="selectedDelivery" 
+          <select
+            [(ngModel)]="selectedDelivery"
             class="w-full border px-2 pr-2.5 py-1 rounded text-sm bg-gray-50"
             >
             <option [value]="30">Standard Delivery - 30 EGP</option>
@@ -133,7 +133,7 @@
       <!-- City & Street -->
       <div class="flex gap-2.5">
         <!-- City Select -->
-        <select 
+        <select
           [(ngModel)]="user.address.city"
           [disabled]="HasAAddress()"
           name="city"
@@ -149,9 +149,9 @@
           <option value="Aswan">Aswan</option>
           <option value="Sohag">Sohag</option>
         </select>
-      
+
         <!-- Street Input (Only letters allowed) -->
-        <input 
+        <input
           type="text"
           name="street"
           required
@@ -169,11 +169,11 @@
           Street is required and must contain only letters.
         </div>
       </div>
-    
+
       <!-- Building & Apartment Number -->
       <div class="flex gap-2.5 mt-2">
         <!-- Building Number -->
-        <input 
+        <input
           type="number"
           name="bnum"
           required
@@ -184,9 +184,9 @@
           class="w-[50%] px-2 border py-1 rounded text-sm bg-gray-50"
           placeholder="Building Num"
         />
-      
+
         <!-- Apartment Number -->
-        <input 
+        <input
           type="text"
           name="apart"
           required
@@ -207,14 +207,14 @@
         </div>
       </div>
 
-      <button 
-        *ngIf="!HasAAddress()" 
+      <button
+        *ngIf="!HasAAddress()"
         class="mt-2 bg-gradient-to-r from-sky-400 to-blue-600 py-2 px-3 text-md text-white font-bold rounded-sm"
         (click)="AppyPromo()">
         Save
       </button>
-    
-    
+
+
     </div>
 
       <div>
@@ -236,7 +236,7 @@
         <span>{{ GetTotal() || 0 }} EGP</span>
       </div>
 
-      <button 
+      <button
         (click)="Checkout()"
         class=" w-full bg-gradient-to-r from-sky-400 to-blue-600 text-white text-center font-bold py-2 rounded-md shadow">
         Checkout

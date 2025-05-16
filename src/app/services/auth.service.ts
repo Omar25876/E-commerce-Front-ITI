@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { StorageService } from './storage.service';
+import { BehaviorSubject, Observable, tap, catchError, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,11 +10,18 @@ import { StorageService } from './storage.service';
 export class AuthService {
   private URL = 'http://localhost:5000/api';
 
+  private _isLoggedIn = new BehaviorSubject<boolean>(false);
+  isLoggedIn$ = this._isLoggedIn.asObservable();
+
   constructor(
     private myHTTPClient: HttpClient,
     private router: Router,
     private storage: StorageService
-  ) {}
+  ) {
+    // Check login status on service init
+    const token = this.getToken();
+    this._isLoggedIn.next(!!token && !this.isTokenExpired());
+  }
 
   // Register User
   registerUser(userData: any) {
@@ -21,8 +29,23 @@ export class AuthService {
   }
 
   // Login User
-  loginUser(userData: any) {
-    return this.myHTTPClient.post(`${this.URL}/login`, userData);
+  loginUser(userData: any): Observable<any> {
+    return this.myHTTPClient.post(`${this.URL}/login`, userData).pipe(
+      tap((res: any) => {
+        if (res.token) {
+          this._isLoggedIn.next(true);
+          this.saveToken(res.token);
+          this.saveUserData(res.user);
+        } else {
+          this._isLoggedIn.next(false);
+          throw new Error('Invalid login response: token missing.');
+        }
+      }),
+      catchError((err) => {
+        this._isLoggedIn.next(false);
+        return throwError(() => err);
+      })
+    );
   }
 
   // Save Token to Local Storage
@@ -40,54 +63,50 @@ export class AuthService {
     this.storage.removeItem('token');
   }
 
-  // Check if User is Logged In
+  // Check if Token is Expired
+  isTokenExpired(): boolean {
+    const token = this.getToken();
+    if (!token) return true;
+
+    try {
+      const decoded = JSON.parse(atob(token.split('.')[1]));
+      const exp = new Date(0);
+      exp.setUTCSeconds(decoded.exp);
+      return exp < new Date();
+    } catch (e) {
+      console.error('Invalid token:', e);
+      return true;
+    }
+  }
+
+  // Manual Login Check (Optional)
   isLoggedIn(): boolean {
-    return !this.isTokenExpired();
+    return !!this.getToken() && !this.isTokenExpired();
   }
 
   // Logout User
   logout(): void {
     this.removeToken();
     this.removeUserData();
+    this._isLoggedIn.next(false);
     this.router.navigateByUrl('/auth/login');
   }
 
-  // Check if Token is Expired
-  isTokenExpired(): boolean {
-    const token = this.getToken();
-    if (!token) {
-      return true;
-    }
-    try {
-      const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the token payload
-      const expDate = new Date(0);
-      expDate.setUTCSeconds(decodedToken.exp); // Extract expiration date
-
-      return expDate < new Date(); // Check if the token is expired
-    } catch (error) {
-      console.error('Error decoding token:', error);
-      return true;
-    }
-  }
-
-  // Save User Data to Local Storage
+  // Save User Data
   saveUserData(userData: any): void {
-    this.storage.setItem('userData', userData);
+    this.storage.setItem('user', userData);
   }
 
-  // Get User Data from Local Storage
   getUserData(): any {
-    return this.storage.getItem<any>('userData');
+    return this.storage.getItem<any>('user');
   }
 
-  // Remove User Data from Local Storage
   removeUserData(): void {
-    this.storage.removeItem('userData');
+    this.storage.removeItem('user');
   }
 
-  // Get User Role
   getUserRole(): string | null {
-    const userData = this.getUserData();
-    return userData ? userData.role : null;
+    const data = this.getUserData();
+    return data ? data.role : null;
   }
 }

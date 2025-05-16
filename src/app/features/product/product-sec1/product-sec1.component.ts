@@ -108,6 +108,7 @@ export class ProductSec1Component implements OnInit {
     this.getQuantityInCart();
     this.remainingProduct =
       this.product.stock - this.enteredQuantity - this.productQuantityInCart;
+
   }
 
   getQuantityInCart() {
@@ -205,6 +206,6 @@ export class ProductSec1Component implements OnInit {
       this.MsgSer.show(`${this.product.name}'s Quantity increased`);
     if(this.productQuantityInCart==0 && !this.isOutOfStock)
       this.MsgSer.show(`${this.product.name} Added To Cart`);
-    
+
   }
 }

@@ -7,7 +7,6 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private storage: StorageService){}
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     const token =  this.storage.getItem('token');
-    console.log('token',token)
     if (token) {
       // Clone the request and add the Authorization header
       req  = req.clone({

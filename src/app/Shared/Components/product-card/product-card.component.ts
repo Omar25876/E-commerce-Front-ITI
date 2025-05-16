@@ -23,7 +23,7 @@ export class ProductCardComponent {
      private cartService: CartService,
      private MsgSer:MessageService,
     private compareservice:CompareService,
-    private msg:MessageService
+
     ) {}
 
   ngOnInit(): void {
@@ -45,8 +45,6 @@ export class ProductCardComponent {
     this.cartService.getCart().subscribe({
       next: (data) => {
         const cartProducts: CartProduct[] = data;
-        console.log('Cart data:', cartProducts);
-
         // get product in cart
         const matchedProduct = cartProducts.find(
           (prd: CartProduct) => prd.itemId === product._id
@@ -81,7 +79,7 @@ export class ProductCardComponent {
           .subscribe({
             next: (response) => {
               this.MsgSer.show(`${product.name} Added To Cart`);
-              console.log('Item added to cart:', response);
+
             },
             error: (err) => {
               this.MsgSer.show(`Error Adding ${product.name} To Cart`);

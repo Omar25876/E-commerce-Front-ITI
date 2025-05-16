@@ -10,12 +10,16 @@ export interface Address {
 }
 
 export interface PaymentCard {
-  _id: string;
+  id: string;
   cardNumber: string;
   cardHolderName: string;
   expiryDate: string;
   cvv:string;
 }
+export interface EditablePaymentCard extends PaymentCard {
+  editable?: boolean;
+}
+
 
 export interface UserInfo {
   profileImageUrl: string;
