@@ -1,4 +1,4 @@
 export const environment = {
-  production: false,
+  production: true,
   apiBase: 'https://e-commerce-backend-iti-e672.vercel.app/api' 
 };
