@@ -67,8 +67,10 @@ export const routes: Routes = [
   {
     path: 'product/:id',
     component: ProductComponent,
+     data: { renderMode: 'browser' },
     title: 'Product',
     canActivate:[userGuard],
+   
     children: [
       { path: '', redirectTo: 'description', pathMatch: 'full' },
       { path: 'reviews', component: ProdReviewsComponent, title: 'Reviews' },
