@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { Subject, takeUntil } from 'rxjs';
+import { StorageService } from '../../../services/storage.service';
 
 @Component({
   selector: 'app-navbar',
@@ -39,11 +40,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       city: '',
       street: '',
       buildingNumber: '',
-      apartmentNumber: '',
-      floor: '',
-      entrance: '',
-      zipCode: '',
-      country: '',
+      apartmentNumber: ''
     },
     phone: '',
     gender: 'male',
@@ -56,7 +53,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router,
     private searchService: SearchService,
-    private imageService: ImageService
+    private imageService: ImageService,
+    private LocalStorage :StorageService
   ) {}
 
   ngOnInit(): void {
@@ -110,6 +108,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.toggleDropdown();
     this.authService.logout();
     this.router.navigate(['/auth/login']);
+    this.LocalStorage.clear();
   }
 
   ngOnDestroy(): void {

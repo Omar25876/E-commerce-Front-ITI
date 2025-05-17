@@ -7,9 +7,6 @@ import { firstValueFrom } from 'rxjs';
   providedIn: 'root',
 })
 export class CartService {
-  private apiUrl = 'http://localhost:5000/api';
-
-  constructor(private http: HttpClient) {}
 
   getCartFromLocalStorage(): CartProduct[] {
     const cartData = localStorage.getItem('cartProducts');
@@ -30,7 +27,7 @@ export class CartService {
     name: string,
     selectedColor: any,
     image: string,
-    brandId: string,
+    brand: string,
     stock:number
   ): Promise<void> {
     const cart = this.getCartFromLocalStorage();
@@ -45,11 +42,6 @@ export class CartService {
     }
 
     try {
-      // Fetch brand name from API
-      const brand = await firstValueFrom(
-        this.http.get<{name: string}>(`${this.apiUrl}/brand/${brandId}`)
-      );
-
       const newItem: CartProduct = {
         itemId,
         quantity,
@@ -57,8 +49,7 @@ export class CartService {
         name,
         selectedColor,
         image,
-        brandId,
-        brand: brand.name,
+        brand,
         stock
       };
 

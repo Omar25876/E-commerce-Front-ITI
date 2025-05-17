@@ -7,7 +7,7 @@
           type="radio"
           id="COD"
           name="paymentType"
-          value="COD"
+          value="cash"
           [(ngModel)]="selectedPayment" 
           (ngModelChange)="SetPaymentView()"
           class="w-6 h-6 accent-gradient bg-gradient-to-r from-sky-400 to-blue-600"
@@ -20,7 +20,7 @@
           type="radio"
           id="Credit"
           name="paymentType"
-          value="Credit"
+          value="stripe"
           [(ngModel)]="selectedPayment"
           (ngModelChange)="SetPaymentView()"
           class="w-6 h-6 accent-gradient bg-gradient-to-r from-purple-400 to-pink-600"
@@ -34,14 +34,14 @@
         alt="Payment Method"
       />
       }
-       @if(selectedPayment=="COD"){
+       @if(selectedPayment=="cash"){
         <img
         src="Images/Checkout Page/Delivery.png"
         class="w-full"
         alt="Payment Method"
       />
         }
-        @if(selectedPayment=="Credit"){
+        @if(selectedPayment=="stripe"){
           <!-- Card Template -->
           <div
             class=" max-w-[65%] mt-4 mx-auto relative group bg-gradient-to-r from-blue-800 to-blue-500 text-white rounded-xl p-6 space-y-3 shadow-lg transition-transform duration-200 hover:scale-105 hover:shadow-2xl"
@@ -70,7 +70,7 @@
             <div class="flex justify-between text-xs items-end">
               <input 
                 type="text" 
-                class="font-semibold px-1 py-1 border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent" 
+                class="font-semibold w-70 px-1 py-1 border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent" 
                 [value]="CurrentCard.cardHolderName" 
                 [disabled]="!AddClicked"
                 name="HolderName"
@@ -148,22 +148,16 @@
       <!-- City & Street -->
       <div class="flex gap-2.5">
         <!-- City Select -->
-        <select
+        <input
+          type="text"
           [(ngModel)]="user.address.city"
-          [disabled]="HasAAddress()"
+          [disabled]="HasAddressBool"
           name="city"
           required
           #cityRef="ngModel"
-          class="w-[50%] border px-1 pr-2.5 py-1 rounded text-sm bg-gray-50"
-        >
-          <option value="" disabled selected>Select City</option>
-          <option value="Cairo">Cairo</option>
-          <option value="Alex">Alex</option>
-          <option value="El-Fayoum">El-Fayoum</option>
-          <option value="Suez">Suez</option>
-          <option value="Aswan">Aswan</option>
-          <option value="Sohag">Sohag</option>
-        </select>
+          class="w-[50%] border px-2 pr-2.5 py-1 rounded text-sm bg-gray-50"
+        />
+        
 
         <!-- Street Input (Only letters allowed) -->
         <input
@@ -172,7 +166,7 @@
           required
           pattern="^[A-Za-z\s\-]+$"
           [(ngModel)]="user.address.street"
-          [disabled]="HasAAddress()"
+          [disabled]="HasAddressBool"
           #streetRef="ngModel"
           class="w-[50%] px-2 border py-1 rounded text-sm bg-gray-50"
           placeholder="Street"
@@ -193,7 +187,7 @@
           name="bnum"
           required
           min="1"
-          [disabled]="HasAAddress()"
+          [disabled]="HasAddressBool"
           [(ngModel)]="user.address.buildingNumber"
           #bnumRef="ngModel"
           class="w-[50%] px-2 border py-1 rounded text-sm bg-gray-50"
@@ -206,7 +200,7 @@
           name="apart"
           required
           min="1"
-          [disabled]="HasAAddress()"
+          [disabled]="HasAddressBool"
           [(ngModel)]="user.address.apartmentNumber"
           #apartRef="ngModel"
           class="w-[50%] px-2 border py-1 rounded text-sm bg-gray-50"
@@ -223,9 +217,9 @@
       </div>
 
       <button
-        *ngIf="!HasAAddress()"
+        *ngIf="!HasAddressBool"
         class="mt-2 bg-gradient-to-r from-sky-400 to-blue-600 py-2 px-3 text-md text-white font-bold rounded-sm"
-        (click)="AppyPromo()">
+        (click)="SaveAddress()">
         Save
       </button>
 
@@ -234,12 +228,15 @@
 
       <div>
         <label class="block text-sm font-medium mb-1">Promo Code</label>
-        <input type="text" class="w-full border px-3 py-1 rounded text-sm bg-gray-50" [(ngModel)]="Promo"/>
-        <button class="mt-2 bg-gradient-to-r from-sky-400 to-blue-600 py-2 px-3 text-md text-white font-bold rounded-sm" (click)="AppyPromo()">Apply</button>
+        <input 
+          type="text" 
+          class="w-full border px-3 py-1 rounded text-sm bg-gray-50" 
+          [(ngModel)]="Promo"/>
+        <button class="mt-2 bg-gradient-to-r from-sky-400 to-blue-600 py-2 px-3 text-md text-white font-bold rounded-sm" (click)="ApplyPromo()">Apply</button>
         @if(PromoCheck && Clicked){
            <label class="ml-4 text-md text-green-500 font-bold">Applied</label>
         }
-        @if(!PromoCheck && Promo.length>0 &&Clicked){
+        @if(!PromoCheck && Promo.length>0 && Clicked){
            <label class="ml-4 text-md text-red-700 font-bold">Wrong Promo Code</label>
         }
       </div>

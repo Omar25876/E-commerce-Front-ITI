@@ -9,6 +9,7 @@ import { AuthInterceptor } from '../../../services/auth.interceptor';
 import { StorageService } from '../../../services/storage.service';
 import { ImageService } from '../../../services/image.service';
 import { FormsModule } from '@angular/forms';
+import { MessageService } from '../../../services/message.service';
 
 @Component({
   selector: 'app-personal-info',
@@ -42,7 +43,8 @@ export class PersonalInfoComponent implements OnInit, OnDestroy {
     private myProfile: AccountService,
     private storage: StorageService,
     private imageService: ImageService,
-    private router: Router
+    private router: Router,
+    private MesSer:MessageService
   ) {}
 
   ngOnInit(): void {
@@ -90,6 +92,7 @@ export class PersonalInfoComponent implements OnInit, OnDestroy {
   upload(): void {
     if (!this.selectedFile) {
       console.warn('No file selected!');
+      this.MesSer.show("Please Upload Image From Your PC First")
       return;
     }
 
@@ -126,6 +129,7 @@ export class PersonalInfoComponent implements OnInit, OnDestroy {
         this.storage.setItem('user', this.data);
         this.router.navigate(['/dashboard']);
         this.uniqueEmail = false;
+        this.MesSer.show("Personal Info Updated Successfully");
       },
       error: (err) => {
         console.error('Failed to update info:', err);
@@ -149,6 +153,7 @@ export class PersonalInfoComponent implements OnInit, OnDestroy {
         this.data = res.user;
         this.storage.setItem('user', this.data);
         this.router.navigate(['/dashboard']);
+        this.MesSer.show("Personal Address Updated Successfully");
       },
       error: (err) => {
         console.error('Failed to update address:', err);
@@ -164,6 +169,7 @@ export class PersonalInfoComponent implements OnInit, OnDestroy {
         this.data = res.user;
         this.storage.setItem('user', this.data);
         this.router.navigate(['/dashboard']);
+        this.MesSer.show("Phone Number Updated Successfully");
         this.uniquePhone = false;
       },
       error: (err) => {

@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Order } from '../../../models/orderModel';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-my-orders',
@@ -20,16 +21,18 @@ export class MyOrdersComponent implements OnInit {
 
   constructor(
     private orderService: OrderService,
-    private storage: StorageService
+    private storage: StorageService,
+    private Auth : AuthService
   ) {
-    this.user = this.storage.getItem('userData');
+    this.user=Auth.getUserData();
     console.log(this.user);
   }
 
   myOrders: any[] | null = [];
 
   ngOnInit(): void {
-    this.orderService.getAllOrdersByUserId(this.user?._id).subscribe({
+    console.log(this.user);
+    this.orderService.getAllOrdersByUserId(this.user?.id).subscribe({
       next: (data) => {
         this.storage.setItem('orders', data.orders);
         this.myOrders = data.orders;

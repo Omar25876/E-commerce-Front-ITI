@@ -54,6 +54,7 @@ export class ProductCardComponent implements OnInit {
 
       // Add item to cart synchronously
       console.log(product);
+      console.log(imageUrl);
       this.cartService.addItemToCart(
         product._id,
         1,
@@ -73,7 +74,7 @@ export class ProductCardComponent implements OnInit {
   }
 
   private getProductImageUrl(product: any): string {
-    const image = product.imagesAndColors?.[product.selectedColor?.toLowerCase()];
+    const image = product.imagesAndColors?.[product.selectedColor];
     return image
       ? image
           .replace('https://github.com/', 'https://raw.githubusercontent.com/')

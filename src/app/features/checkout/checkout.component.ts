@@ -6,6 +6,11 @@ import { MessageService } from '../../services/message.service';
 import { AccountService } from '../../services/account.service';
 import { StorageService } from '../../services/storage.service';
 import { AuthService } from '../../services/auth.service';
+import { PromoCodeService } from '../../services/PromoCode.service';
+import { PromoCode } from '../../models/PromoCodeModel';
+import { OrderService } from '../../services/order.service';
+import { CartProduct } from '../../models/cartModel';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-checkout',
@@ -14,18 +19,23 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './checkout.component.html',
 })
 export class CheckoutComponent {
-  selectedPayment: string = 'Confuse';
+  selectedPayment: string = "Confuse";
   selectedDelivery: string = '50';
   AddClicked:boolean=false;
   CardBut:string='ADD';
+  
   Promo : string ='';
   PromoCheck : boolean =false;
   Clicked:boolean=false;
-  prdWithStock: any ;
+  DBPromos:PromoCode[]=[];
+
+  prdWithStock: CartProduct[]=[] ;
   cartTotal: number = 0;
+  HasAddressBool:boolean =false;
+
   CardIndex:number=0;
   cardsdata:any[]=[];
-  DBcardsdata:any[]=[];
+  DBcardsNum:number=0;
   CurrentCard: {
     cardNumber: string;
     cvv: string;
@@ -38,14 +48,18 @@ export class CheckoutComponent {
     cardHolderName: "Enter Your Name"
   };
 
-  user:any;
+ Order:any;
+ user: any;
 
   constructor(
     private cartService: CartService,
     private MessageSer:MessageService,
     private myProfile: AccountService,
     private storage: StorageService,
-    private Auth : AuthService
+    private Auth : AuthService,
+    private promoService:PromoCodeService,
+    private orderService:OrderService,
+    private router:Router
   ) {}
 
   ngOnInit(): void {
@@ -55,36 +69,53 @@ export class CheckoutComponent {
     this.myProfile.getProfile().subscribe({
         next: (res) => {
           this.storage.setItem('cards', res.user.paymentCards);
-          this.DBcardsdata=res.user.paymentCards;
-          this.cardsdata=this.DBcardsdata.slice();
-          console.log("Payment cards");
-          console.log(this.DBcardsdata);
-          console.log(this.cardsdata);
-          
+          this.cardsdata=res.user.paymentCards.slice();
+          this.DBcardsNum=this.cardsdata.length; // holds the cards number before adding
         },
         error: (err) => {
           console.log(err);
         }
       });
-      this.user = this.Auth.getUserData();
       
+     this.promoService.getAllPromoCodes().subscribe({
+        next: (data) => {
+          this.DBPromos = data;
+        },
+        error: (err) => {
+          console.error('Error fetching promo codes:', err);
+        }
+      });
+    this.user = this.Auth.getUserData();
+    this.HasAAddress();
   }
 
-  AppyPromo() {
+  ApplyPromo() {
      this.Clicked = true;
-     this.PromoCheck = this.Promo === "SoundJoy100";
+     this.PromoCheck = this.DBPromos.some(item => item.code === this.Promo);
   }
   GetTotal():number{
+    let result;
     if(this.PromoCheck &&this.Clicked&&this.Promo.length>0)
-      return this.cartTotal+parseInt(this.selectedDelivery.replace(/\D/g, ''), 10)-parseInt(this.Promo.replace(/\D/g, ''), 10);
-    return (this.cartTotal+parseInt(this.selectedDelivery.replace(/\D/g, ''), 10));
+      result = this.cartTotal+ parseInt(this.selectedDelivery.replace(/\D/g, ''), 10)
+              - ((parseInt(this.Promo.replace(/\D/g, ''), 10) * this.cartTotal) / 100);
+    
+    else 
+      result = (this.cartTotal+parseInt(this.selectedDelivery.replace(/\D/g, ''), 10));
+    
+    return parseFloat(result.toFixed(2));
   }
   HasAAddress(){
-     
-    return Object.values(this.user.address).every(
+    
+    let temp = {
+        city: this.user.address.city,
+        street: this.user.address.street,
+        buildingNumber: this.user.address.buildingNumber,
+        apartmentNumber: this.user.address.apartmentNumber
+      };
+
+     this.HasAddressBool = Object.values(temp).every(
       (value) => value !== null && value !== undefined && value !== ''
       );
-    
   }
   Checkout(){
     if(this.selectedPayment=="Confuse")
@@ -93,26 +124,86 @@ export class CheckoutComponent {
         return
       }
     
-    if(this.AddClicked && this.selectedPayment=="Credit")
+    if(this.AddClicked && this.selectedPayment=="stripe")
       {
         this.MessageSer.show("Save Your Payment Card First");
         return;
       }
 
-    if(!this.HasAAddress())
+    if(!this.HasAddressBool)
       {
         this.MessageSer.show("Save Your Address First");
         return;
       }
-    if(!this.AddClicked && this.HasAAddress() && this.selectedPayment=="Credit")
+
+      //Preparing The Order Template
+
+      const transformedKeys = this.prdWithStock.map(({ itemId,brand,image,selectedColor, ...rest }) => ({
+          _id: itemId,
+          Brand:brand,
+          Image:image,
+          SelectedColor:selectedColor,
+          ...rest
+        }));
+        let promoused = this.PromoCheck ? this.Promo : '';
+        let Delivery = (this.selectedDelivery =="50") ? "Fast Delivery - 50 EGP" : "Standard Delivery - 30 EGP";
+        this.Order={
+          userId:this.user.id,
+          shippingAddress:this.user.address,
+          Status:"pending",
+          DeliveyType:Delivery,
+          items:transformedKeys,
+          totalAmount:this.cartTotal+parseInt(this.selectedDelivery.replace(/\D/g, ''), 10),
+          AfterSale:this.GetTotal(),
+          PromoCode:promoused,
+          paymentMethod:this.selectedPayment,
+        }
+
+    if(!this.AddClicked && this.HasAddressBool && this.selectedPayment=="stripe")
       {
-        this.MessageSer.show("Order Added Successfully");
-        return
+        // Checking If User Has Add Cards
+        if(this.cardsdata.length>this.DBcardsNum) 
+        {
+          let addedCards = this.cardsdata.slice((this.cardsdata.length-this.DBcardsNum)*-1);
+           this.myProfile.updateProfile({ paymentCards: addedCards }).subscribe({
+            next: () => {
+              this.MessageSer.show('Cards updated successfully');
+            },
+            error: (err) => {
+              console.error('Failed to update cards:', err);
+              this.MessageSer.show('Failed to update cards');
+            }
+          });
+        }
+      // Posting Order To DataBase
+        this.orderService.addOrder(this.Order).subscribe({
+        next: (res) => {
+          this.MessageSer.show("Order Added Successfully");
+          this.cartService.EmptyCart();
+          this.router.navigate(['/home']);
+        },
+        error: (err) => {
+          this.MessageSer.show("Failed To Place Order,See Console For More Details");
+          console.error('Failed to place order:', err);
+        }
+      });
+        
       }
-      if(this.HasAAddress() && this.selectedPayment=="COD")
+      if(this.HasAddressBool && this.selectedPayment=="cash")
       {
-        this.MessageSer.show("Order Added Successfully");
-        return
+        // Posting Order To DataBase
+        this.orderService.addOrder(this.Order).subscribe({
+        next: (res) => {
+          this.MessageSer.show("Order Added Successfully");
+          this.cartService.EmptyCart();
+          this.router.navigate(['/home']);
+        },
+        error: (err) => {
+          this.MessageSer.show("Failed To Place Order,See Console For More Details");
+          console.error('Failed to place order:', err);
+        }
+      });
+        
       }
   }
   Prev(){
@@ -123,7 +214,7 @@ export class CheckoutComponent {
         if(this.CardIndex>0){
           this.CardIndex--;
           this.MessageSer.show(`Card ${this.CardIndex+1}`);
-          this.CurrentCard=this.cardsdata[this.CardIndex];
+          this.CurrentCard={...this.cardsdata[this.CardIndex]};
         }
         else
           this.MessageSer.show("No Previous Cards");
@@ -142,7 +233,7 @@ export class CheckoutComponent {
           if(this.CardIndex<this.cardsdata.length-1){
             this.CardIndex++;
             this.MessageSer.show(`Card ${this.CardIndex+1}`);
-            this.CurrentCard=this.cardsdata[this.CardIndex];
+            this.CurrentCard={...this.cardsdata[this.CardIndex]};
           }
          else
            this.MessageSer.show("No Next Cards");
@@ -160,10 +251,12 @@ export class CheckoutComponent {
     {
       if(this.cardsdata?.length<4)
       {
-        this.CurrentCard.cardHolderName="Enter Your Name Here";
-        this.CurrentCard.cardNumber="0000 0000 0000 0000";
-        this.CurrentCard.cvv="000";
-        this.CurrentCard.expiryDate="00/00";
+        this.CurrentCard = {  // create a fresh object here
+        cardHolderName: "Enter Your Name Here",
+        cardNumber: "0000 0000 0000 0000",
+        cvv: "000",
+        expiryDate: "00/00",
+        };
         setTimeout(() => {
             this.CardBut="Save";
           }, 500);
@@ -194,12 +287,10 @@ export class CheckoutComponent {
 
             if(this.cardsdata.length==0)
               {
-                console.log("First IF");
                 this.cardsdata=[{...this.CurrentCard}];
               }
             else
               {
-                console.log("Second IF"); 
                 this.cardsdata.push({...this.CurrentCard});
                 this.CardIndex++;
               }
@@ -265,10 +356,11 @@ export class CheckoutComponent {
   }
 
   SaveAddress(){
+    this.HasAddressBool =true;
     this.MessageSer.show("Address Saved Correctly");
   }
   SetPaymentView(){
-    if(this.selectedPayment =="Credit")
+    if(this.selectedPayment =="stripe")
     {
      
       if(this.cardsdata?.length==0)

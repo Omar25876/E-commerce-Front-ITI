@@ -2,7 +2,6 @@ export interface CartProduct {
   itemId: string;
   name: string;
   brand: string;
-  brandId: string;
   image: string;
   price: number;
   quantity: number;
