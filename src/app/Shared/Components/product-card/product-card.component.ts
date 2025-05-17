@@ -40,6 +40,7 @@ export class ProductCardComponent implements OnInit {
 
   addToCart(product: any): void {
     try {
+      console.log(product);
       const cart: CartProduct[] = this.cartService.getCartFromLocalStorage();
 
       // Check if product is already in cart
@@ -47,6 +48,13 @@ export class ProductCardComponent implements OnInit {
 
       if (alreadyInCart) {
         this.MsgSer.show(`${product.name}(${product.selectedColor}) is already in the cart.`);
+        return;
+      }
+
+      //Check to See if there is stock 
+      if(product.stock==0)
+      {
+         this.MsgSer.show(`Sorry,${product.name}(${product.selectedColor}) Is Out Of Stock.`);
         return;
       }
 
