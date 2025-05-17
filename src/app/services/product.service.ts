@@ -108,6 +108,10 @@ export class ProductService {
   addProduct(product: Product): Observable<Product> {
     return this.myHttp.post<Product>(this.url, product);
   }
+  addProductFormData(productFormData: FormData): Observable<Product> {
+  return this.myHttp.post<Product>(this.url, productFormData);
+}
+
 
   /**
    * Update an existing product
