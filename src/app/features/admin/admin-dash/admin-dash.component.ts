@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {Chart,registerables} from 'chart.js'
 
 Chart.register(...registerables);
@@ -17,7 +17,7 @@ export class AdminDashComponent implements AfterViewInit {
       data: [1200, 1500, 1700, 1600, 2000, 2400, 2200, 2100, 2300, 2500, 2700, 3000],
       fill: false,
       borderColor: 'rgb(75, 192, 192)',
-      tension: 0.3, // smoother curve
+      tension: 0.3, 
       pointBackgroundColor: 'rgb(75, 192, 192)'
     }]
   },
@@ -69,18 +69,18 @@ public trafficByDeviceConfig: any = {
       legend: {
         position: 'bottom'
       },
-      // tooltip: {
-      //   enabled: true
-      // }
     }
   }
 };
 
   chart:any;
   trafficChart:any;
-  ngAfterViewInit():void{
+  constructor(private cdr:ChangeDetectorRef){}
+  ngAfterViewInit(): void {
     this.trafficChart = new Chart('TrafficDeviceChart', this.trafficByDeviceConfig);
-    this.chart=new Chart('MyChart',this.config);
+    this.chart = new Chart('MyChart', this.config);
+
+    this.cdr.detectChanges();  
   }
 
 }
