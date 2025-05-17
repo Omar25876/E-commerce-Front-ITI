@@ -64,6 +64,7 @@ export class LoginFormComponent {
           this.authService.saveToken(res.token);
           this.authService.saveUserData(res.user);
           this.imageService.setImageUrl(res.user.profileImageUrl);
+          this.imageService.setName(res.user.lastName);
           this.msgService.show(
             `Welcome back ${res.user.firstName} ${res.user.lastName}, great to see you again!`
           );
@@ -72,7 +73,7 @@ export class LoginFormComponent {
           this.router.navigate([route]);
         } else {
           console.error('Login failed: No token or user returned');
-          
+
         }
       },
       error: (err) => {

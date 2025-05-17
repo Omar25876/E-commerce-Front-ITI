@@ -19,7 +19,6 @@ export class HomeSec5Component implements OnInit {
   constructor(private productService: ProductService) {}
 
   ngOnInit(): void {
-    this.loadProductsFromLocalStorage();
     this.fetchProducts();
   }
 
@@ -43,13 +42,13 @@ export class HomeSec5Component implements OnInit {
     this.productService.getAllProductsbyFilters().subscribe({
       next: (data) => {
         const popularProducts = data;
-        // Update localStorage and productList
-        if (typeof window !== 'undefined' && window.localStorage) {
-          localStorage.setItem(
-            'popularProducts',
-            JSON.stringify(popularProducts)
-          );
-        }
+        // // Update localStorage and productList
+        // if (typeof window !== 'undefined' && window.localStorage) {
+        //   localStorage.setItem(
+        //     'popularProducts',
+        //     JSON.stringify(popularProducts)
+        //   );
+        // }
         this.productList = popularProducts;
         this.isLoading = false;
       },

@@ -22,9 +22,9 @@ export class MyOrdersComponent implements OnInit {
   constructor(
     private orderService: OrderService,
     private storage: StorageService,
-    private Auth : AuthService
+    private Auth: AuthService
   ) {
-    this.user=Auth.getUserData();
+    this.user = Auth.getUserData();
     console.log(this.user);
   }
 
@@ -52,14 +52,27 @@ export class MyOrdersComponent implements OnInit {
       );
     }
   }
-  getSavings(): number | null {
-  if (
-    this.selectedOrder?.totalAmount != null &&
-    this.selectedOrder?.AfterSale != null
-  ) {
-    return this.selectedOrder.totalAmount - this.selectedOrder.AfterSale;
-  }
-  return null;
-}
 
+  getStatusClass(status: string | null | undefined): string {
+    switch (status) {
+      case 'Canceled':
+        return 'bg-gradient-to-r from-red-400 to-red-600 text-white';
+      case 'Pending':
+        return 'bg-gradient-to-r from-sky-400 to-blue-600 text-white';
+      case 'Complete':
+        return 'bg-gradient-to-r from-green-400 to-green-600 text-white';
+      default:
+        return 'bg-gray-200 text-gray-600'; // fallback class
+    }
+  }
+
+  getSavings(): number | null {
+    if (
+      this.selectedOrder?.totalAmount != null &&
+      this.selectedOrder?.AfterSale != null
+    ) {
+      return this.selectedOrder.totalAmount - this.selectedOrder.AfterSale;
+    }
+    return null;
+  }
 }

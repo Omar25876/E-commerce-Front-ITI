@@ -14,9 +14,9 @@
             (change)="onOrderSelect()"
             class="border border-gray-300 p-2 rounded w-full sm:w-48"
           >
-          <option [ngValue]="null" disabled>Select an order</option>
-            <option *ngFor="let order of myOrders" [ngValue]="order.orderId">
-              Order #{{ order.orderId }}
+            <option [ngValue]="null" disabled>Select an order</option>
+            <option *ngFor="let order of myOrders || []" [ngValue]="order?.orderId">
+              Order #{{ order?.orderId }}
             </option>
           </select>
         </div>
@@ -24,11 +24,8 @@
           <span class="text-lg font-medium">Order Status :</span>
           <span
             class="text-gray-500 text-sm font-semibold px-3 py-1 rounded-full shadow"
-            [ngClass]="{
-              'bg-gradient-to-r from-green-400 to-green-600 text-white': selectedOrder?.Status === 'Complete',
-              'bg-gradient-to-r from-red-400 to-red-600 text-white': selectedOrder?.Status === 'Canceled',
-              'bg-gradient-to-r from-sky-400 to-blue-600 text-white': selectedOrder?.Status === 'Pending'
-            }"
+            [ngClass]="getStatusClass(selectedOrder?.Status)"
+
           >
             {{ selectedOrder?.Status || 'N/A' }}
           </span>
@@ -38,7 +35,7 @@
       <!-- Product List -->
       <div class="bg-white p-4 rounded-xl shadow-sm space-y-6">
         <div
-          *ngFor="let item of selectedOrder?.items"
+          *ngFor="let item of selectedOrder?.items || []"
           class="flex flex-col sm:flex-row gap-4 items-center"
         >
           <img
@@ -83,6 +80,7 @@
           readonly
         />
       </div>
+
       <div>
         <label class="block text-sm font-medium mb-1">Delivery Type</label>
         <input

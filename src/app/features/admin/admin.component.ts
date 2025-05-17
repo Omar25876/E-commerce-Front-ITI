@@ -46,12 +46,12 @@ export class AdminComponent implements OnInit {
     let temp = this.router.url.split('/')[2];
     this.selectedIndex= this.buttons.findIndex(button => button.label === temp);
   }
-  
+
   selectButton(index: number) {
     this.selectedIndex = index;
   }
 
-  
+
   Logout(){
     this.AuthSer.logout();
     this.cdRef.detectChanges();

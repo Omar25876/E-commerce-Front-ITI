@@ -20,7 +20,11 @@ import { MessageService } from '../../../../../services/message.service';
   styles: '',
 })
 export class RegisterComponent {
-  constructor(private myService: AuthService, private router: Router,private MsgSer:MessageService) {}
+  constructor(
+    private myService: AuthService,
+    private router: Router,
+    private MsgSer: MessageService
+  ) {}
 
   passwordMismatch: boolean = false;
   showPassword = false;
@@ -53,7 +57,9 @@ export class RegisterComponent {
     password: new FormControl<string | null>(null, [
       Validators.required,
       Validators.minLength(8),
-      Validators.pattern(/^(?=.*[A-Z]).*$/)
+      Validators.pattern(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/
+      ),
     ]),
     confirmPassword: new FormControl<string | null>(null, [
       Validators.required,
@@ -78,7 +84,7 @@ export class RegisterComponent {
         next: (res) => {
           console.log(res);
           this.router.navigate(['/auth/login']);
-          this.MsgSer.show("Registration Completed. Now you can log in.");
+          this.MsgSer.show('Registration Completed. Now you can log in.');
         },
         error: (err) => {
           console.error(err);

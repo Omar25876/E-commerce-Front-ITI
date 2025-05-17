@@ -5,6 +5,7 @@ import { CartService } from './../../../services/cart.service';
 import { CartProduct } from '../../../models/cartModel';
 import { MessageService } from '../../../services/message.service';
 import { CompareService } from '../../../services/compare.service';
+import { StorageService } from '../../../services/storage.service';
 @Component({
   selector: 'app-product-card',
   standalone: true,
@@ -21,6 +22,7 @@ export class ProductCardComponent implements OnInit {
      private cartService: CartService,
      private MsgSer:MessageService,
     private compareservice:CompareService,
+    private storage: StorageService
 
     ) {}
 
@@ -97,9 +99,10 @@ export class ProductCardComponent implements OnInit {
   }
 
   quickView(): void {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.setItem('product', JSON.stringify(this.myProduct));
+
+      this.storage.setItem('product', this.myProduct);
       this.router.navigate(['/product', this.myProduct._id]);
-    }
   }
+
+
 }
