@@ -1,2 +1,56 @@
-<p>admin works!</p>
-<button class="bg-amber-700 px-4 py-2 pointer-coarse:" (click)="Logout()" >Logout</button>
+<!-- Heading -->
+<div class="mx-auto w-[20%] h-[25%] px-10 py-10 bg-gradient-to-r from-blue-800 to-blue-500 rounded-b-4xl">
+    <img src="Images/Icons/WebsiteLogo.png" alt="SoundJoy Logo">
+</div>
+
+    
+ <div class="flex w-full gap-10">
+    <!-- SideBar -->
+    <div class="flex flex-col gap-4 w-[20%] h-[90vh] items-center -mt-28">
+        <div class="w-[60%] rounded-full shadow-lg bg-gradient-to-r from-blue-800 to-blue-500">
+            <img  src="Images/Icons/Adminn.png" alt="Admin Photo">
+        </div>
+        <p class="text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-bold w-fit mb-10">Ibrahim Medhat</p>
+   
+        <div
+            *ngFor="let btn of buttons; let i = index"
+            (click)="selectButton(i)"
+            routerLink="{{btn.label}}"
+            [ngClass]="[
+              'flex',
+              'gap-10',
+              'w-full',
+              'h-[8%]',
+              'mb-4',
+              'items-center',
+              'rounded-r-2xl',
+              'py-3',
+              btn.paddingX,
+              'cursor-pointer', 
+              selectedIndex === i ? 'bg-gradient-to-r from-blue-800 to-blue-500 text-white' : '',
+            ]"
+        >
+        <img
+          class="h-full"
+          [src]="selectedIndex === i ? btn.activeSrc : btn.defaultSrc"
+          [alt]="btn.label + ' Icon'"
+        />
+        <label
+          class="font-bold text-xs md:text-base lg:text-lg xl:text-xl 2xl:text-2xl cursor-pointer"
+          >{{ btn.label }}</label
+        >
+        </div>
+        
+        <button class="bg-gradient-to-r from-blue-800 to-blue-500 w-[90%] rounded-xl 
+        h-[9%] px-[20%] mt-8 font-bold text-white self-center
+        text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl
+        " 
+        (click)="Logout()" >Logout</button>
+    </div>
+    <!-- Dynamic Part -->
+     <div class="flex mt-4">
+        <router-outlet></router-outlet>
+     </div>
+ </div>
+
+

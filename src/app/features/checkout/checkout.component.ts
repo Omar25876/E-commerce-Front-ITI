@@ -65,7 +65,11 @@ export class CheckoutComponent {
   ngOnInit(): void {
     this.prdWithStock=this.cartService.getCartFromLocalStorage()
     this.cartTotal=this.cartService.getCartTotal();
-
+    if(this.prdWithStock.length==0)
+    {
+      this.router.navigate(['/home']);
+      this.MessageSer.show("Please Add Products First");
+    }
     this.myProfile.getProfile().subscribe({
         next: (res) => {
           this.storage.setItem('cards', res.user.paymentCards);
