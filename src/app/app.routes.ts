@@ -67,7 +67,6 @@ export const routes: Routes = [
   {
     path: 'product/:id',
     component: ProductComponent,
-     data: { renderMode: 'browser' },
     title: 'Product',
     canActivate:[userGuard],
    
