@@ -106,11 +106,13 @@ export class PersonalInfoComponent implements OnInit, OnDestroy {
         this.data = res.user;
         this.storage.setItem('user', this.data);
         this.imageService.setImageUrl(this.data.profileImageUrl);
+        this.MesSer.show("Profile Image Updated Successfully");
         this.loading = false;
         this.selectedFile = null;
       },
       error: (err) => {
         console.error('Upload failed:', err);
+        this.MesSer.show("Profile Image Updated Failed");
         this.loading = false;
       },
     });
@@ -134,6 +136,7 @@ export class PersonalInfoComponent implements OnInit, OnDestroy {
       error: (err) => {
         console.error('Failed to update info:', err);
         this.uniqueEmail = true;
+        this.MesSer.show("Personal Info Updated Failed");
       },
     });
   }
@@ -157,6 +160,7 @@ export class PersonalInfoComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Failed to update address:', err);
+        this.MesSer.show("Personal Address Updated Failed");
       },
     });
   }
@@ -175,6 +179,7 @@ export class PersonalInfoComponent implements OnInit, OnDestroy {
       error: (err) => {
         console.error('Failed to update phone:', err);
         this.uniquePhone = true;
+        this.MesSer.show("Phone Number Updated Failed");
       },
     });
   }

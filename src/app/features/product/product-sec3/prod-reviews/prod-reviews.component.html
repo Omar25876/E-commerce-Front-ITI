@@ -1,4 +1,4 @@
-<div class="flex flex-col w-full h-full bg-white p-6 rounded-lg ">
+<div class="flex flex-col w-full h-full bg-white p-6 rounded-lg">
   <!-- Overall Rating Section -->
   <div
     class="flex flex-col md:flex-row items-center justify-evenly w-full max-w-3xl space-y-6 md:space-y-0"
@@ -70,7 +70,8 @@
     <button
       class="px-4 py-2"
       [ngClass]="{
-        'bg-gradient-to-r from-sky-400 to-blue-600 text-white': selectedFilter === 'all',
+        'bg-gradient-to-r from-sky-400 to-blue-600 text-white':
+          selectedFilter === 'all',
         'text-gray-500 hover:bg-gray-200': selectedFilter !== 'all'
       }"
       (click)="filterReviews('all')"
@@ -80,7 +81,8 @@
     <button
       class="px-4 py-2"
       [ngClass]="{
-        'bg-gradient-to-r from-sky-400 to-blue-600 text-white': selectedFilter === 'non-arabic',
+        'bg-gradient-to-r from-sky-400 to-blue-600 text-white':
+          selectedFilter === 'non-arabic',
         'text-gray-500 hover:bg-gray-200': selectedFilter !== 'non-arabic'
       }"
       (click)="filterReviews('non-arabic')"
@@ -90,7 +92,8 @@
     <button
       class="px-4 py-2"
       [ngClass]="{
-        'bg-gradient-to-r from-sky-400 to-blue-600 text-white': selectedFilter === 'arabic',
+        'bg-gradient-to-r from-sky-400 to-blue-600 text-white':
+          selectedFilter === 'arabic',
         'text-gray-500 hover:bg-gray-200': selectedFilter !== 'arabic'
       }"
       (click)="filterReviews('arabic')"
@@ -109,13 +112,22 @@
     <div
       class="rounded-full h-12 w-12 flex items-center justify-center text-lg font-bold text-white bg-gradient-to-r from-sky-400 to-blue-600"
     >
-      {{ review.user?.charAt(0)?.toUpperCase() }}
+      <img
+        [src]="
+          getReviewerImageUrl(review.user) ||
+          'Images/Authentication/Main User Photo 2.svg'
+        "
+        alt="Reviewer"
+        class="w-full h-full rounded-full object-cover"
+      />
     </div>
     <div
       class="flex flex-col ml-5 items-start justify-around w-full md:w-2/3 space-y-1"
     >
       <div class="flex flex-row items-center space-x-2">
-        <h1 class="text-xl font-bold text-gray-800">{{ review.user }}</h1>
+        <h1 class="text-xl font-bold text-gray-800">
+          {{ getReviewerName(review.user) || review.user }}
+        </h1>
       </div>
       <div class="flex items-center space-x-2 w-full">
         <p class="text-md font-medium text-gray-600">{{ review.rating }}</p>
@@ -142,12 +154,16 @@
 
 <!-- Add Review Section -->
 <div class="flex flex-col items-center">
-  <div class="flex flex-col w-1/2 bg-white m-5 p-6 space-y-4 rounded-lg shadow-md items-center">
+  <div
+    class="flex flex-col w-1/2 bg-white m-5 p-6 space-y-4 rounded-lg shadow-md items-center"
+  >
     <h2 class="text-xl font-bold text-gray-800 text-center">Add Your Review</h2>
     <form (ngSubmit)="addReview()" class="space-y-4 w-2/3">
       <!-- Review Input -->
       <div>
-        <label for="review" class="block text-sm font-medium text-gray-700">Your Review</label>
+        <label for="review" class="block text-sm font-medium text-gray-700"
+          >Your Review</label
+        >
         <textarea
           id="review"
           [(ngModel)]="newReview.comment"
@@ -161,7 +177,9 @@
 
       <!-- Rating Input -->
       <div>
-        <label for="rating" class="block text-sm font-medium text-gray-700">Your Rating</label>
+        <label for="rating" class="block text-sm font-medium text-gray-700"
+          >Your Rating</label
+        >
         <select
           id="rating"
           [(ngModel)]="newReview.rating"
@@ -170,7 +188,9 @@
           required
         >
           <option value="" disabled>Select a rating</option>
-          <option *ngFor="let rating of [5, 4, 3, 2, 1]" [value]="rating">{{ rating }}</option>
+          <option *ngFor="let rating of [5, 4, 3, 2, 1]" [value]="rating">
+            {{ rating }}
+          </option>
         </select>
       </div>
 
@@ -183,6 +203,4 @@
       </button>
     </form>
   </div>
-  </div>
-
-
+</div>

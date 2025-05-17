@@ -6,6 +6,9 @@ import { ProductService } from '../../../../services/product.service';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthInterceptor } from '../../../../services/auth.interceptor';
+import { UserService } from '../../../../services/user.service';
+import { MessageService } from '../../../../services/message.service';
+import { StorageService } from '../../../../services/storage.service';
 
 @Component({
   selector: 'app-prod-reviews',
@@ -50,9 +53,10 @@ export class ProdReviewsComponent implements OnInit {
 
   selectedFilter: string = 'all'; // Default filter
 
-  constructor(private productService: ProductService, private router: Router) {}
+  constructor(private productService: ProductService, private router: Router, private userService: UserService,private msg:MessageService,private storage: StorageService) {}
 
   reviews: Review[] = [];
+  usersList: any[] = [];
   filteredReviews: Review[] = [];
   ratingCounts: { [key: number]: number } = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }; // Object to store counts for each rating
   newReview: { comment: string; rating: number } = {
@@ -69,6 +73,11 @@ export class ProdReviewsComponent implements OnInit {
         this.calculateRatingCounts(); // Calculate the counts for each rating
       }
     }
+    this.userService.getAllUsers().subscribe({
+      next: (res) => {
+        this.usersList = res.users;
+      }
+    });
   }
 
   /**
@@ -118,12 +127,24 @@ export class ProdReviewsComponent implements OnInit {
     return review._id;
   }
 
+   getReviewerName(userId: string): string {
+    const user = this.usersList.find((u: any) => u._id === userId);
+    return user ? `${user.firstName} ${user.lastName}` : '';
+  }
+
+  getReviewerImageUrl(userId: string): string {
+    const user = this.usersList.find((u: any) => u._id === userId);
+    return user ? user.profileImageUrl.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/') : '';
+  }
+
   addReview(): void {
     if (this.newReview.comment && this.newReview.rating) {
 
       this.productService.addReviewToProduct(this.product._id, this.newReview).subscribe({
         next: (res) => {
           console.log('Product updated successfully:', res);
+          this.msg.show(res.message)
+          this.storage.setItem('product', res.product);
           this.router.navigate(['/product/'+this.product._id+"/reviews"]);
           this.reviews = res.product.reviews;
           this.filteredReviews = [...this.reviews];
@@ -132,6 +153,7 @@ export class ProdReviewsComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error updating product:', err);
+          this.msg.show('Failed To add review, try later');
         },
       });
     } else {

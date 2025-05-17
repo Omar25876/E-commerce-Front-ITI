@@ -6,6 +6,7 @@ import { Category } from '../../../models/categoryModel';
 import { CartService } from '../../../services/cart.service';
 import { CartProduct } from '../../../models/cartModel';
 import { MessageService } from '../../../services/message.service';
+import { StorageService } from '../../../services/storage.service';
 
 @Component({
   selector: 'app-product-sec1',
@@ -63,14 +64,15 @@ export class ProductSec1Component implements OnInit {
   constructor(
     private categoryService: CategoryService,
     private cartService: CartService,
-    private MsgSer: MessageService
+    private MsgSer: MessageService,
+    private Storage: StorageService
   ) {
     if (typeof window !== 'undefined' && window.localStorage) {
-      const storedProduct = localStorage.getItem('product');
+      const storedProduct:Product|null = this.Storage.getItem('product');
       console.log("storedProduct :");
       console.log(storedProduct);
       if (storedProduct) {
-        this.product = JSON.parse(storedProduct);
+        this.product = storedProduct
         this.productColors = this.product.imagesAndColors
           ? Object.keys(this.product.imagesAndColors)
           : [];
@@ -103,7 +105,7 @@ export class ProductSec1Component implements OnInit {
   const matchingProducts = cartProducts.filter(
     (prd: CartProduct) => prd.itemId === this.product._id
   );
-  
+
   this.productQuantityInCart = matchingProducts.reduce(
     (total, prd) => total + prd.quantity,0
   );
@@ -146,7 +148,7 @@ export class ProductSec1Component implements OnInit {
   console.log('Trying to add item to cart...');
 
   const cartProducts = this.cartService.getCartFromLocalStorage();
-  
+
   const matchedProduct = cartProducts.find(
     (prd: CartProduct) =>
       prd.itemId === this.product._id && prd.selectedColor === this.selectedColor
