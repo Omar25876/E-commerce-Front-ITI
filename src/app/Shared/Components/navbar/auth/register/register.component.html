@@ -236,8 +236,8 @@
       </div>
       <div
         *ngIf="
-          (myForm.controls['confirmPassword'].touched &&
-            myForm.controls['confirmPassword'].invalid) ||
+          (myForm.controls['confirmPassword']?.touched &&
+            myForm.controls['confirmPassword']?.invalid) ||
           passwordMismatch
         "
         class="text-red-500 text-xs"

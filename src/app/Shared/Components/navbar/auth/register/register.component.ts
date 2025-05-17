@@ -82,6 +82,7 @@ export class RegisterComponent {
         },
         error: (err) => {
           console.error(err);
+          this.MsgSer.show(err.message);
         },
       });
       console.log('Form Submitted', this.myForm.value);

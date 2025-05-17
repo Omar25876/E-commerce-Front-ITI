@@ -1,1 +1,45 @@
-<p>admin-add works!</p>
+<div class="w-[77vw] flex flex-col gap-4">
+    <div class="w-full flex justify-between">
+        <p class="text-2xl font-bold">Add Product </p>
+        <button class="bg-gradient-to-r from-blue-800 to-blue-500 rounded-full 
+        text-white font-bold text-xl p-4 w-[7%] ">Save</button>
+    </div>
+    <!-- Adding Product Fields -->
+     <div class="flex gap-4">
+        <!-- Photo -->
+         <div class="bg-[#edeefc] w-[30%] h-[60%] py-[7%] flex justify-center items-center rounded-3xl">
+            <img class="w-[60%]" src="Images/Icons/camera.png" alt="Camera Icon">
+         </div>
+         <div class="flex flex-col w-[23%] h-[44vh] gap-3">
+             <input class="bg-[#edeefc] h-[20%] p-4 rounded-lg" type="text" placeholder="Product Name">
+             <input class="bg-[#edeefc] h-[70%] p-4 rounded-lg" type="text" placeholder="Product Description">
+        </div>
+        <div class="flex flex-col w-[23%] h-[44vh] gap-3">
+            <input class="bg-[#edeefc] h-[21%] p-4 rounded-lg" type="text" placeholder="Model Number">
+            <select class="bg-[#edeefc] h-[21%] p-4 rounded-lg">
+                <option>Category</option>
+            </select>
+            <select class="bg-[#edeefc]  h-[21%] p-4 rounded-lg">
+                <option>Brand</option>
+            </select>
+            <input class="bg-[#edeefc] h-[21%] p-4 rounded-lg" type="text" placeholder="what is in the Box ?">
+         </div>
+         <div class="h-[41vh] w-[23%]">
+            <input class="bg-[#edeefc] w-[100%] h-[100%] p-4 rounded-lg" type="text" placeholder="Highlights">
+         </div>
+     </div>
+     <div class="w-full flex justify-between">
+        <p class="text-2xl font-bold">Add Promo Code </p>
+        <button class="bg-gradient-to-r from-blue-800 to-blue-500 rounded-full 
+        text-white font-bold text-xl p-4 w-[7%] ">Save</button>
+    </div>
+    <!-- Adding Promo Code Fields -->
+     <div class="flex gap-4">
+         <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg" type="text" placeholder="Code">
+         <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg" type="text" placeholder="Discount Type">
+     </div>
+     <div class="flex gap-4">
+         <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg" type="text" placeholder="Usage Limit">
+         <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg" type="text" placeholder="Discount Value">
+     </div>
+</div>

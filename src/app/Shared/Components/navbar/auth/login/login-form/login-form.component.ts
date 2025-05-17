@@ -72,10 +72,12 @@ export class LoginFormComponent {
           this.router.navigate([route]);
         } else {
           console.error('Login failed: No token or user returned');
+          
         }
       },
       error: (err) => {
         console.error('Login error:', err);
+        this.msgService.show("Invaild Email Or Password");
       },
     });
   }
