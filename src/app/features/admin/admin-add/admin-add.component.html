@@ -7,39 +7,77 @@
     <!-- Adding Product Fields -->
      <div class="flex gap-4">
         <!-- Photo -->
-         <div class="bg-[#edeefc] w-[30%] h-[60%] py-[7%] flex justify-center items-center rounded-3xl">
-            <img class="w-[60%]" src="Images/Icons/camera.png" alt="Camera Icon">
+         <div class="bg-[#edeefc] w-[30%] h-[35vh] py-[7%] flex justify-center items-center rounded-3xl">
+            <img class="w-[40%]" src="Images/Icons/camera.png" alt="Camera Icon">
          </div>
-         <div class="flex flex-col w-[23%] h-[44vh] gap-3">
+         <div class="flex flex-col w-[23%] h-[37vh] gap-3">
              <input class="bg-[#edeefc] h-[20%] p-4 rounded-lg" type="text" placeholder="Product Name">
-             <input class="bg-[#edeefc] h-[70%] p-4 rounded-lg" type="text" placeholder="Product Description">
+             <textarea class="bg-[#edeefc] h-[70%] p-4 rounded-lg"
+                placeholder="Product Description" [value]="MyProduct.name"></textarea>
         </div>
-        <div class="flex flex-col w-[23%] h-[44vh] gap-3">
-            <input class="bg-[#edeefc] h-[21%] p-4 rounded-lg" type="text" placeholder="Model Number">
+        <div class="flex flex-col w-[23%] h-[37vh] gap-3">
+            <input class="bg-[#edeefc] h-[21%] p-4 rounded-lg" type="text" 
+             placeholder="Model Number"
+             [value]="MyProduct.modelNumber"
+             >
+           <select 
+              class="bg-[#edeefc] h-[21%] p-4 rounded-lg" 
+              (change)="onCategoryChange($event)">
+              <option selected>Select Category</option>
+              <option *ngFor="let category of categories" [value]="category.categoryName">
+                {{ category.categoryName }}
+              </option>
+            </select>
+            
             <select class="bg-[#edeefc] h-[21%] p-4 rounded-lg">
-                <option>Category</option>
+              <option selected>Select Brand</option>
+              <option *ngFor="let brand of selectedCategoryBrands" [value]="brand.name">
+                  {{ brand.name }}
+                </option>
             </select>
-            <select class="bg-[#edeefc]  h-[21%] p-4 rounded-lg">
-                <option>Brand</option>
-            </select>
-            <input class="bg-[#edeefc] h-[21%] p-4 rounded-lg" type="text" placeholder="what is in the Box ?">
+
+            <textarea class="bg-[#edeefc] h-[21%] p-4 rounded-lg" placeholder="what is in the Box ?"></textarea>
          </div>
-         <div class="h-[41vh] w-[23%]">
-            <input class="bg-[#edeefc] w-[100%] h-[100%] p-4 rounded-lg" type="text" placeholder="Highlights">
-         </div>
+         <div class="h-[35vh] w-[23%]">
+            <textarea class="bg-[#edeefc] w-[100%] h-[100%] p-4 rounded-lg"placeholder="Highlights"></textarea>
+        </div>
      </div>
+     <div class="w-full flex gap-4 -mt-6">
+            <input class="bg-[#edeefc] w-[32.5%] p-4 rounded-lg" type="text" placeholder="Driver Size">
+            <input class="bg-[#edeefc] w-[25%] p-4 rounded-lg" type="text" placeholder="Bluetooth Version">
+            <input class="bg-[#edeefc] w-[25%] p-4 rounded-lg" type="text" placeholder="Battery Life">
+            <input class="bg-[#edeefc] w-[25%] p-4 rounded-lg" type="text" placeholder="Charging Port">
+        </div>   
+
      <div class="w-full flex justify-between">
         <p class="text-2xl font-bold">Add Promo Code </p>
         <button class="bg-gradient-to-r from-blue-800 to-blue-500 rounded-full 
-        text-white font-bold text-xl p-4 w-[7%] ">Save</button>
+        text-white font-bold text-xl p-4 w-[7%] "
+        (click)="PromoSave()"
+        >Save</button>
     </div>
     <!-- Adding Promo Code Fields -->
-     <div class="flex gap-4">
-         <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg" type="text" placeholder="Code">
-         <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg" type="text" placeholder="Discount Type">
+     <div class="flex items-center gap-4">
+         <label for="Code">Promo Code :</label>
+         <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg  border border-transparent" 
+         type="text" placeholder="Code" id="Code" [value]="PromoCode.code" (input)="FVaildate($event)">
+         <label for="DiscountType">Discount Type :</label>
+         <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg" 
+            type="text" id="DiscountType" value="percentage" readonly>
      </div>
-     <div class="flex gap-4">
-         <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg" type="text" placeholder="Usage Limit">
-         <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg" type="text" placeholder="Discount Value">
+     <div class="flex items-center gap-4">
+        <label for="Limt">Usage Limit :</label>
+         <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg" 
+                type="text" id="Limt" (input)="FVaildate($event)" [value]="PromoCode.usageLimit">
+        
+         <label for="DiscountValue">Discount Value :</label>       
+        <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg" 
+                type="text" id="DiscountValue" 
+                (input)="FVaildate($event)" [value]="PromoCode.discountValue">
+
+         <label for="expiryDate">Expiry Date :</label>       
+        <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg" 
+                type="text"  id="expiryDate" 
+                (input)="FVaildate($event)" [value]="PromoCode.expiryDate">        
      </div>
 </div>
