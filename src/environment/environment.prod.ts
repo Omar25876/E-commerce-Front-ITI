@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiBase: 'https://your-backend.onrender.com/api' 
+  apiBase: 'https://e-commerce-backend-iti-e672.vercel.app/api' 
 };

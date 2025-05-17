@@ -2,13 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OrderResponse, SingleOrderResponse } from '../models/orderModel';
-
+import { environment } from '../../environment/environment'; 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
 
-  private url = 'http://localhost:5000/api/orders';
+  private url = `${environment.apiBase}/orders`;
 
   constructor(private myHttp: HttpClient) { }
 

@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { forkJoin, map, switchMap, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { Product, ProductResponse } from '../models/productModel';
-
+import { environment } from '../../environment/environment'; 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
-  private url = 'http://localhost:5000/api/products';
+  private url = `${environment.apiBase}/products`;
   private cachedProducts: Product[] | null = null; // Cache for products
 
   constructor(private myHttp: HttpClient, private router: Router) {}
