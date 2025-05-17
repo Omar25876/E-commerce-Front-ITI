@@ -24,12 +24,12 @@ export class AdminComponent implements OnInit {
       activeSrc: 'Images/Icons/Fast Delivery-White.png',
       paddingX: 'px-[8%]',
     },
-    {
-      label: 'Orders',
-      defaultSrc: 'Images/Icons/Orders-Black.png',
-      activeSrc: 'Images/Icons/Orders-White.png',
-      paddingX: 'px-[20%]',
-    },
+    // {
+    //   label: 'Orders',
+    //   defaultSrc: 'Images/Icons/Orders-Black.png',
+    //   activeSrc: 'Images/Icons/Orders-White.png',
+    //   paddingX: 'px-[20%]',
+    // },
     {
       label: 'Add',
       defaultSrc: 'Images/Icons/Add-Black.png',

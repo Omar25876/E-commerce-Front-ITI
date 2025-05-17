@@ -54,7 +54,7 @@ export const routes: Routes = [
     canActivate: [adminGuard],
     title: 'Admin Home',
     children:[
-      {path:'',redirectTo:'Orders',pathMatch:'full'},
+      {path:'',redirectTo:'Products',pathMatch:'full'},
       {path:'Dashboard',component:AdminDashComponent,title:'Dashboard'},
       {path:'Products',component:AdminProdsComponent,title:'Mange Products'},
       {path:'Orders',component:AdminOrdersComponent,title:'Mange Orders'},
