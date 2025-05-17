@@ -1,100 +1,104 @@
 import { Component } from '@angular/core';
-import { PromoCode } from '../../../models/PromoCodeModel';
-import { PromoCodeService } from '../../../services/PromoCode.service';
-import { MessageService } from '../../../services/message.service';
-import { Category } from '../../../models/categoryModel';
-import { CategoryService } from '../../../services/category.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 import { Product } from '../../../models/productModel';
+import { PromoCode } from '../../../models/PromoCodeModel';
+import { Category } from '../../../models/categoryModel';
+
+import { PromoCodeService } from '../../../services/PromoCode.service';
+import { MessageService }   from '../../../services/message.service';
+import { CategoryService }  from '../../../services/category.service';
+import { ProductService }   from '../../../services/product.service';
 
 @Component({
-  selector: 'app-admin-add',
-  imports: [CommonModule],
-  templateUrl: './admin-add.component.html'
+  selector   : 'app-admin-add',
+  templateUrl: './admin-add.component.html',
+  standalone : true,
+  imports    : [CommonModule, FormsModule]
 })
 export class AdminAddComponent {
-  
-  PromoCode:PromoCode={
-  _id: '',
-  code: '',
-  discountType: "percentage",
-  discountValue: 0,
-  expiryDate: '', 
-  isActive: false,
-  usageLimit: 0,
-  usedCount: 0,
-  createdAt: '',
-  updatedAt: '',
-};
-MyProduct:Product={
-  _id: '',
-  name: '',
-  description: '',
-  price: 0,
-  oldPrice: 0,
-  discount: 0,
-  colors: [],
-  images: [],
-  imagesAndColors: {},
-  selectedColor: '',
-  stock: 0,
-  rating: 0,
-  reviewsCount: 0,
-  reviews: [],
-  highlights: [],
-  specs: {}, // specs as key-value pairs
-  modelNumber: '',
-  modelName: '',
-  whatsInTheBox: [],
-  isPopular: false,
-  isNewArrival: false,
-  isDiscover: false,
-  category: '',
-  brand: '',
-  createdAt: '',
-  updatedAt: ''
-};
-constructor(
-  private PromoSer:PromoCodeService,
-  private MsgSer:MessageService,
-  private CateSer:CategoryService
-){}
-categories: Category[] = [];
-selectedCategoryBrands: any[] = [];
 
-ngOnInit() {
-  this.getCategories();
-}
+  /* ------------------------------------------------------------------
+   * UI-bound helpers
+   * ---------------------------------------------------------------- */
+  driverSize = '';
+  BluetoothVersion = '';
+  ChargingPort = '';
+  BatteryLife = '';
+  whatInTheBoxText = '';
+  highlightsText = '';
 
-getCategories() {
-  this.CateSer.getAllCategories().subscribe({
-    next: (res) => {
-      this.categories = res;
-      console.log("Categorties are :");
-      console.log(this.categories);
-    },
-    error: (err) => {
-      console.error('Error fetching categories:', err);
-    }
-  });
-}
+  /* ------------------------------------------------------------------
+   *  Promo code model
+   * ---------------------------------------------------------------- */
+  PromoCode: PromoCode = {
+    _id: '', code: '', discountType: 'percentage', discountValue: 0,
+    expiryDate: '', isActive: false, usageLimit: 0, usedCount: 0,
+    createdAt: '', updatedAt: ''
+  };
 
-onCategoryChange(event:Event) {
- const selectedValue = (event.target as HTMLSelectElement).value;
-  const category = this.categories.find(cat => cat.categoryName === selectedValue);
-  this.selectedCategoryBrands = category ? category.brandNames : [];
-  console.log(this.selectedCategoryBrands);
-}
+  /* ------------------------------------------------------------------
+   *  Product model
+   * ---------------------------------------------------------------- */
+  MyProduct: Product = {
+    _id: '', name: '', description: '',
+    price: 0, oldPrice: 0, discount: 0,
+    colors: [], images: [], imagesAndColors: {},
+    selectedColor: '', stock: 0,
+    rating: 0, reviewsCount: 0, reviews: [],
+    highlights: [], specs: {},
+    modelNumber: '', modelName: '',
+    whatsInTheBox: [],
+    isPopular: false, isNewArrival: false, isDiscover: false,
+    category: '', brand: '',
+    createdAt: '', updatedAt: ''
+  };
+
+  /* ------------------------------------------------------------------
+   *  DI services & runtime collections
+   * ---------------------------------------------------------------- */
+  categories: Category[] = [];
+  selectedCategoryBrands: any[] = [];
 
 
-  PromoSave(){
+
+  constructor(
+    private promoSer: PromoCodeService,
+    private msgSer  : MessageService,
+    private cateSer : CategoryService,
+    private productSer: ProductService
+  ) {}
+
+  /* ============================= LIFECYCLE ============================= */
+  ngOnInit() {
+    this.cateSer.getAllCategories().subscribe({
+      next: res => (this.categories = res),
+      error: err => console.error(err)
+    });
+  }
+  /* ============================= CATEGORY ============================== */
+ 
+  /* ========== category → brands cascade ========== */
+  onCategoryChange(evt: Event) {
+    const value = (evt.target as HTMLSelectElement).value;
+    const cat = this.categories.find(c => c.categoryName === value);
+    this.selectedCategoryBrands = cat ? cat.brandNames : [];
+    this.MyProduct.category = value;
+    this.MyProduct.brand = ''; // reset brand when category changes
+  }
+
+
+
+  /* ============================= PROMO ================================ */
+   PromoSave(){
     if(
       this.PromoCode.code.length==0 ||
       this.PromoCode.usageLimit==0 ||
       this.PromoCode.discountValue == 0 ||
       this.PromoCode.expiryDate.length == 0 
     )
-    this.MsgSer.show("Please Fill In All Required Data First");
+    this.msgSer.show("Please Fill In All Required Data First");
     else{
       let temp ={
         code:this.PromoCode.code,
@@ -103,10 +107,10 @@ onCategoryChange(event:Event) {
         expiryDate:this.PromoCode.expiryDate,
         discountType:this.PromoCode.discountType
       };
-          this.PromoSer.createPromoCode(temp).subscribe({
+          this.promoSer.createPromoCode(temp).subscribe({
         next: (res) => {
           console.log('Promo code created successfully:', res);
-          this.MsgSer.show("Promo code created successfully");
+          this.msgSer.show("Promo code created successfully");
         },
         error: (err) => {
           console.error('Error creating promo code:', err);
@@ -184,4 +188,149 @@ onCategoryChange(event:Event) {
 
 }
 
+  private splitLines = (t: string) => t.split('\n').map(s => s.trim()).filter(Boolean);
+
+  /* ============================ IMAGES ================================ */
+
+    imagePreviews: string[] = [];
+  selectedImages: File[]  = [];
+
+  
+
+   extractColorsAndImages(imagesAndColors: Record<string, string>): { colors: string[], images: string[] } {
+  const colors = Object.keys(imagesAndColors);
+  const images = Object.values(imagesAndColors);
+  return { colors, images };
+}
+
+
+  updateColor(index: number, color: string) {
+    if(index >= 0 && index < this.MyProduct.colors.length) {
+      this.MyProduct.colors[index] = color;
+    }
+  }
+
+  onImageSelected(e: Event) {
+    const files = (e.target as HTMLInputElement).files;
+    if (!files) return;
+    this.selectedImages = Array.from(files);
+    this.imagePreviews  = [];
+ this.MyProduct.colors = [];
+
+    this.selectedImages.forEach(f => {
+      const reader = new FileReader();
+      reader.onload = ev => this.imagePreviews.push((ev.target as any).result);
+      reader.readAsDataURL(f);
+       this.MyProduct.colors.push('#ffffff');  
+    });
+
+    
+  }
+  
+  removeImage(i: number) {
+    this.selectedImages.splice(i, 1);
+    this.imagePreviews.splice(i, 1);
+  }
+
+  /* ============================ SAVE PRODUCT ========================== */
+saveProduct() {
+  // Assemble fields
+  this.MyProduct.whatsInTheBox = this.splitLines(this.whatInTheBoxText);
+  this.MyProduct.highlights    = this.splitLines(this.highlightsText);
+  this.MyProduct.specs = {
+    driverSize      : this.driverSize.trim(),
+    BluetoothVersion: this.BluetoothVersion.trim(),
+    ChargingPort    : this.ChargingPort.trim(),
+    BatteryLife     : this.BatteryLife.trim()
+  };
+
+  // Validation (same as before)
+  const errs: string[] = [];
+  const r = this.MyProduct;
+  if (!r.name.trim())        errs.push('Name required.');
+  if (!r.description.trim()) errs.push('Description required.');
+  if (!r.category)           errs.push('Category required.');
+  if (!r.brand)              errs.push('Brand required.');
+  if (r.price <= 0)          errs.push('Price must be > 0.');
+  if (r.stock < 0)           errs.push('Stock cannot be negative.');
+  if (r.discount < 0)        errs.push('Discount cannot be negative.');
+  if (r.oldPrice && r.oldPrice < r.price)
+                             errs.push('Old price must be ≥ price.');
+  if (!this.selectedImages.length)
+                             errs.push('At least one image is required.');
+  if (!r.highlights.length)  errs.push('Add a highlight.');
+  if (!r.whatsInTheBox.length)
+                             errs.push('“What’s in the Box” empty.');
+  if (Object.values(r.specs).some(v => !v))
+                             errs.push('Fill all spec fields.');
+
+  if (errs.length) {
+    this.msgSer.show(errs.join('\n'));
+    return;
+  }
+
+  // Build FormData
+  const fd = new FormData();
+
+  // Append primitives
+  fd.append('name', r.name);
+  fd.append('description', r.description);
+  fd.append('price', r.price.toString());
+  fd.append('oldPrice', r.oldPrice.toString());
+  fd.append('discount', r.discount.toString());
+  fd.append('stock', r.stock.toString());
+  fd.append('category', r.category);
+  fd.append('brand', r.brand);
+  fd.append('modelNumber', r.modelNumber);
+  fd.append('modelName', r.modelName);
+  fd.append('selectedColor', r.selectedColor);
+  fd.append('isPopular', r.isPopular.toString());
+  fd.append('isNewArrival', r.isNewArrival.toString());
+  fd.append('isDiscover', r.isDiscover.toString());
+
+  // Append arrays/objects as JSON strings
+  fd.append('highlights', JSON.stringify(r.highlights));
+  fd.append('whatsInTheBox', JSON.stringify(r.whatsInTheBox));
+  fd.append('specs', JSON.stringify(r.specs));
+  fd.append('colors', JSON.stringify(r.colors));
+
+ 
+  this.selectedImages.forEach(file => {
+  fd.append('file', file, file.name);
+});
+
+  // Debug: log FormData keys (optional)
+  for (const pair of fd.entries()) {
+    console.log(pair[0], pair[1]);
+  }
+
+  // POST FormData to backend
+  this.productSer.addProductFormData(fd).subscribe({
+    next: () => {
+      this.msgSer.show('Product added.');
+     // this.resetForm();
+    },
+    error: err => {
+      console.error('Save product error', err);
+      this.msgSer.show('Failed to add product.');
+    }
+  });
+}
+
+
+
+  /* ============================ RESET ================================ */
+  private resetForm() {
+    this.MyProduct = { ...this.MyProduct,
+      name:'', description:'', modelNumber:'', modelName:'',
+      price:0, oldPrice:0, discount:0, stock:0,
+      category:'', brand:'', selectedColor:'',
+      highlights:[], whatsInTheBox:[], specs:{},
+      isPopular:false, isNewArrival:false, isDiscover:false
+    };
+    this.driverSize = this.BluetoothVersion =
+    this.BatteryLife = this.ChargingPort = '';
+    this.whatInTheBoxText = this.highlightsText = '';
+    this.selectedImages = []; this.imagePreviews = [];
+  }
 }
