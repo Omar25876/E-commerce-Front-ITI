@@ -27,6 +27,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   dropdownOpen = false;
   searchTerm = '';
   imageUrl = '';
+  lastName = '';
 
   private destroy$ = new Subject<void>();
 
@@ -75,6 +76,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
       .subscribe((url) => {
         this.imageUrl = url || this.user.profileImageUrl;
       });
+   this.imageService.name$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((name) => {
+        this.lastName=this.user.lastName;
+      })
   }
 
   onSearchChange(query: string): void {

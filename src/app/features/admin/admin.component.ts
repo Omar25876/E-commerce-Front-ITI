@@ -9,7 +9,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './admin.component.html'
 })
 export class AdminComponent {
-  selectedIndex = 2;
+  selectedIndex = 1;
 
   buttons = [
     {
