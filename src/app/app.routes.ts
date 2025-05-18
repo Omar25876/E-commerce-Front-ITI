@@ -46,8 +46,9 @@ export const routes: Routes = [
 
   //Checkout Route
   {path: 'checkout',component: CheckoutComponent,canActivate: [authGuard],title: 'Checkout'},
-  {path:'compare',loadComponent:()=>import('./features/compare/compare.component').then(c=>CompareComponent),title:'Compare'},
-  
+
+  {path:'compare',loadComponent:()=>import('./features/compare/compare.component').then(c=>CompareComponent),title:'Compare',canActivate: [authGuard]},
+
   {
     path: 'admin',
     component: AdminComponent,
@@ -61,7 +62,7 @@ export const routes: Routes = [
       {path:'Add',component:AdminAddComponent,title:'Add Products'}
     ]
   },
-  
+
   //Hello
   // Product Route
   {
@@ -69,7 +70,7 @@ export const routes: Routes = [
     component: ProductComponent,
     title: 'Product',
     canActivate:[userGuard],
-   
+
     children: [
       { path: '', redirectTo: 'description', pathMatch: 'full' },
       { path: 'reviews', component: ProdReviewsComponent, title: 'Reviews' },

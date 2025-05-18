@@ -10,6 +10,9 @@ import { StorageService } from '../../../services/storage.service';
 import { ImageService } from '../../../services/image.service';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from '../../../services/message.service';
+import gsap from 'gsap';
+import { ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+
 
 @Component({
   selector: 'app-personal-info',
@@ -26,7 +29,11 @@ import { MessageService } from '../../../services/message.service';
   templateUrl: './personal-info.component.html',
   styles: ``,
 })
-export class PersonalInfoComponent implements OnInit, OnDestroy {
+export class PersonalInfoComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('mainContainer', { static: false }) mainContainer!: ElementRef;
+  @ViewChild('profileCard', { static: false }) profileCard!: ElementRef;
+  @ViewChild('addressCard', { static: false }) addressCard!: ElementRef;
+  @ViewChild('phoneCard', { static: false }) phoneCard!: ElementRef;
   data: any;
   selectedFile: File | null = null;
   loading = false;
@@ -55,6 +62,42 @@ export class PersonalInfoComponent implements OnInit, OnDestroy {
       .subscribe((url) => {
         this.imageUrl = url;
       });
+  }
+  ngAfterViewInit(): void {
+    this.animateCards();
+  }
+
+  animateCards(): void {
+    gsap.from(this.mainContainer.nativeElement, {
+      opacity: 0,
+      y: 30,
+      duration: 0.6,
+      ease: 'power2.out',
+    });
+
+    gsap.from(this.profileCard.nativeElement, {
+      opacity: 0,
+      x: -50,
+      delay: 0.3,
+      duration: 0.8,
+      ease: 'back.out(1.7)',
+    });
+
+    gsap.from(this.addressCard.nativeElement, {
+      opacity: 0,
+      x: 50,
+      delay: 0.5,
+      duration: 0.8,
+      ease: 'back.out(1.7)',
+    });
+
+    gsap.from(this.phoneCard.nativeElement, {
+      opacity: 0,
+      x: 50,
+      delay: 0.7,
+      duration: 0.8,
+      ease: 'back.out(1.7)',
+    });
   }
 
   fetchProfile(): void {

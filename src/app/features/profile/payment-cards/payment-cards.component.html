@@ -6,6 +6,7 @@
   >
     <!-- Card Template -->
     <div
+      #cardRef
       *ngFor="let card of cardList"
       class="relative group bg-gradient-to-tr from-blue-800 to-blue-500 text-white rounded-xl p-6 space-y-3 shadow-lg transition-transform duration-200 hover:scale-105 hover:shadow-2xl"
     >
@@ -18,7 +19,11 @@
       <input
         type="text"
         [readOnly]="!card.editable"
-        [placeholder]="card.cardNumber ? 'XXXX XXXX XXXX ' + card.cardNumber.slice(-4) : '0000 0000 0000 0000'"
+        [placeholder]="
+          card.cardNumber
+            ? 'XXXX XXXX XXXX ' + card.cardNumber.slice(-4)
+            : '0000 0000 0000 0000'
+        "
         class="w-full text-2xl font-mono mb-0 text-center px-1 py-1 border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent"
         [(ngModel)]="cardNumber"
       />

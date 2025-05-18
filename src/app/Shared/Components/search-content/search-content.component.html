@@ -1,7 +1,7 @@
 <!-- Page Content -->
-<div class="content-section flex-1 p-5 mt-32 px-22">
+<div class="content-section w-full min-w-3/4 flex-1 p-5 mt-10 px-4 sm:px-8 md:px-10 lg:px-16 xl:px-22">
   <!-- Header -->
-  <div class="flex justify-between items-center flex-wrap gap-x-96 mb-5">
+  <div class="flex flex-wrap justify-between items-center gap-5 mb-5">
     <h3 class="text-xl font-semibold text-gray-700">
       <span>{{ paginatedProducts.length }} Results Of </span>
       <span [ngClass]="{
@@ -13,14 +13,14 @@
     </h3>
 
     <!-- Sort Dropdown -->
-    <div class="flex items-center gap-2">
+    <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
       <h3 class="text-lg font-semibold text-gray-700">Sort By</h3>
       <select
         name="filter"
         id="filter"
         [(ngModel)]="sortBy"
         (ngModelChange)="OnSortChange($event)"
-        class="bg-gray-100 px-3 py-2 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+        class="bg-gray-100 px-3 py-2 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 w-full sm:w-auto"
       >
         <option value="default" disabled hidden>Recommended</option>
         <option value="rating">Rating: High to Low</option>
@@ -30,14 +30,15 @@
     </div>
   </div>
 
-  <!--Not Found Message-->
-  <div *ngIf="!isLoading && paginatedProducts.length === 0" class="flex flex-col items-center justify-center h-96">
-    <img src="Images/Icons/cloud.png" alt="Not Found" class="w-1/4 mb-5" />
+  <!-- Not Found Message -->
+  <div *ngIf="!isLoading && paginatedProducts.length === 0" class="flex flex-col items-center justify-center h-96 text-center px-4">
+    <img src="Images/Icons/cloud.png" alt="Not Found" class="w-1/2 sm:w-1/4 mb-5" />
     <h3 class="text-xl font-semibold text-gray-700">No Products Found</h3>
     <p class="text-gray-500">Try adjusting your filters or search terms.</p>
   </div>
+
   <!-- Product Cards -->
-  <div *ngIf="!isLoading && paginatedProducts.length>0" class="flex flex-wrap justify-center gap-6 my-5 pb-20">
+  <div *ngIf="!isLoading && paginatedProducts.length > 0" class="flex flex-wrap justify-center gap-6 my-5 pb-20">
     <div
       *ngFor="let product of paginatedProducts"
       class="product-card flex flex-col items-center justify-center w-60 rounded-lg shadow-lg bg-white mb-6 transform transition-all hover:scale-105 hover:shadow-xl"
@@ -53,7 +54,7 @@
 </div>
 
 <!-- Pagination Controls -->
-<div *ngIf="!isLoading && paginatedProducts.length > 0" class="flex justify-center mt-4 gap-3 mb-3">
+<div *ngIf="!isLoading && paginatedProducts.length > 0" class="flex flex-wrap justify-center mt-4 gap-3 mb-3">
   <!-- Previous Button -->
   <button
     (click)="changePage(currentpage - 1)"

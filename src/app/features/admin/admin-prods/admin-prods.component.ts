@@ -1,5 +1,12 @@
 // admin-prods.component.ts
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  ViewChildren,
+  QueryList,
+  ElementRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientJsonpModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -12,18 +19,17 @@ import { BrandService } from '../../../services/brand.service';
 import { Brand } from '../../../models/brandModel';
 import { Category } from '../../../models/categoryModel';
 import { MessageService } from '../../../services/message.service';
+import gsap from 'gsap';
 
 @Component({
   selector: 'app-admin-prods',
-  imports: [
-    CommonModule,
-    FormsModule,
-    HttpClientJsonpModule,
-  ],
+  imports: [CommonModule, FormsModule, HttpClientJsonpModule],
   providers: [ProductService],
-  templateUrl: './admin-prods.component.html'
+  templateUrl: './admin-prods.component.html',
 })
-export class AdminProdsComponent implements OnInit {
+export class AdminProdsComponent implements OnInit, AfterViewInit {
+  @ViewChildren('productCard') productCards!: QueryList<ElementRef>;
+
   AllBrands: Brand[] = [];
   AllCategorys: Category[] = [];
   ratings: number[] = [1, 2, 3, 4, 5];
@@ -53,19 +59,40 @@ export class AdminProdsComponent implements OnInit {
     this.fetchProducts();
 
     this.categoryService.getAllCategories().subscribe({
-      next: (data) => { this.AllCategorys = data; },
-      error: (error) => { console.error('Error loading categories', error); }
+      next: (data) => {
+        this.AllCategorys = data;
+      },
+      error: (error) => {
+        console.error('Error loading categories', error);
+      },
     });
 
     this.brandService.getAllBrands().subscribe({
-      next: (data) => { this.AllBrands = data; },
-      error: (error) => { console.error('Error loading brands', error); }
+      next: (data) => {
+        this.AllBrands = data;
+      },
+      error: (error) => {
+        console.error('Error loading brands', error);
+      },
     });
 
-    this.searchservice.searchTerm$.subscribe(term => {
+    this.searchservice.searchTerm$.subscribe((term) => {
       this.searchTerm = term;
       this.applyFilters();
     });
+  }
+
+  ngAfterViewInit(): void {
+    gsap.from(
+      this.productCards.map((c) => c.nativeElement),
+      {
+        opacity: 0.3,
+        y: 30,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: 'power3.out',
+      }
+    );
   }
 
   fetchProducts() {
@@ -79,15 +106,21 @@ export class AdminProdsComponent implements OnInit {
       error: (error) => {
         console.error('Error fetching products:', error);
         this.isLoading = false;
-      }
+      },
     });
   }
 
   applyFilters() {
-    this.filteredProducts = this.AllProducts.filter(product => {
-      const matchesCategory = this.selectedCategory ? product.category === this.selectedCategory : true;
-      const matchesBrand = this.selectedBrand ? product.brand === this.selectedBrand : true;
-      const matchesRating = this.selectedRating ? Math.floor(product.rating) == this.selectedRating : true;
+    this.filteredProducts = this.AllProducts.filter((product) => {
+      const matchesCategory = this.selectedCategory
+        ? product.category === this.selectedCategory
+        : true;
+      const matchesBrand = this.selectedBrand
+        ? product.brand === this.selectedBrand
+        : true;
+      const matchesRating = this.selectedRating
+        ? Math.floor(product.rating) == this.selectedRating
+        : true;
       const matchesSearch = this.searchTerm
         ? product.name?.toLowerCase().includes(this.searchTerm.toLowerCase())
         : true;
@@ -120,47 +153,55 @@ export class AdminProdsComponent implements OnInit {
 
   get paginatedProducts(): Product[] {
     const startIndex = (this.currentpage - 1) * this.itemsPerPage;
-    return this.filteredProducts.slice(startIndex, startIndex + this.itemsPerPage);
+    return this.filteredProducts.slice(
+      startIndex,
+      startIndex + this.itemsPerPage
+    );
   }
 
   getFirstImage(product: any): string {
-  if (product?.imagesAndColors && Object.keys(product.imagesAndColors).length > 0) {
-    const firstKey = Object.keys(product.imagesAndColors)[0];
-    return product.imagesAndColors[firstKey].replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
+    if (
+      product?.imagesAndColors &&
+      Object.keys(product.imagesAndColors).length > 0
+    ) {
+      const firstKey = Object.keys(product.imagesAndColors)[0];
+      return product.imagesAndColors[firstKey]
+        .replace('github.com', 'raw.githubusercontent.com')
+        .replace('/blob/', '/');
+    }
+    return 'assets/Images/default-product.png';
   }
-  return 'assets/Images/default-product.png'; // fallback image
-}
 
-makeEditable() {
-  this.editable = true;
-}
+  makeEditable() {
+    this.editable = true;
+  }
 
-editProduct(product: Product) {
-  this.productservice.updateProduct(product._id, product).subscribe({
-    next: () => {
-      this.editable = false;
-      this.fetchProducts();
-      this.msg.show('Product Updated Successfully');
-    },
-    error: (error) => {
-      console.error('Error updating product:', error);
-      this.msg.show('Failed To Update Product, try later');
-    }
-  })
-}
+  editProduct(product: Product) {
+    this.productservice.updateProduct(product._id, product).subscribe({
+      next: () => {
+        this.editable = false;
+        this.fetchProducts();
+        this.msg.show('Product Updated Successfully');
+      },
+      error: (error) => {
+        console.error('Error updating product:', error);
+        this.msg.show('Failed To Update Product, try later');
+      },
+    });
+  }
 
-removeProduct(product: Product) {
-  this.productservice.deleteProduct(product._id).subscribe({
-    next: () => {
-      this.fetchProducts();
-      this.msg.show('Product Deleted Successfully');
-    },
-    error: (error) => {
-      console.error('Error deleting product:', error);
-      this.msg.show('Failed To Delete Product, try later');
-    }
-  });
-}
+  removeProduct(product: Product) {
+    this.productservice.deleteProduct(product._id).subscribe({
+      next: () => {
+        this.fetchProducts();
+        this.msg.show('Product Deleted Successfully');
+      },
+      error: (error) => {
+        console.error('Error deleting product:', error);
+        this.msg.show('Failed To Delete Product, try later');
+      },
+    });
+  }
 
   changePage(page: number) {
     this.currentpage = page;

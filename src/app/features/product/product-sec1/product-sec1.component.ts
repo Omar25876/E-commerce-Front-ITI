@@ -7,6 +7,7 @@ import { CartService } from '../../../services/cart.service';
 import { CartProduct } from '../../../models/cartModel';
 import { MessageService } from '../../../services/message.service';
 import { StorageService } from '../../../services/storage.service';
+import { CompareService } from '../../../services/compare.service';
 
 @Component({
   selector: 'app-product-sec1',
@@ -59,20 +60,20 @@ export class ProductSec1Component implements OnInit {
   enteredQuantity: number = 1;
   productQuantityInCart: number = 0;
   remainingProduct: number = 0;
-  TotalQuantity:number=0;
+  TotalQuantity: number = 0;
 
   constructor(
-    private categoryService: CategoryService,
     private cartService: CartService,
     private MsgSer: MessageService,
-    private Storage: StorageService
+    private Storage: StorageService,
+    private compareservice: CompareService
   ) {
     if (typeof window !== 'undefined' && window.localStorage) {
-      const storedProduct:Product|null = this.Storage.getItem('product');
-      console.log("storedProduct :");
+      const storedProduct: Product | null = this.Storage.getItem('product');
+      console.log('storedProduct :');
       console.log(storedProduct);
       if (storedProduct) {
-        this.product = storedProduct
+        this.product = storedProduct;
         this.productColors = this.product.imagesAndColors
           ? Object.keys(this.product.imagesAndColors)
           : [];
@@ -99,24 +100,24 @@ export class ProductSec1Component implements OnInit {
   }
 
   getQuantityInCart() {
-  const cartProducts = this.cartService.getCartFromLocalStorage();
+    const cartProducts = this.cartService.getCartFromLocalStorage();
 
-  // get the quantity whatever the color is
-  const matchingProducts = cartProducts.filter(
-    (prd: CartProduct) => prd.itemId === this.product._id
-  );
+    // get the quantity whatever the color is
+    const matchingProducts = cartProducts.filter(
+      (prd: CartProduct) => prd.itemId === this.product._id
+    );
 
-  this.productQuantityInCart = matchingProducts.reduce(
-    (total, prd) => total + prd.quantity,0
-  );
+    this.productQuantityInCart = matchingProducts.reduce(
+      (total, prd) => total + prd.quantity,
+      0
+    );
 
-  this.isOutOfStock = this.productQuantityInCart >= this.product.stock;
-  this.remainingProduct = this.product.stock - this.productQuantityInCart;
-  console.log("Remaining Product:0");
-  console.log(this.remainingProduct);
-  this.enteredQuantity = 0;
-}
-
+    this.isOutOfStock = this.productQuantityInCart >= this.product.stock;
+    this.remainingProduct = this.product.stock - this.productQuantityInCart;
+    console.log('Remaining Product:0');
+    console.log(this.remainingProduct);
+    this.enteredQuantity = 1;
+  }
 
   selectImage(image: string): void {
     this.selectedImage = image;
@@ -144,62 +145,84 @@ export class ProductSec1Component implements OnInit {
     }
   }
 
- clickAddtoCart(): void {
-  console.log('Trying to add item to cart...');
+  clickAddtoCart(): void {
+    if (!this.Storage.getItem('token')) {
+      this.MsgSer.show('You must be logged in to add items to the cart.');
+      return;
+    }
+    console.log('Trying to add item to cart...');
 
-  const cartProducts = this.cartService.getCartFromLocalStorage();
+    const cartProducts = this.cartService.getCartFromLocalStorage();
 
-  const matchedProduct = cartProducts.find(
-    (prd: CartProduct) =>
-      prd.itemId === this.product._id && prd.selectedColor === this.selectedColor
-  );
-
-  const quantityInCart = matchedProduct ? matchedProduct.quantity : 0;
-
-  const quantityToAdd = this.enteredQuantity - quantityInCart;
-
-  if (this.product.stock <= quantityInCart) {
-    console.log('No addition, product is out of stock');
-    this.MsgSer.show(`Sorry, ${this.product.name}(${this.product.selectedColor}) is out of stock.`);
-    return;
-  }
-
-  if (quantityToAdd <= 0) {
-    this.MsgSer.show(`Quantity already in cart is up to date.`);
-    return;
-  }
-
-  try {
-    // Add to local storage cart
-     this.cartService.addItemToCart(
-      this.product._id,
-      quantityToAdd,
-      this.product.price,
-      this.product.name,
-      this.selectedColor,
-      this.selectedImage,
-      this.product.brand,
-      this.product.stock
+    const matchedProduct = cartProducts.find(
+      (prd: CartProduct) =>
+        prd.itemId === this.product._id &&
+        prd.selectedColor === this.selectedColor
     );
 
-    // Update UI state
-    this.productQuantityInCart = quantityInCart + quantityToAdd;
+    const quantityInCart = matchedProduct ? matchedProduct.quantity : 0;
 
-    if (quantityInCart > 0) {
-      this.MsgSer.show(`${this.product.name}(${this.product.selectedColor})'s quantity increased.`);
-      this.TotalQuantity += quantityToAdd;
-      this.remainingProduct= this.product.stock - this.TotalQuantity;
-      this.enteredQuantity=0;
-    } else {
-      this.MsgSer.show(`${this.product.name}(${this.selectedColor}) added to cart.`);
-      this.TotalQuantity +=quantityToAdd;
-      this.remainingProduct= this.product.stock - this.TotalQuantity;
-      this.enteredQuantity=0;
+    const quantityToAdd = this.enteredQuantity - quantityInCart;
+
+    if (this.product.stock <= quantityInCart) {
+      console.log('No addition, product is out of stock');
+      this.MsgSer.show(
+        `Sorry, ${this.product.name}(${this.product.selectedColor}) is out of stock.`
+      );
+      return;
     }
-  } catch (err) {
-    console.error('Error adding item to cart:', err);
-    this.MsgSer.show(`Error adding ${this.product.name}(${this.selectedColor}) to cart.`);
-  }
-}
 
+    if (quantityToAdd <= 0) {
+      this.MsgSer.show(`Quantity already in cart is up to date.`);
+      return;
+    }
+
+    try {
+      // Add to local storage cart
+      this.cartService.addItemToCart(
+        this.product._id,
+        quantityToAdd,
+        this.product.price,
+        this.product.name,
+        this.selectedColor,
+        this.selectedImage,
+        this.product.brand,
+        this.product.stock
+      );
+
+      // Update UI state
+      this.productQuantityInCart = quantityInCart + quantityToAdd;
+
+      if (quantityInCart > 0) {
+        this.MsgSer.show(
+          `${this.product.name}(${this.product.selectedColor})'s quantity increased.`
+        );
+        this.TotalQuantity += quantityToAdd;
+        this.remainingProduct = this.product.stock - this.TotalQuantity;
+        this.enteredQuantity = 0;
+      } else {
+        this.MsgSer.show(
+          `${this.product.name}(${this.selectedColor}) added to cart.`
+        );
+        this.TotalQuantity += quantityToAdd;
+        this.remainingProduct = this.product.stock - this.TotalQuantity;
+        this.enteredQuantity = 0;
+      }
+    } catch (err) {
+      console.error('Error adding item to cart:', err);
+      this.MsgSer.show(
+        `Error adding ${this.product.name}(${this.selectedColor}) to cart.`
+      );
+    }
+  }
+
+  addToComparelist(product: any): void {
+    if (!this.Storage.getItem('token')) {
+      this.MsgSer.show('You must be logged in to add items to Compare List.');
+      return;
+    }
+    this.compareservice.addToCompare(product);
+    this.MsgSer.show(`${product.name} Added Successfully To Compare List`);
+    console.log('Added to CompareList:', product);
+  }
 }

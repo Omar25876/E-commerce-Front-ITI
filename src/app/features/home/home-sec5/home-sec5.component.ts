@@ -35,6 +35,8 @@ export class HomeSec5Component implements OnInit {
     }
   }
 
+  trackByIndex(index: number, item: any) { return index; }
+
   /**
    * Fetch products from the API and update localStorage
    */

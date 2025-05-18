@@ -1,6 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  QueryList,
+  ViewChildren
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import gsap from 'gsap';
 import { CartService } from '../../services/cart.service';
 import { CartProduct } from '../../models/cartModel';
 import { StorageService } from '../../services/storage.service';
@@ -8,17 +17,49 @@ import { StorageService } from '../../services/storage.service';
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './cart.component.html',
 })
-export class CartComponent implements OnInit {
+export class CartComponent implements OnInit, AfterViewInit {
+  @ViewChild('pageWrapper') pageWrapper!: ElementRef;
+  @ViewChildren('cartItem') cartItemElements!: QueryList<ElementRef>;
+
   cartItems: CartProduct[] = [];
   selectedItem: CartProduct | null = null;
 
-  constructor(private cartService: CartService,private Storage:StorageService) {}
+  constructor(
+    private cartService: CartService,
+    private Storage: StorageService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadCart();
+  }
+
+  ngAfterViewInit(): void {
+    // Entry animation for the whole page
+    gsap.from(this.pageWrapper.nativeElement, {
+      duration: 1,
+      y: 50,
+      opacity: 0.3,
+      ease: 'power3.out',
+    });
+
+    // Animate each cart item
+    this.animateCartItems();
+  }
+
+  animateCartItems(): void {
+    if (this.cartItemElements?.length) {
+      gsap.from(this.cartItemElements.map(ref => ref.nativeElement), {
+        duration: 1,
+        y: 30,
+        opacity: 0.3,
+        stagger: 0.1,
+        ease: 'power3.out',
+      });
+    }
   }
 
   loadCart(): void {
@@ -45,7 +86,7 @@ export class CartComponent implements OnInit {
       item.brand,
       item.stock
     );
-    this.loadCart(); // Refresh the cart after modification
+    this.loadCart();
   }
 
   decreaseQuantity(item: CartProduct): void {
@@ -60,21 +101,32 @@ export class CartComponent implements OnInit {
         item.brand,
         item.stock
       );
-      this.loadCart(); 
+      this.loadCart();
     } else {
       this.removeItem(item);
     }
   }
 
   removeItem(item: CartProduct): void {
-    this.cartService.removeItemFromCart(item.itemId,item.selectedColor);
+    this.cartService.removeItemFromCart(item.itemId, item.selectedColor);
     this.cartItems = this.cartItems.filter(
-      i => !(i.itemId === item.itemId && i.selectedColor === item.selectedColor)
+      (i) => !(i.itemId === item.itemId && i.selectedColor === item.selectedColor)
     );
-
   }
 
   trackByItemId(index: number, item: CartProduct): string {
     return item.itemId;
+  }
+
+  navigateWithAnimation(url: string) {
+    gsap.to(this.pageWrapper.nativeElement, {
+      duration: 0.5,
+      y: -50,
+      opacity: 0.3,
+      ease: 'power3.in',
+      onComplete: () => {
+        this.router.navigateByUrl(url);
+      },
+    });
   }
 }
