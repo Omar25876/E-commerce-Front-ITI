@@ -1,4 +1,5 @@
 <nav
+  #navbarWrapper
   class="bg-gradient-to-r from-sky-400 to-blue-600 text-white px-4 sm:px-6 py-4 flex items-center justify-between rounded-lg shadow-lg m-2 sm:m-5"
 >
   <!-- Logo -->
@@ -10,8 +11,10 @@
     />
   </div>
 
-  <!-- Navigation Links -->
-  <ul class="hidden md:flex space-x-12 text-lg font-semibold">
+  <!-- Responsive Navigation Links -->
+  <ul
+    class="flex flex-wrap sm:flex-nowrap justify-center items-center gap-6 text-sm sm:text-base md:text-lg font-semibold mx-3 sm:mx-5"
+  >
     <li>
       <a
         routerLink="/"
@@ -28,7 +31,7 @@
     </li>
     <li>
       <a
-        routerLink="/compare"
+        (click)="goToCompare()"
         class="hover:underline hover:text-gray-200 transition duration-300"
         >Compare</a
       >
@@ -58,7 +61,7 @@
 
     <!-- Cart Icon -->
     <a
-      routerLink="/cart"
+      (click)="goToCart()"
       class="hidden md:flex h-10 w-10 items-center justify-center rounded-full shadow-md hover:shadow-lg transition duration-300 cursor-pointer"
     >
       <img class="h-6" src="Images/Icons/CartIcon.png" alt="Cart" />
@@ -75,61 +78,62 @@
     </ng-container>
 
     <!-- User Icon -->
-    <ng-container *ngIf="isLoggedIn">
-      <div class="relative flex flex-row items-center gap-2">
-        <!-- User Profile Image -->
-        <div class="w-12 h-12 bg-gray-300 rounded-full overflow-hidden">
-          <img
-            [src]="
-              imageUrl
-                ? imageUrl
-                : 'Images/Authentication/Main User Photo 2.svg'
-            "
-            alt="User Profile"
-            class="w-full h-full object-cover"
-          />
-        </div>
+<ng-container *ngIf="isLoggedIn">
+  <div class="relative flex flex-row items-center gap-2">
+    <!-- User Profile Image -->
+    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gray-300 rounded-full overflow-hidden">
+      <img
+        [src]="imageUrl ? imageUrl : 'Images/Authentication/Main User Photo 2.svg'"
+        alt="User Profile"
+        class="w-full h-full object-cover"
+      />
+    </div>
 
-        <!-- Dropdown Button -->
+    <!-- Dropdown Button -->
+    <button
+      class="inline-flex items-center w-16 sm:w-24 text-xs sm:text-sm px-2 py-2 font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none"
+      (click)="toggleDropdown()"
+      type="button"
+    >
+      <span class="truncate">{{ lastName }}</span>
+      <svg
+        class="w-4 h-4 sm:w-5 sm:h-5 ml-2"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M19 9l-7 7-7-7"
+        />
+      </svg>
+    </button>
+
+    <!-- Dropdown Menu -->
+    <div
+      *ngIf="dropdownOpen"
+      class="absolute top-12 right-0 z-50 mt-2 w-40 sm:w-48 origin-top-right rounded-md shadow-lg bg-gradient-to-r from-sky-400 to-blue-600 ring-1 ring-black ring-opacity-5"
+    >
+      <div class="py-1">
         <button
-          class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none"
-          (click)="toggleDropdown()"
+          class="block w-full text-left px-4 py-2 text-white text-sm hover:bg-gray-100 hover:text-gray-800 transition"
+          (click)="viewProfile()"
+          type="button"
         >
-          {{ lastName }}
-          <svg
-            class="w-5 h-5 ml-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
+          My Profile
         </button>
-
-        <!-- Dropdown Menu -->
-        <div
-          *ngIf="dropdownOpen"
-          class="absolute top-12 right-0 z-50 mt-2 w-48 origin-top-right rounded-md shadow-lg bg-gradient-to-r from-sky-400 to-blue-600 ring-1 ring-black ring-opacity-5"
+        <button
+          class="block w-full text-left px-4 py-2 text-white text-sm hover:bg-gray-100 hover:text-gray-800 transition"
+          (click)="logout()"
+          type="button"
         >
-          <div class="py-1">
-            <a
-              class="block px-4 py-2 text-white text-md hover:bg-gray-100 hover:text-gray-800"
-              (click)="viewProfile()"
-              >My Profile</a
-            >
-            <a
-              class="block px-4 py-2 text-white text-md hover:bg-gray-100 hover:text-gray-800"
-              (click)="logout()"
-              >Logout</a
-            >
-          </div>
-        </div>
+          Logout
+        </button>
       </div>
-    </ng-container>
+    </div>
+  </div>
+</ng-container>
   </div>
 </nav>

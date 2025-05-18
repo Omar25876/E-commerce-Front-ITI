@@ -1,11 +1,13 @@
-<div class="flex group flex-col items-center justify-center w-60 rounded-lg shadow-lg bg-white m-x-10">
+<div
+  class="flex group flex-col items-center justify-center w-60 rounded-lg shadow-lg bg-white m-x-10"
+>
   <!-- Product Image -->
   <div
     class="relative group w-full h-48 group-hover:bg-gray-500 group-hover:bg-opacity-10 transition-all duration-500 rounded-lg overflow-hidden"
   >
     <img
       class="object-contain w-full h-full rounded-lg transition-transform duration-500 group-hover:scale-115"
-      src="{{rawUrl}}"
+      src="{{ rawUrl }}"
       [alt]="myProduct.name"
     />
     <div
@@ -13,7 +15,7 @@
     >
       <!-- Add to Cart Button -->
       <button
-        class="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-lg hover:bg-sky-400 transition-all duration-300 "
+        class="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-lg hover:bg-sky-400 transition-all duration-300"
         (click)="addToCart(myProduct)"
       >
         <svg
@@ -36,10 +38,23 @@
         class="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-lg hover:bg-sky-400 transition-all duration-300"
         (click)="addToComparelist(myProduct)"
       >
-        <svg class="w-6 h-6 text-gray-800 dark:text-black hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.651 7.65a7.131 7.131 0 0 0-12.68 3.15M18.001 4v4h-4m-7.652 8.35a7.13 7.13 0 0 0 12.68-3.15M6 20v-4h4"/>
+        <svg
+          class="w-6 h-6 text-gray-800 dark:text-black hover:text-white"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M17.651 7.65a7.131 7.131 0 0 0-12.68 3.15M18.001 4v4h-4m-7.652 8.35a7.13 7.13 0 0 0 12.68-3.15M6 20v-4h4"
+          />
         </svg>
-
       </button>
 
       <!-- Quick View Button -->
@@ -47,7 +62,7 @@
         class="group flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-lg hover:bg-sky-400 transition-all duration-300"
         (click)="quickView()"
       >
-       <svg
+        <svg
           xmlns="http://www.w3.org/2000/svg"
           class="w-6 h-6 text-gray-800 dark:text-black hover:text-white"
           fill="none"
@@ -72,20 +87,33 @@
 
   <!-- Product Info -->
   <div class="flex flex-col items-start w-full p-4 space-y-2">
-    <span class="text-md font-semibold text-gray-800">{{ myProduct.name}}</span>
-    <span class="text-md font-bold text-gray-800">{{ myProduct.price}} EGP</span>
+    <span class="text-md font-semibold text-gray-800">{{
+      myProduct.name
+    }}</span>
+    <span class="text-md font-bold text-gray-800"
+      >{{ myProduct.price }} EGP</span
+    >
     <div class="flex items-center space-x-1">
-      <span class="bg-gradient-to-r from-sky-400 to-blue-600 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
-        {{myProduct.rating}}
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+      <span
+        class="bg-gradient-to-r from-sky-400 to-blue-600 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 shadow-md"
+      >
+        {{ myProduct.rating }}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-4 h-4 text-white"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path
             d="M12 .587l3.668 7.431 8.332 1.151-6.064 5.798 1.43 8.275L12 18.896l-7.366 4.346 1.43-8.275L.001 9.169l8.332-1.151z"
           />
         </svg>
       </span>
-      <span class="text-sm text-gray-500">({{myProduct.reviewsCount}})</span>
+      <span class="text-sm text-gray-500">({{ myProduct.reviewsCount }})</span>
       <div class="flex flex-row justify-between ml-5">
-        <span class="line-through text-gray-500">{{myProduct.oldPrice}} EGP</span>
+        <span class="line-through text-gray-500"
+          >{{ myProduct.oldPrice }} EGP</span
+        >
       </div>
     </div>
   </div>

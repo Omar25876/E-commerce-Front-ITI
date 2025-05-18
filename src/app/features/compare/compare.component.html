@@ -1,23 +1,40 @@
-<div *ngIf="productCompare.length > 0; else noProducts" class="flex flex-col items-center gap-y-10 mx-auto py-12 px-2 sm:px-6">
+<div
+  #pageWrapper
+  *ngIf="productCompare.length > 0; else noProducts"
+  class="flex flex-col items-center gap-y-10 mx-auto py-12 px-2 sm:px-6"
+>
   <!-- المنتجات -->
   <div class="flex flex-wrap justify-center gap-x-6 gap-y-8 w-full">
-    <div *ngFor="let product of productCompare" class="flex flex-col items-center space-y-2">
+    <div
+      *ngFor="let product of productCompare"
+      #card
+      class="flex flex-col items-center space-y-2"
+    >
       <app-product-card [myProduct]="product"></app-product-card>
       <button
         class="bg-gradient-to-r from-sky-400 to-blue-600 text-white w-28 mt-3 text-base p-2 border-4 hover:border-blue-600 rounded-xl font-bold transition"
-        (click)="remove(product._id)">
+        (click)="remove(product._id)"
+      >
         Remove
       </button>
     </div>
   </div>
 
   <!-- جدول المقارنة -->
-  <div *ngIf="productCompare.length > 1" class="overflow-x-auto mt-8 w-full px-1 sm:px-4">
-    <table class="min-w-full border border-gray-300 text-center bg-sky-300 text-white">
+  <div
+    *ngIf="productCompare.length > 1"
+    class="overflow-x-auto mt-8 w-full px-1 sm:px-4"
+  >
+    <table
+      class="min-w-full border border-gray-300 text-center bg-sky-300 text-white"
+    >
       <thead>
         <tr class="bg-sky-500">
           <th class="border p-3 font-bold whitespace-nowrap">Feature</th>
-          <th *ngFor="let product of productCompare" class="border p-3 font-bold whitespace-nowrap">
+          <th
+            *ngFor="let product of productCompare"
+            class="border p-3 font-bold whitespace-nowrap"
+          >
             {{ product.name }}
           </th>
         </tr>
@@ -27,14 +44,21 @@
           <td class="border p-3 font-medium whitespace-nowrap">Ratings</td>
           <td *ngFor="let product of productCompare" class="border p-3">
             <div class="flex flex-row justify-center gap-2">
-              <div class="flex items-center gap-2 bg-gradient-to-r from-sky-400 to-blue-600 px-3 py-1 rounded-full">
-                <span class="text-white font-semibold">{{ product.rating }}</span>
+              <div
+                class="flex items-center gap-2 bg-gradient-to-r from-sky-400 to-blue-600 px-3 py-1 rounded-full"
+              >
+                <span class="text-white font-semibold">{{
+                  product.rating
+                }}</span>
                 <svg class="w-5 h-5" fill="white" viewBox="0 0 20 20">
                   <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.965a1 1 0 00.95.69h4.174c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.921-.755 1.688-1.54 1.118l-3.38-2.455a1 1 0 00-1.175 0l-3.38 2.455c-.784.57-1.838-.197-1.539-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.05 9.392c-.783-.57-.38-1.81.588-1.81h4.174a1 1 0 00.95-.69l1.287-3.965z" />
+                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.965a1 1 0 00.95.69h4.174c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.921-.755 1.688-1.54 1.118l-3.38-2.455a1 1 0 00-1.175 0l-3.38 2.455c-.784.57-1.838-.197-1.539-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.05 9.392c-.783-.57-.38-1.81.588-1.81h4.174a1 1 0 00.95-.69l1.287-3.965z"
+                  />
                 </svg>
               </div>
-              <span class="text-base text-white">({{ product.reviewsCount }})</span>
+              <span class="text-base text-white"
+                >({{ product.reviewsCount }})</span
+              >
             </div>
           </td>
         </tr>
@@ -42,7 +66,7 @@
         <tr>
           <td class="border p-3 font-medium whitespace-nowrap">Price</td>
           <td *ngFor="let product of productCompare" class="border p-3">
-            {{ product.price | currency:'EGP':'symbol':'1.2-2' }}
+            {{ product.price | currency : "EGP" : "symbol" : "1.2-2" }}
           </td>
         </tr>
 
@@ -50,18 +74,25 @@
           <td class="border p-3 font-medium whitespace-nowrap">Colors</td>
           <td *ngFor="let product of productCompare" class="border p-3">
             <div class="flex flex-wrap justify-center gap-2">
-              <div *ngFor="let color of (getProductColors(product._id))"
+              <div
+                *ngFor="let color of getProductColors(product._id)"
                 class="w-6 h-6 rounded-full border border-gray-300 shadow"
-                [style.backgroundColor]="color" title="{{ color }}">
-              </div>
+                [style.backgroundColor]="color"
+                title="{{ color }}"
+              ></div>
             </div>
           </td>
         </tr>
 
         <tr>
-          <td class="border p-3 font-medium whitespace-nowrap">Connection Type</td>
+          <td class="border p-3 font-medium whitespace-nowrap">
+            Connection Type
+          </td>
           <td *ngFor="let product of productCompare" class="border p-3">
-            <div *ngFor="let type of (getType(product._id,'Charging Port'))" title="{{ type }}">
+            <div
+              *ngFor="let type of getType(product._id, 'Charging Port')"
+              title="{{ type }}"
+            >
               {{ type }}
             </div>
           </td>
@@ -80,7 +111,8 @@
   <div class="mt-8">
     <button
       class="bg-gradient-to-r from-sky-400 to-blue-600 text-white w-28 text-base p-2 border-4 hover:border-blue-600 rounded-xl font-bold transition"
-      (click)="clear()">
+      (click)="clear()"
+    >
       Clear All
     </button>
   </div>
@@ -88,7 +120,10 @@
 
 <!-- لو مفيش منتجات -->
 <ng-template #noProducts>
-  <div class="flex flex-col items-center justify-center min-h-[60vh] pb-10 px-2">
+  <div
+    #pageWrapper
+    class="flex flex-col items-center justify-center min-h-[60vh] pb-10 px-2"
+  >
     <img src="Images/Icons/cloud.png" alt="Not Found" class="w-24 mb-4" />
     <h3 class="text-xl font-semibold text-gray-700">No Products Added Yet</h3>
     <p class="text-gray-500">Try adding your product to compare.</p>

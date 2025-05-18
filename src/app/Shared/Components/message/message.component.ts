@@ -18,10 +18,10 @@ export class MessageComponent {
     if (msg) {
       this.message = msg;
       this.visible = true;
-       
+
       setTimeout(() => {
       this.visible = false;
-    }, 3000);
+    }, 4000);
     }
   });
 }

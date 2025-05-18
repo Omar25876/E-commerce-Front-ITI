@@ -2,7 +2,7 @@
 
 <ng-container *ngIf="AuthSer.isLoggedIn() && AuthSer.getUserData().isAdmin; else User_Guest">
   <router-outlet></router-outlet>
-  <app-message></app-message> 
+  <app-message></app-message>
 </ng-container>
 
 <!-- Guest & User Pages -->

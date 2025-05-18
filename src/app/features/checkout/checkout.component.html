@@ -1,4 +1,4 @@
-<div class="flex justify-center">
+<div #checkoutWrapper class="flex justify-center">
    <div class="w-[37%] flex flex-col gap-4 p-4 rounded-xl mb-5">
       <p class="text-xl font-bold">Choose Payment Type:</p>
 
@@ -8,7 +8,7 @@
           id="COD"
           name="paymentType"
           value="cash"
-          [(ngModel)]="selectedPayment" 
+          [(ngModel)]="selectedPayment"
           (ngModelChange)="SetPaymentView()"
           class="w-6 h-6 accent-gradient bg-gradient-to-r from-sky-400 to-blue-600"
         />
@@ -52,39 +52,39 @@
             </div>
             <img src="Images/Icons/sim card.png" class="max-w-[50px] ml-1"/>
             <input
-              name="CardNum" 
-              type="text" 
+              name="CardNum"
+              type="text"
               [disabled]="!AddClicked"
-              (input)="FRestrict($event)" 
-              class="w-[100%] text-2xl font-mono mb-0 tracking-widest px-1 py-1 border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent" 
+              (input)="FRestrict($event)"
+              class="w-[100%] text-2xl font-mono mb-0 tracking-widest px-1 py-1 border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent"
               [value]="!AddClicked ? 'XXXX XXXX XXXX '+CurrentCard.cardNumber.slice(-4) : CurrentCard.cardNumber"
               />
             <input
               class="text-sm px-1 py-1 border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent"
-              [value]="!AddClicked ? 'CVV':CurrentCard.cvv" 
+              [value]="!AddClicked ? 'CVV':CurrentCard.cvv"
               [disabled]="!AddClicked"
               (input)="FRestrict($event)"
               name="CVV"
               />
 
             <div class="flex justify-between text-xs items-end">
-              <input 
-                type="text" 
-                class="font-semibold w-70 px-1 py-1 border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent" 
-                [value]="CurrentCard.cardHolderName" 
+              <input
+                type="text"
+                class="font-semibold w-70 px-1 py-1 border border-transparent rounded outline-none focus:ring-0 focus:border-white bg-transparent"
+                [value]="CurrentCard.cardHolderName"
                 [disabled]="!AddClicked"
                 name="HolderName"
-                (input)="FRestrict($event)" 
-                
+                (input)="FRestrict($event)"
+
                 />
 
               <div class="flex flex-col items-end">
                 <span class="w-fit">VALID</span>
                 <div class="flex gap-1">
                   <span>THRU ▶</span>
-                  <input 
-                    type="text" 
-                    [value]="CurrentCard.expiryDate" 
+                  <input
+                    type="text"
+                    [value]="CurrentCard.expiryDate"
                     [disabled]="!AddClicked"
                     name="Expiry"
                     (input)="FRestrict($event)"
@@ -104,7 +104,7 @@
                 </button>
               </div>
               <div class="p-[2px] rounded bg-gradient-to-r from-blue-800 to-blue-500 inline-block shadow-md">
-                <button 
+                <button
                 (click)="ADD()"
                 class="bg-white rounded px-4 py-2 text-lg text-blue-800 hover:bg-gradient-to-r from-blue-800 to-blue-500 transition hover:text-white hover:font-bold">
                   {{CardBut}}
@@ -157,7 +157,7 @@
           #cityRef="ngModel"
           class="w-[50%] border px-2 pr-2.5 py-1 rounded text-sm bg-gray-50"
         />
-        
+
 
         <!-- Street Input (Only letters allowed) -->
         <input
@@ -228,9 +228,9 @@
 
       <div>
         <label class="block text-sm font-medium mb-1">Promo Code</label>
-        <input 
-          type="text" 
-          class="w-full border px-3 py-1 rounded text-sm bg-gray-50" 
+        <input
+          type="text"
+          class="w-full border px-3 py-1 rounded text-sm bg-gray-50"
           [(ngModel)]="Promo"/>
         <button class="mt-2 bg-gradient-to-r from-sky-400 to-blue-600 py-2 px-3 text-md text-white font-bold rounded-sm" (click)="ApplyPromo()">Apply</button>
         @if(PromoCheck && Clicked){

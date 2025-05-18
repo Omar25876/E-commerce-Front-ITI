@@ -1,51 +1,95 @@
-<div class="flex  items-center h-screen ">
-<div class=" w-60 h-screen bg-white  rounded-r-2xl flex flex-col py-10 px-0">
-  <nav class="flex flex-col items-center justify-center h-full">
-    <ul class="space-y-4 w-full">
-      <li>
-        <a
-          routerLink="personal-info"
-          routerLinkActive="active text-white bg-gradient-to-r from-sky-400 to-blue-600"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="flex items-center gap-3 px-4 py-3 rounded-r-lg font-semibold w-full text-gray-600 hover:text-white hover:bg-gradient-to-r hover:from-sky-400 hover:to-blue-600 transition duration-200 shadow-sm"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          Profile
-        </a>
-      </li>
-      <li>
-        <a
-          routerLink="payment-cards"
-          routerLinkActive="active text-white bg-gradient-to-r from-sky-400 to-blue-600"
-          class="flex items-center gap-3 px-4 py-3 rounded-r-lg font-semibold w-full text-gray-600 hover:text-white hover:bg-gradient-to-r hover:from-sky-400 hover:to-blue-600 transition duration-200 shadow-sm"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <rect width="20" height="14" x="2" y="5" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M2 10h20" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Payment Cards
-        </a>
-      </li>
-      <li>
-        <a
-          routerLink="orders"
-          routerLinkActive="active text-white bg-gradient-to-r from-sky-400 to-blue-600"
-          class="flex items-center gap-3 px-4 py-3 rounded-r-lg font-semibold w-full text-gray-600 hover:text-white hover:bg-gradient-to-r hover:from-sky-400 hover:to-blue-600 transition duration-200 shadow-sm"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7M16 3v4M8 3v4" />
-          </svg>
-          Orders
-        </a>
-      </li>
-    </ul>
-  </nav>
-</div>
-<div class="overflow-y-auto w-full flex flex-col justify-center items-center">
-<router-outlet></router-outlet>
-</div>
+<div class="flex items-center h-screen">
+  <div
+    #sidebar
+    class="w-60 h-screen bg-white rounded-r-2xl flex flex-col py-10 px-0"
+  >
+    <nav class="flex flex-col items-center justify-center h-full">
+      <ul class="space-y-4 w-full">
+        <li>
+          <a
+            routerLink="personal-info"
+            routerLinkActive="active text-white bg-gradient-to-r from-sky-400 to-blue-600"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="flex items-center gap-3 px-4 py-3 rounded-r-lg font-semibold w-full text-gray-600 hover:text-white hover:bg-gradient-to-r hover:from-sky-400 hover:to-blue-600 transition duration-200 shadow-sm"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+            Profile
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="payment-cards"
+            routerLinkActive="active text-white bg-gradient-to-r from-sky-400 to-blue-600"
+            class="flex items-center gap-3 px-4 py-3 rounded-r-lg font-semibold w-full text-gray-600 hover:text-white hover:bg-gradient-to-r hover:from-sky-400 hover:to-blue-600 transition duration-200 shadow-sm"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <rect
+                width="20"
+                height="14"
+                x="2"
+                y="5"
+                rx="2"
+                ry="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M2 10h20"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            Payment Cards
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="orders"
+            routerLinkActive="active text-white bg-gradient-to-r from-sky-400 to-blue-600"
+            class="flex items-center gap-3 px-4 py-3 rounded-r-lg font-semibold w-full text-gray-600 hover:text-white hover:bg-gradient-to-r hover:from-sky-400 hover:to-blue-600 transition duration-200 shadow-sm"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 7h18M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7M16 3v4M8 3v4"
+              />
+            </svg>
+            Orders
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
 
-
+  <div
+    #content
+    class="overflow-y-auto w-full flex flex-col justify-center items-center"
+  >
+    <router-outlet></router-outlet>
+  </div>
 </div>
