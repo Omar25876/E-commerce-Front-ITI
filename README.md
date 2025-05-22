@@ -83,24 +83,8 @@ ng serve
 
 > Make sure to configure your `.env` files properly with MongoDB URI, Stripe keys, and any other credentials.
 
----
 
-## 👨‍👩‍👧‍👦 Team
 
-* Omar Khaled (👨‍💻 Developer)
-* Abdelrahman Aziz
-* Ibrahim Medhat
-* Mahmoud Shrief
-* Fares Hossam
-
----
-
-## 🎓 Mentors
-
-* Mostafa Mahmoud
-* Mahmoud Abdelaziz
-
----
 
 ## 🏁 Goals
 
