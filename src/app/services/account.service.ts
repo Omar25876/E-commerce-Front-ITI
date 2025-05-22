@@ -16,6 +16,10 @@ export class AccountService {
     return this.myHttp.get<UserResponse>(this.url);
   }
 
+   get2Profile(): Observable<UserResponse> {
+    return this.myHttp.get<UserResponse>(this.url);
+  }
+  
   updateProfile(profile: any) {
     return this.myHttp.put(this.url, profile);
   }
