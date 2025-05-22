@@ -1,5 +1,5 @@
 <!-- Filter Section -->
-<div class="filter-section w-full max-w-xs mx-auto px-2 sm:px-0">
+<div #filterSection class="filter-section w-full max-w-xs sm:max-w-sm md:w-lg lg:max-w-sm xl:max-w-xs mx-auto px-2 sm:px-4">
 
   <!-- Category Card -->
   <div class="card my-6 shadow-lg rounded-xl overflow-hidden w-full">
@@ -12,7 +12,7 @@
       </button>
     </div>
     <div *ngIf="iscategoryopen" class="px-4 py-5">
-      <div class="flex flex-wrap gap-4" *ngFor="let category of categories">
+      <div class="flex flex-wrap gap-4 items-center" *ngFor="let category of categories">
         <input type="checkbox" [checked]="categoryChecked(category)" (change)="OnCategoryChange(category, $event)">
         <h3>{{category.categoryName}}</h3>
       </div>
@@ -30,7 +30,7 @@
       </button>
     </div>
     <div *ngIf="isbrandopen" class="px-4 py-5">
-      <div class="flex flex-wrap gap-4" *ngFor="let brand of brands">
+      <div class="flex flex-wrap gap-4 items-center" *ngFor="let brand of brands">
         <input type="checkbox" [checked]="brandChecked(brand)" (change)="OnBrandChange(brand, $event)">
         <h3>{{brand.name}}</h3>
       </div>
@@ -48,7 +48,7 @@
       </button>
     </div>
     <div *ngIf="isratingopen" class="px-4 py-5">
-      <div class="flex flex-wrap gap-3 my-3" *ngFor="let star of Stars; let i = index">
+      <div class="flex flex-wrap gap-3 my-3 items-center" *ngFor="let star of Stars; let i = index">
         <input type="checkbox" (change)="onRatingChange(star, $event)" [checked]="selectedRatings.includes(star)">
         <ng-container *ngFor="let s of Stars">
           <svg width="20" height="20" viewBox="0 0 24 24" [attr.fill]="s <= star ? 'lightgreen' : '#D3D3D3'" xmlns="http://www.w3.org/2000/svg">
@@ -69,13 +69,13 @@
         </svg>
       </button>
     </div>
-    <div *ngIf="ispriceopen" class="px-4 py-5 flex flex-col sm:flex-row justify-center gap-4">
+    <div *ngIf="ispriceopen" class="px-4 py-5 flex flex-col sm:flex-row sm:items-center justify-center gap-4">
       <input min="0" class="outline-2 outline-black w-full sm:w-1/3 py-1 px-2 rounded" type="number" [(ngModel)]="minPrice" (ngModelChange)="onminPriceChange($event)" [ngClass]="{'input-error': errorprice}">
-      <h3 class="font-extrabold fs-3 flex items-center">To</h3>
+      <h3 class="font-extrabold fs-3 flex justify-center sm:items-center">To</h3>
       <input min="0" class="outline-2 outline-black w-full sm:w-1/3 py-1 px-2 rounded" type="number" [(ngModel)]="maxPrice" (ngModelChange)="onmaxPriceChange($event)" [ngClass]="{'input-error': errorprice}">
-      <button class="font-extrabold fs-3 text-sky-500 px-3 py-1 rounded bg-white shadow hover:bg-sky-100 transition" >Go</button>
+      <button class="font-extrabold fs-3 text-sky-500 px-3 py-1 rounded bg-white shadow hover:bg-sky-100 transition">Go</button>
     </div>
-    <div *ngIf="errorprice" class="error-message text-red-700 mx-auto px-5 py-2">
+    <div *ngIf="errorprice" class="error-message text-red-700 mx-auto px-5 py-2 text-center">
       Max price should be greater than Min price
     </div>
   </div>

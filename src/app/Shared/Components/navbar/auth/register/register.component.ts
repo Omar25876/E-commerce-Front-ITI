@@ -1,16 +1,21 @@
+import {
+  Component,
+  AfterViewInit,
+  ElementRef,
+  ViewChild
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
-  Validators,
-  ValidationErrors,
+  Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../../services/auth.service';
 import { MessageService } from '../../../../../services/message.service';
+import gsap from 'gsap';
 
 @Component({
   selector: 'app-register',
@@ -19,7 +24,9 @@ import { MessageService } from '../../../../../services/message.service';
   templateUrl: './register.component.html',
   styles: '',
 })
-export class RegisterComponent {
+export class RegisterComponent implements AfterViewInit {
+  @ViewChild('registerWrapper', { static: true }) registerWrapper!: ElementRef;
+
   constructor(
     private myService: AuthService,
     private router: Router,
@@ -30,6 +37,15 @@ export class RegisterComponent {
   showPassword = false;
   showConfirmPassword = false;
 
+  ngAfterViewInit(): void {
+    gsap.from(this.registerWrapper.nativeElement, {
+      duration: 1,
+      opacity: 0.3,
+      y: 50,
+      ease: 'power3.out'
+    });
+  }
+
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
@@ -37,6 +53,7 @@ export class RegisterComponent {
   toggleConfirmPasswordVisibility(): void {
     this.showConfirmPassword = !this.showConfirmPassword;
   }
+
   myForm = new FormGroup({
     firstName: new FormControl<string | null>(null, [
       Validators.required,
@@ -76,24 +93,19 @@ export class RegisterComponent {
     const confirmPassword = this.myForm.get('confirmPassword')?.value;
     this.passwordMismatch = password !== confirmPassword;
   }
+
   onSubmit(): void {
     if (this.myForm.valid) {
       (this.myForm as FormGroup).removeControl('confirmPassword');
-      console.log(this.myForm.value);
       this.myService.registerUser(this.myForm.value).subscribe({
         next: (res) => {
-          console.log(res);
           this.router.navigate(['/auth/login']);
           this.MsgSer.show('Registration Completed. Now you can log in.');
         },
         error: (err) => {
-          console.error(err);
           this.MsgSer.show(err.message);
         },
       });
-      console.log('Form Submitted', this.myForm.value);
-    } else {
-      console.log('Form is invalid');
     }
   }
 }

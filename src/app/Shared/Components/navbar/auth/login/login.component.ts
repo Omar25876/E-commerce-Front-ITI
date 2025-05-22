@@ -1,8 +1,13 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  ElementRef,
+  ViewChild
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LoginFormComponent } from "./login-form/login-form.component";
 import { RouterOutlet } from '@angular/router';
+import gsap from 'gsap';
 
 @Component({
   selector: 'app-login',
@@ -11,6 +16,15 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './login.component.html',
   styles: ''
 })
-export class LoginComponent {
+export class LoginComponent implements AfterViewInit {
+  @ViewChild('loginWrapper', { static: true }) loginWrapper!: ElementRef;
 
+  ngAfterViewInit(): void {
+    gsap.from(this.loginWrapper.nativeElement, {
+      opacity: 0.3,
+      y: 50,
+      duration: 1,
+      ease: 'power2.out'
+    });
+  }
 }

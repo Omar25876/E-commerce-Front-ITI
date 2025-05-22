@@ -1,4 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  AfterViewInit,
+  ViewChild,
+  ElementRef
+} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { User } from '../../../models/userModel';
@@ -9,6 +16,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { Subject, takeUntil } from 'rxjs';
 import { StorageService } from '../../../services/storage.service';
+import { MessageService } from '../../../services/message.service';
+import gsap from 'gsap';
 
 @Component({
   selector: 'app-navbar',
@@ -22,13 +31,14 @@ import { StorageService } from '../../../services/storage.service';
   templateUrl: './navbar.component.html',
   styles: ''
 })
-export class NavbarComponent implements OnInit, OnDestroy {
+export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('navbarWrapper', { static: true }) navbarWrapper!: ElementRef;
+
   isLoggedIn = false;
   dropdownOpen = false;
   searchTerm = '';
   imageUrl = '';
   lastName = '';
-
   private destroy$ = new Subject<void>();
 
   user: User = {
@@ -45,7 +55,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     },
     phone: '',
     gender: 'male',
-    isAdmin: false,
+    isAdmin: true,
     createdAt: '',
     updatedAt: '',
   };
@@ -55,7 +65,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private router: Router,
     private searchService: SearchService,
     private imageService: ImageService,
-    private LocalStorage :StorageService
+    private LocalStorage: StorageService,
+    private msgService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -76,11 +87,21 @@ export class NavbarComponent implements OnInit, OnDestroy {
       .subscribe((url) => {
         this.imageUrl = url || this.user.profileImageUrl;
       });
-   this.imageService.name$
+
+    this.imageService.name$
       .pipe(takeUntil(this.destroy$))
       .subscribe((name) => {
-        this.lastName=this.user.lastName;
-      })
+        this.lastName = name || this.user.lastName;
+      });
+  }
+
+  ngAfterViewInit(): void {
+    gsap.from(this.navbarWrapper.nativeElement, {
+      y: -100,
+      opacity: 0.3,
+      duration: 1,
+      ease: 'power3.out'
+    });
   }
 
   onSearchChange(query: string): void {
@@ -103,6 +124,24 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   sign(): void {
     this.router.navigate(['/auth/login']);
+  }
+
+  goToCart(): void {
+    if (!this.LocalStorage.getItem('token')) {
+      this.msgService.show('You must be logged in to go to Cart.');
+      this.router.navigate(['/auth/login']);
+      return;
+    }
+    this.router.navigate(['/cart']);
+  }
+
+  goToCompare(): void {
+    if (!this.LocalStorage.getItem('token')) {
+      this.msgService.show('You must be logged in to go to Compare Page.');
+      this.router.navigate(['/auth/login']);
+      return;
+    }
+    this.router.navigate(['/compare']);
   }
 
   viewProfile(): void {

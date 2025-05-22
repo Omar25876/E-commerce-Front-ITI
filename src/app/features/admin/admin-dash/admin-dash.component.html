@@ -1,61 +1,60 @@
 <div class="w-[77vw] flex flex-col gap-4">
-    <p class="text-2xl font-bold">Overview</p>
-    <!-- First Row Of Statics -->
-    <div class="flex gap-20">
-        <div class="w-[20%] p-4 flex flex-col gap-1 bg-[#e6f1fd] rounded-xl">
-            <label class="text-lg" >Views</label>
-            <div class="flex justify-between">
-                <label class="text-lg font-bold" >7,265</label>
-                <div class="flex gap-2">
-                    <label class="text-sm">+11.01%</label>
-                    <img class="h-2" src="Images/Icons/IncreasingArrow.png" alt="Increasing Arrow Icon">
-                </div>
-            </div>
+  <p class="text-2xl font-bold">Overview</p>
+
+  <!-- Stats Row -->
+  <div class="flex gap-20">
+    <div #statCard class="w-[20%] p-4 flex flex-col gap-1 bg-[#e6f1fd] rounded-xl">
+      <label class="text-lg">Views</label>
+      <div class="flex justify-between">
+        <label class="text-lg font-bold">7,265</label>
+        <div class="flex gap-2">
+          <label class="text-sm">+11.01%</label>
+          <img class="h-2" src="Images/Icons/IncreasingArrow.png" alt="Arrow" />
         </div>
-        <div class="w-[20%] p-4 flex flex-col gap-1 bg-[#e6f1fd] rounded-xl">
-            <label class="text-lg" >Visits</label>
-            <div class="flex justify-between">
-                <label class="text-lg font-bold" >3,671</label>
-                <div class="flex gap-2">
-                    <label class="text-sm">-0.03%</label>
-                    <img class="h-2" src="Images/Icons/IncreasingArrow.png" alt="Increasing Arrow Icon">
-                </div>
-            </div>
-        </div>
-        <div class="w-[20%] p-4 flex flex-col gap-1 bg-[#e6f1fd] rounded-xl">
-            <label class="text-lg" >New Users</label>
-            <div class="flex justify-between">
-                <label class="text-lg font-bold" >151</label>
-                <div class="flex gap-2">
-                    <label class="text-sm">+15.03%</label>
-                    <img class="h-2" src="Images/Icons/IncreasingArrow.png" alt="Increasing Arrow Icon">
-                </div>
-            </div>
-        </div>
-        <div class="w-[20%] p-4 flex flex-col gap-1 bg-[#e6f1fd] rounded-xl">
-            <label class="text-lg" >Active Users</label>
-            <div class="flex justify-between">
-                <label class="text-lg font-bold" >+6.08%</label>
-                <div class="flex gap-2">
-                    <label class="text-sm">+11.01%</label>
-                    <img class="h-2" src="Images/Icons/IncreasingArrow.png" alt="Increasing Arrow Icon">
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
-
-    <!-- Secound Row : Total Users -->
-    <div class="flex gap-8 items-center">
-        <div class="h-[30%] w-[65%] bg-[#f9f9fa] p-8">
-            <canvas id="MyChart">{{chart}}</canvas>
+    <div #statCard class="w-[20%] p-4 flex flex-col gap-1 bg-[#e6f1fd] rounded-xl">
+      <label class="text-lg">Visits</label>
+      <div class="flex justify-between">
+        <label class="text-lg font-bold">3,671</label>
+        <div class="flex gap-2">
+          <label class="text-sm">-0.03%</label>
+          <img class="h-2" src="Images/Icons/IncreasingArrow.png" alt="Arrow" />
         </div>
-        <div class="bg-[#f9f9fa] p-8 flex flex-col items-center gap-10 rounded-2xl">
-            <label class="text-xl font-black w-fit" >Traffic By Device</label>
-            <div class="w-[400px] h-[400px]">
-                <canvas id="TrafficDeviceChart">{{trafficChart}}</canvas>
-            </div>
-        </div>
+      </div>
     </div>
+    <div #statCard class="w-[20%] p-4 flex flex-col gap-1 bg-[#e6f1fd] rounded-xl">
+      <label class="text-lg">New Users</label>
+      <div class="flex justify-between">
+        <label class="text-lg font-bold">151</label>
+        <div class="flex gap-2">
+          <label class="text-sm">+15.03%</label>
+          <img class="h-2" src="Images/Icons/IncreasingArrow.png" alt="Arrow" />
+        </div>
+      </div>
+    </div>
+    <div #statCard class="w-[20%] p-4 flex flex-col gap-1 bg-[#e6f1fd] rounded-xl">
+      <label class="text-lg">Active Users</label>
+      <div class="flex justify-between">
+        <label class="text-lg font-bold">+6.08%</label>
+        <div class="flex gap-2">
+          <label class="text-sm">+11.01%</label>
+          <img class="h-2" src="Images/Icons/IncreasingArrow.png" alt="Arrow" />
+        </div>
+      </div>
+    </div>
+  </div>
 
-
+  <!-- Charts Row -->
+  <div class="flex gap-8 items-center">
+    <div #chartsWrapper class="h-[30%] w-[65%] bg-[#f9f9fa] p-8">
+      <canvas id="MyChart">{{ chart }}</canvas>
+    </div>
+    <div #chartsWrapper class="bg-[#f9f9fa] p-8 flex flex-col items-center gap-10 rounded-2xl">
+      <label class="text-xl font-black w-fit">Traffic By Device</label>
+      <div class="w-[400px] h-[400px]">
+        <canvas id="TrafficDeviceChart">{{ trafficChart }}</canvas>
+      </div>
+    </div>
+  </div>
 </div>

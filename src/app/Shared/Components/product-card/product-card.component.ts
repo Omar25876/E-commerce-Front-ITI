@@ -22,7 +22,7 @@ export class ProductCardComponent implements OnInit {
      private cartService: CartService,
      private MsgSer:MessageService,
     private compareservice:CompareService,
-    private storage: StorageService
+    private storage: StorageService,
 
     ) {}
 
@@ -41,6 +41,11 @@ export class ProductCardComponent implements OnInit {
   }
 
   addToCart(product: any): void {
+    if (!this.storage.getItem('token')) {
+      this.MsgSer.show('You must be logged in to add items to the cart.');
+      return;
+    }
+
     try {
       console.log(product);
       const cart: CartProduct[] = this.cartService.getCartFromLocalStorage();
@@ -53,7 +58,7 @@ export class ProductCardComponent implements OnInit {
         return;
       }
 
-      //Check to See if there is stock 
+      //Check to See if there is stock
       if(product.stock==0)
       {
          this.MsgSer.show(`Sorry,${product.name}(${product.selectedColor}) Is Out Of Stock.`);
@@ -94,7 +99,12 @@ export class ProductCardComponent implements OnInit {
 
   // Other methods remain unchanged
   addToComparelist(product: any): void {
-    this.compareservice.addToCompare(product)
+    if (!this.storage.getItem('token')) {
+      this.MsgSer.show('You must be logged in to add items to Compare List.');
+      return;
+    }
+    this.compareservice.addToCompare(product),
+    this.MsgSer.show(`${product.name} Added Successfully To Compare List`);
     console.log('Added to CompareList:', product);
   }
 

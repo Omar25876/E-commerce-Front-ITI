@@ -1,16 +1,39 @@
-<div class="w-[77vw] flex flex-col gap-4 mr-4 mb-10">
+<div class="w-[77vw] flex flex-col gap-4 m-5 mb-10">
   <!-- Header & Save button -->
   <div class="w-full flex justify-between">
     <p class="text-2xl font-bold">Add Product</p>
     <button
-      class="bg-gradient-to-r from-blue-800 to-blue-500 rounded-full text-white font-bold text-xl p-4 w-[7%]"
+      class="bg-gradient-to-r from-blue-800 to-blue-500 rounded-full text-white font-bold text-xl p-2 w-[7%]"
       (click)="saveProduct()"
     >
       Save
     </button>
   </div>
-<!-- IMAGE PICKER & PREVIEW -->
-<div class="flex gap-6 p-6 bg-indigo-50 rounded-3xl border border-indigo-200 shadow-md">
+
+  @if(isLoading){
+     <div *ngIf="isLoading" class="flex justify-center">
+  <div class=" p-8 rounded-lg text-center">
+    <!-- Loader -->
+    <div class="flex justify-center mb-4">
+      <div class="animate-spin rounded-full h-20 w-20 border-t-4 border-blue-500"></div>
+    </div>
+    
+    <!-- Message Text -->
+    <div class="text-xl font-medium text-gray-700 mb-2">
+      {{ loadingMessage }}
+      <span class="inline-block w-8 text-left">{{ dots }}</span>
+    </div>
+    
+    <!-- Progress text (shown only during image upload) -->
+    <div *ngIf="isUploadingImages" class="text-sm text-gray-500">
+      This may take a moment depending on image sizes
+    </div>
+  </div>
+</div>
+  }
+  @else{
+    <!-- IMAGE PICKER & PREVIEW -->
+<div #section class="flex gap-6 p-6 bg-indigo-50 rounded-3xl border border-indigo-200 shadow-md">
 
   <!-- File Picker Block -->
   <div
@@ -38,14 +61,14 @@
     </label>
   </div>
 
-  <!-- Image Previews + Color Picker -->
+  <!-- Image Previews + Color Name -->
   <div
     *ngIf="selectedImages.length > 0"
     class="flex flex-wrap gap-5 p-4 w-2/3 max-h-[35vh] overflow-y-auto border border-indigo-300 rounded-xl shadow-sm bg-white"
   >
     <div
       *ngFor="let img of selectedImages; let i = index"
-      class="relative w-[130px] h-[170px] flex flex-col items-center bg-white rounded-xl shadow-md p-3 hover:shadow-lg transition-shadow"
+      class="relative w-[142px] h-[170px] flex flex-col items-center bg-white rounded-xl shadow-md p-3 hover:shadow-lg transition-shadow"
     >
       <img
         [src]="imagePreviews[i]"
@@ -55,9 +78,9 @@
 
       <!-- Color Picker -->
       <input
-        type="color"
+        type="text"
         [(ngModel)]="MyProduct.colors[i]"
-        class="w-full mt-3 h-9 rounded-lg cursor-pointer border border-indigo-300 shadow-sm"
+        class="w-full p-4 mt-3 h-9 rounded-lg cursor-pointer border border-indigo-300 shadow-sm"
         title="Select base color for this image"
         (change)="updateColor(i, MyProduct.colors[i])"
       />
@@ -78,7 +101,7 @@
 
 
 <!-- ----------- BASIC INFO & TEXT AREAS ---------------- -->
-<div class="flex gap-6 mt-8">
+<div #section class="flex gap-6 mt-8">
   <!-- Left column -->
   <div class="flex flex-col w-1/3 gap-4">
     <input
@@ -122,10 +145,10 @@
 
     <label class="block text-sm font-medium text-gray-700">
   Brand
- 
+
     <select
 
-    
+
       class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
       [(ngModel)]="MyProduct.brand"
     >
@@ -156,7 +179,7 @@
 </div>
 
 <!-- ----------- SPECS ROW ---------------- -->
-<div class="w-full flex gap-6 mt-6">
+<div #section class="w-full flex gap-6 mt-6">
   <input
     class="bg-indigo-50 w-1/4 p-4 rounded-xl border border-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
     type="text"
@@ -184,30 +207,38 @@
 </div>
 
 <!-- ----------- PRICING / STOCK / FLAGS ---------------- -->
-<div class="w-full flex gap-6 mt-6 items-center">
+<div #section class="w-full flex gap-6 mt-6 items-center">
   <input
     class="bg-indigo-50 w-1/5 p-4 rounded-xl border border-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
-    type="number"
+    type="text"
     placeholder="Price"
-    [(ngModel)]="MyProduct.price"
+    id="ProdPrice"
+    (input)="FVaildate($event)"
+    [value]="MyProduct.price"
   />
   <input
     class="bg-indigo-50 w-1/5 p-4 rounded-xl border border-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
-    type="number"
+    type="text"
     placeholder="Old Price"
-    [(ngModel)]="MyProduct.oldPrice"
+    (input)="FVaildate($event)"
+    id="ProdOldPrice"
+    [value]="MyProduct.oldPrice"
   />
   <input
     class="bg-indigo-50 w-1/6 p-4 rounded-xl border border-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
-    type="number"
+    type="text"
     placeholder="Discount (%)"
-    [(ngModel)]="MyProduct.discount"
+    (input)="FVaildate($event)"
+    id="ProdDiscount"
+   [value]="MyProduct.discount"
   />
   <input
     class="bg-indigo-50 w-1/6 p-4 rounded-xl border border-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
-    type="number"
+    type="text"
     placeholder="Stock"
-    [(ngModel)]="MyProduct.stock"
+    (input)="FVaildate($event)"
+    id="ProdStock"
+    [value]="MyProduct.stock"
   />
 
   <!-- Flags -->
@@ -244,42 +275,38 @@
     </label>
   </div>
 </div>
+  }
 
-
-
-
-
-
-
-     <div class="w-full flex justify-between">
+     <div #section class="w-full flex justify-between">
         <p class="text-2xl font-bold">Add Promo Code </p>
-        <button class="bg-gradient-to-r from-blue-800 to-blue-500 rounded-full 
-        text-white font-bold text-xl p-4 w-[7%] "
+        <button class="bg-gradient-to-r from-blue-800 to-blue-500 rounded-full
+        text-white font-bold text-xl p-2 w-[7%] "
         (click)="PromoSave()"
         >Save</button>
     </div>
     <!-- Adding Promo Code Fields -->
-     <div class="flex items-center gap-4">
+     <div #section class="flex items-center gap-4">
          <label for="Code">Promo Code :</label>
-         <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg  border border-transparent" 
+         <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg  border border-transparent"
          type="text" placeholder="Code" id="Code" [value]="PromoCode.code" (input)="FVaildate($event)">
          <label for="DiscountType">Discount Type :</label>
-         <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg" 
+         <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg"
             type="text" id="DiscountType" value="percentage" readonly>
      </div>
-     <div class="flex items-center gap-4">
+     <div #section class="flex items-center gap-4">
         <label for="Limt">Usage Limit :</label>
-         <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg" 
+         <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg"
                 type="text" id="Limt" (input)="FVaildate($event)" [value]="PromoCode.usageLimit">
-        
-         <label for="DiscountValue">Discount Value :</label>       
-        <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg" 
-                type="text" id="DiscountValue" 
+
+         <label for="DiscountValue">Discount Value :</label>
+        <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg"
+                type="text" id="DiscountValue"
                 (input)="FVaildate($event)" [value]="PromoCode.discountValue">
 
-         <label for="expiryDate">Expiry Date :</label>       
-        <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg" 
-                type="text"  id="expiryDate" 
-                (input)="FVaildate($event)" [value]="PromoCode.expiryDate">        
+         <label for="expiryDate">Expiry Date :</label>
+        <input class="bg-[#edeefc] w-[20%] h-[30%] p-4 rounded-lg"
+                type="text"  id="expiryDate"
+                (input)="FVaildate($event)" [value]="PromoCode.expiryDate">
      </div>
+
 </div>

@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'], // ✅ use 'styleUrls'
 })
-export class AppComponent {
+export class AppComponent  {
   title = 'frontend';
   User:any;
   constructor(

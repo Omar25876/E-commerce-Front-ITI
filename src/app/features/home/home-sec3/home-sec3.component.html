@@ -1,37 +1,41 @@
 <section class="bg-white py-12 px-12 flex flex-col items-center">
-  <!-- Section Heading -->
-  <div class="text-center mb-12">
-    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+   <!-- Section Heading -->
+  <div class="text-center mb-8 sm:mb-12">
+    <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
       Discover the Perfect Sound
     </h1>
-    <p class="text-gray-600 text-sm md:text-base">
+    <p class="text-gray-600 text-xs sm:text-sm md:text-base">
       Find something that hits the right note
     </p>
   </div>
 
   <!-- Top Feature -->
   <div
-    class="bg-gradient-to-r from-white md:w-4xl h-lg to-blue-100 rounded-3xl flex flex-col lg:flex-row items-center justify-between p-8 shadow-lg mb-12 relative overflow-hidden"
+    class="relative bg-gradient-to-r from-white to-blue-100 rounded-3xl flex flex-col lg:flex-row items-center justify-between p-4 sm:p-8 shadow-lg mb-8 sm:mb-12 w-full max-w-5xl overflow-hidden"
   >
     <!-- Background Image -->
     <div
-      class="absolute inset-0 bg-cover bg-center "
+      class="absolute inset-0 bg-cover bg-center opacity-20 lg:opacity-100"
       style="background-image: url('Images/Home-Page/Sec-3 ph1.png');"
     ></div>
 
     <!-- Content -->
-    <div class="relative z-10 max-w-xl mb-6 lg:mb-0">
-      <h3 class="text-sm text-gray-600 font-semibold">Liberty 4 Pro</h3>
-      <h2 class="text-3xl font-bold text-gray-900 mb-2 mr-72">
+    <div class="relative z-10 w-full lg:w-1/2 mb-6 lg:mb-0 text-center lg:text-left">
+      <h3 class="text-xs sm:text-sm text-gray-600 font-semibold">Liberty 4 Pro</h3>
+      <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2">
         7-Sensor Precise Noise Cancelling
       </h2>
-      <p class="text-gray-600 mb-4">React to noise as you go</p>
+      <p class="text-gray-600 mb-4 text-xs sm:text-base">React to noise as you go</p>
       <a
         href="#"
-        class="inline-block bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-600 hover:to-blue-600 text-white font-semibold py-2 px-6 rounded-full transition duration-300"
+        class="inline-block bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-600 hover:to-blue-600 text-white font-semibold py-2 px-6 rounded-full transition duration-300 text-sm sm:text-base"
       >
         Buy Now
       </a>
+    </div>
+    <!-- Hide background image on mobile for clarity, show on lg+ as side image -->
+    <div class="hidden lg:block relative z-10 w-1/2 h-48">
+      <!-- Empty div to keep layout, image is background -->
     </div>
   </div>
 
@@ -48,10 +52,11 @@
       <img
         src="Images/Home-Page/Sec-3 ph4.png"
         alt="Boom 2 Plus"
-        class="w-40 h-50 object-contain mb-4"
+        class="w-40 h-50 object-contain mb-4 floating-image"
       />
       <a
-        href="#"
+      
+        [routerLink]="['/product', '68275b3e1bc9cb42e57a5aa6']"  
         class="inline-block bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-600 hover:to-blue-600 text-white font-semibold py-2 px-6 rounded-full transition duration-300"
       >
         Buy Now
@@ -67,10 +72,10 @@
       <img
         src="Images/Home-Page/Sec-3 ph2.png"
         alt="Space One"
-        class="w-40 h-50 object-contain mb-4"
+        class="w-40 h-50 object-contain mb-4 floating-image"
       />
       <a
-        href="#"
+        [routerLink]="['/product', '68275b3e1bc9cb42e57a5b09']"
         class="inline-block bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-600 hover:to-blue-600 text-white font-semibold py-2 px-6 rounded-full transition duration-300"
       >
         Buy Now
@@ -88,10 +93,10 @@
       <img
         src="Images/Home-Page/Sec-3 ph3.png"
         alt="Sport X20"
-        class="w-40 h-50 object-contain mb-4"
+        class="w-40 h-50 object-contain mb-4 floating-image"
       />
       <a
-        href="#"
+        [routerLink]="['/product', '68275b3e1bc9cb42e57a5b44']"
         class="inline-block bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-600 hover:to-blue-600 text-white font-semibold py-2 px-6 rounded-full transition duration-300"
       >
         Buy Now

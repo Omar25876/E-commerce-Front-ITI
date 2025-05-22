@@ -1,10 +1,10 @@
-<div class="container  my-5 relative group">
+<div class="container mx-auto my-5 relative group">
   <!-- ✅ السلايدر -->
-  <div class="flex transition-transform duration-1000 ease-in-out h-full relative" (mouseenter)="stop()"
+  <div class="flex transition-transform duration-800 m-2   ease-in-out h-full rounded-2xl relative" (mouseenter)="stop()"
     (mouseleave)="startSliding()">
 
-    <div *ngFor="let image of Images; let i = index"
-      class="relative flex-shrink-0 m-2 w-full h-full overflow-hidden group" [hidden]="i !== currentIndex">
+    <div #slideImage *ngFor="let image of Images; let i = index"
+      class="relative   w-full h-full rounded-2xl shadow-lg overflow-hidden group" [hidden]="i !== currentIndex">
 
       <img [src]="image" alt="Slide" class="w-full h-full object-cover" />
 

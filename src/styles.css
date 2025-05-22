@@ -22,6 +22,65 @@
     opacity: 0;
   }
 }
+/* Dimmer fade + scale */
+@keyframes dimmer-scale-in {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Container scale + fade */
+@keyframes container-scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes Slide-Down {
+  0% {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+}
+@keyframes float-up-down {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-30px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Animation classes */
+
+.floating-image:hover {
+  animation: float-up-down 0.7s ease-in-out infinite;
+}
+.Slide-Down-animate {
+  animation: Slide-Down 0.7s ease forwards;
+}
+.dimmer-animate {
+  animation: dimmer-scale-in 0.7s ease forwards;
+}
+
+.container-animate {
+  animation: container-scale-in 0.7s ease forwards;
+}
 
 .animate-message-slide {
   animation: message-slide 3s ease-in-out forwards;
