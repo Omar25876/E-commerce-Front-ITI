@@ -1,9 +1,12 @@
 
-<div class="w-[70vw] flex flex-col gap-6">
-    <p class="text-2xl font-bold">Add Product </p>
+<div class="w-[80vw] h-[77vh] flex flex-col gap-6">
+  <!-- Heading -->
+  <p class="text-2xl font-bold">Add Product </p>
     <!-- Search Input -->
-    <div class="flex justify-between w-[70%] h-10 pl-10 bg-[#edeefc] rounded-full overflow-hidden">
-        <input class="w-[70%]" type="text" placeholder="Search By Customer Name">
+    <div class="flex justify-between w-[70%] h-[50px] pl-10 bg-[#edeefc] rounded-full overflow-hidden">
+        <input class="w-[70%] h-full border-none focus:outline-none" type="text" placeholder="Search By Customer Email"
+        (input)="SearchResult($event)"
+        >
         <!-- Search Icon -->
          <div class="h-full w-[7%] bg-gradient-to-r from-blue-800 to-blue-500 flex justify-center items-center">
              <svg class=" w-7 h-7 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -11,55 +14,71 @@
              </svg>
          </div>
     </div>
-    <div>
-      <!-- User -->
-        <div class="w-[70%] p-1 bg-gradient-to-r from-blue-800 to-blue-500 rounded-md">
+    <!-- Users -->
+    <div class="flex gap-4 w-full max-h-[80%] flex-col flex-wrap overflow-y-auto ">
+        <!-- User col 1 row 1 -->
+        <div class="w-[49%] p-1 bg-gradient-to-r from-blue-800 to-blue-500 rounded-md"
+        *ngFor="let user of SearchAccounts"
+        >
         <!-- White Background -->
-        <div class="w-full bg-white">
+          <div class="w-full bg-white">
             <!-- Header -->
              <div 
              class="w-full py-2 pl-4 pr-2 bg-gradient-to-r from-blue-800 to-blue-500 
-             flex justify-between items-center"
-             (click)="Toggle()"
+             flex justify-between items-center cursor-pointer"
+             (click)="user.IsOpen=!user.IsOpen"
              >
-                <p class="text-xl font-bold text-white">Ibrahim Medhat Ragab</p>
+                <p class="text-xl font-bold text-white">{{user.email}}</p>
                 <!-- Arrow Icon -->
-                <svg class="w-10 h-10 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m16 14-4-4-4 4"/>
-                </svg>
+                 @if(user.IsOpen){
+                   <svg class="w-10 h-10 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m16 14-4-4-4 4"/>
+                   </svg>
+                 }
+                 @else{
+                  <svg class="w-10 h-10 text-gray-800 dark:text-white transform -scale-y-100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m16 14-4-4-4 4"/>
+                   </svg>
+
+                 }
 
 
              </div>
              <!-- Content -->
-              <div class="flex flex-col gap-2 p-4" *ngIf="Play">
+              <div class="flex flex-col gap-2 p-4 Slide-Down-animate" 
+                *ngIf="user.IsOpen">
                  <!-- First Row -->
-                  <div class="flex justify-between rounded-lg p-2 items-center">
-                      <p class="text-lg">1.Order#1234</p>
-                      <select class="border-gray-700 border-2 rounded-lg p-2">
-                        <option value="">pending</option>
+                  <div class="flex justify-between rounded-lg p-2 items-center"
+                   *ngFor="let order of user.Orders;let i=index"
+                  >
+                      <p class="text-lg">{{i+1}}.Order#{{order.orderId}}</p>
+                      <select 
+                        class="border-gray-700 border-2 rounded-lg p-2 w-[20%]" 
+                        [(ngModel)]="order.Status"
+                      >
+                        <option *ngFor="let status of statuses" [value]="status">
+                          {{ status | titlecase }}
+                        </option>
                       </select>
-                      <div class="flex gap-6">
-                          <button class="text-xl text-white font-bold p-3 rounded-lg bg-green-600">Save</button>
-                          <button class="text-xl text-white font-bold p-3 rounded-lg 
-                          bg-gradient-to-r from-blue-800 to-blue-500">View</button>
-                      </div>
-                  </div>
-                <!-- Second Row -->
-                  <div class="flex justify-between rounded-lg p-2 items-center">
-                      <p class="text-lg">1.Order#1234</p>
-                      <select class="border-gray-700 border-2 rounded-lg p-2">
-                        <option value="">pending</option>
-                      </select>
-                      <div class="flex gap-6">
-                          <button class="text-xl text-white font-bold p-3 rounded-lg bg-green-600">Save</button>
-                          <button class="text-xl text-white font-bold p-3 rounded-lg 
-                          bg-gradient-to-r from-blue-800 to-blue-500">View</button>
+                      <div class="flex gap-3">
+                          <button class="text-xl text-white font-bold py-2 shadow-md px-8 rounded-lg cursor-pointer bg-red-700"
+                          (click)="DeleteOrder(order)"
+                          >Delete</button>
+                          <button class="text-xl text-white font-bold py-2 shadow-md px-8 rounded-lg cursor-pointer bg-green-600"
+                          (click)="SaveStatus(order)"
+                          >Save</button>
+                          <button class="text-xl text-white font-bold py-2 shadow-md px-8 rounded-lg cursor-pointer
+                          bg-gradient-to-r from-blue-800 to-blue-500"
+                          (click)="SendOrder(order)"
+                          >View</button>
                       </div>
                   </div>
               </div>
+          </div>
         </div>
-
     </div>
-</div>
 
 </div>
+
+
+

@@ -3,7 +3,7 @@
   <h1 #productCard  class="text-2xl font-bold mb-2">Manage Products</h1>
 
   <!-- Search Bar -->
-  <div #productCard class="flex items-center bg-white text-gray-600 rounded-full px-4 py-2 shadow-md hover:shadow-lg transition duration-300 w-full max-w-lg  mb-4">
+  <div #productCard class="flex items-center bg-white text-gray-600 rounded-full px-4 py-2 shadow-md hover:shadow-lg transition duration-300 w-full max-w-lg  mb-6">
     <input
       type="text"
       placeholder="Search"
@@ -19,7 +19,7 @@
   </div>
 
   <!-- Filters -->
-  <div #productCard class="flex flex-col sm:flex-row items-center gap-4 mb-4 w-full max-w-4xl mx-auto">
+  <div #productCard class="flex flex-col sm:flex-row items-center gap-4 w-full max-w-4xl mx-auto">
     <select
       [(ngModel)]="selectedCategory"
       (change)="applyFilters()"
@@ -51,7 +51,7 @@
   </div>
 
   <!-- Page Content -->
-  <div #productCard class="content-section flex-1 p-2 sm:p-5 mt-6">
+  <div #productCard class="content-section flex-1 p-2 sm:p-5">
     <!-- Header -->
     <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-5">
       <!-- Sort Dropdown -->

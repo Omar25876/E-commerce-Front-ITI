@@ -12,6 +12,8 @@ import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import gsap from 'gsap';
+import { StorageService } from '../../services/storage.service';
+import { SharingUserService } from '../../services/SharingUser.service';
 
 @Component({
   selector: 'app-admin',
@@ -25,7 +27,6 @@ export class AdminComponent implements OnInit, AfterViewInit {
   @ViewChild('mainContent', { static: true }) mainContent!: ElementRef;
 
   selectedIndex = 0;
-
   buttons = [
     {
       label: 'Dashboard',
@@ -40,23 +41,44 @@ export class AdminComponent implements OnInit, AfterViewInit {
       paddingX: 'px-[8%]',
     },
     {
+      label: 'Orders',
+      defaultSrc: 'Images/Icons/Orders-Black.png',
+      activeSrc: 'Images/Icons/Orders-White.png',
+      paddingX: 'px-[20%]',
+    },
+    {
       label: 'Add',
       defaultSrc: 'Images/Icons/Add-Black.png',
       activeSrc: 'Images/Icons/Add-White.png',
       paddingX: 'px-[20%]',
     },
+    
   ];
+  DimmerOn:boolean=false;
+  Userorder:any;
+  Admin:any;
 
   constructor(
     private AuthSer: AuthService,
     private cdRef: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private SharingUs:SharingUserService
   ) {}
 
   ngOnInit(): void {
     const temp = this.router.url.split('/')[2];
     const index = this.buttons.findIndex((button) => button.label === temp);
     this.selectedIndex = index !== -1 ? index : 0;
+    
+    this.SharingUs.isPressed$.subscribe((pressed) => {
+      if (pressed) {
+        const order = this.SharingUs.getUser();
+        this.Userorder={...order};
+        console.log('Received user:', order);
+        this.DimmerOn=true;
+      }
+    });
+    this.Admin=this.AuthSer.getUserData();
   }
 
   ngAfterViewInit(): void {
