@@ -96,7 +96,7 @@ SoundJoy was built to solve a real-world challenge:
 
 ## 📬 Feedback
 
-Have suggestions or feedback? Feel free to open an issue or contact me on [LinkedIn](https://www.linkedin.com/in/omar-khaled-41a7a2269/)
+Have suggestions or feedback? Feel free to open an issue or contact me on [LinkedIn](https://www.linkedin.com/in/omar-mohamed-ibrahim-015ab31ba/)
 
 
 ## 📌 License
