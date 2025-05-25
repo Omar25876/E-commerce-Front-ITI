@@ -35,10 +35,10 @@ export class AllComponent implements OnInit {
     title:''
   }
   AllSections:sections[]=[
-    {img:this.Images[0],title:'Over Air'},
-    {img:this.Images[1],title:'On Air'},
-    {img:this.Images[2],title:'In Air'},
-    {img:this.Images[3],title:'Speaker Air'},
+    {img:this.Images[0],title:'Over Ear'},
+    {img:this.Images[1],title:'On Ear'},
+    {img:this.Images[2],title:'In Ear'},
+    {img:this.Images[3],title:'Speaker Ear'},
 
   ]
 
