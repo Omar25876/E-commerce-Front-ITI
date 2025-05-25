@@ -1,3 +1,100 @@
+<!-- Order Details Dimmer -->
+<div class="w-[100vw] h-[100vh] z-40 bg-black/70 top-0 left-0 absolute 
+flex justify-center items-center cursor-pointer dimmer-animate"
+(click)="DimmerOn=!DimmerOn"
+*ngIf="DimmerOn"
+>
+   <!-- Main Container -->
+  <div class="bg-[#f3f4f6] shadow-lg w-[60%] z-50 h-[70%] cursor-default
+  rounded-2xl flex flex-col gap-4 px-10 py-6 container-animate"
+  (click)="$event.stopPropagation()"
+  >
+        <!-- Heading -->
+         <div class="flex justify-between items-center w-full">
+          <!-- Left Side -->
+           <div class="flex items-center gap-4">
+               <p class="text-xl w-fit">Order Id :</p>
+               <select disabled class="border border-black p-2 rounded-sm">
+                   <option value="" >Order#{{Userorder.orderId}}</option>
+               </select>
+           </div>
+           <!-- Right Side -->
+            <div class="text-xl font-bold text-white bg-gradient-to-r from-blue-800 to-blue-500 
+            rounded-full px-15 py-2 drop-shadow-2xl shadow-sm">
+              {{Userorder.Status | titlecase}}
+            </div>
+         </div>
+        <!-- body -->
+        <div class="flex mt-2 h-[85%] gap-6">
+          <!-- Order Items -->
+          <div class="h-full w-[60%] rounded-2xl bg-white flex flex-col gap-12 shadow-lg p-10 overflow-y-auto">
+            <!-- Single Order -->
+            <div class="w-full flex justify-between "
+            *ngFor="let item of Userorder.items"
+            >
+                <!--Image+Circle+Headings -->
+                <div class="flex gap-6">
+                  <div class="relative w-40 h-40 flex justify-center">
+                     <div class="w-full h-full rounded-full bg-[#f3f4f6] shadow-md"></div>
+                     <img 
+                       [src]="item.Image"
+                       alt="Product Image"
+                       class="absolute bottom-3 left-2 w-[80%] h-auto max-h-[160px] object-contain"
+                     />
+                   </div>
+                   <!-- Headings -->
+                    <div class="flex justify-evenly flex-col">
+                       <label class="text-2xl font-bold">{{item.name}}</label>
+                       <label class="text-lg">{{item.Brand}}</label>
+                       <label class="text-lg">Quantity : {{item.quantity}}</label>
+                    </div>
+                </div>
+                <!-- SubHeadings -->
+                <div class="flex justify-center gap-6 flex-col">
+                   <label class="text-lg">Price : {{item.price}} EGP</label>
+                   <label class="text-lg">Color : {{item.SelectedColor}}</label>
+                </div>
+            </div>
+          </div>
+
+          <!-- Order Summary -->
+          <div class="h-full w-[40%] rounded-2xl flex flex-col justify-between bg-white shadow-lg pt-10 px-10 pb-5">
+            <!-- Heading -->
+            <div class="flex flex-col gap-4 ">
+              <label class="text-2xl font-bold">Order Summary</label>
+              <div class="w-full h-1 bg-black rounded-full"></div>
+            </div>
+            <!-- Shipping -->
+             <div class="flex flex-col gap-4">
+               <label class="text-xl font-bold">Shipping</label>
+               <input type="text" class="px-4 py-2 w-full text-lg border rounded-sm" disabled [value]="Userorder.DeliveyType">  
+             </div>
+            <!-- Promo Code -->
+             <div class="flex flex-col gap-4">
+               <label class="text-xl font-bold">Promo Code</label>
+               <input type="text" class="px-4 py-2 w-full text-lg border rounded-sm" disabled [value]="Userorder.PromoCode">  
+             </div>
+             <!-- Cost + Savings -->
+              <div class="flex flex-col gap-6">
+                <div class="w-full h-1 bg-black rounded-full"></div>
+                <div class="w-full flex justify-between">
+                  <label class="text-xl font-bold">Total Cost</label>
+                  <label class="text-xl font-bold">{{Userorder.totalAmount}} EGP</label>
+                </div>
+                <div class="px-4 py-2 text-2xl font-bold text-white bg-[#0fde7d] flex justify-center">
+                  Savings: {{
+                    (Userorder.AfterSale > Userorder.totalAmount ? 0 : Userorder.totalAmount - Userorder.AfterSale) 
+                    | number:'1.0-0'
+                  }} EGP
+                </div>
+
+
+              </div>
+          </div>
+        </div>
+  </div>
+</div>
+
 <!-- Heading -->
 <div #headerLogo class="mx-auto w-[20%] h-[25%] px-10 py-10 bg-gradient-to-r from-blue-800 to-blue-500 rounded-b-4xl">
   <img src="Images/Icons/WebsiteLogo.png" alt="SoundJoy Logo" />
@@ -6,11 +103,12 @@
 <!-- Layout -->
 <div class="flex w-full gap-10">
   <!-- Sidebar -->
-  <div class="flex flex-col gap-4 w-[20%] h-[90vh] items-center -mt-28">
+  <div class="flex flex-col gap-4 w-[25%] h-[90vh] items-center -mt-28">
     <div class="w-[60%] rounded-full shadow-lg bg-gradient-to-r from-blue-800 to-blue-500">
       <img src="Images/Icons/Adminn.png" alt="Admin Photo" />
     </div>
-    <p class="text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-bold w-fit mb-10">Ibrahim Medhat</p>
+    <p class="text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-bold w-fit mb-10">
+      Welcome, {{Admin.firstName+' '+Admin.lastName}}</p>
 
     <div
       *ngFor="let btn of buttons; let i = index"
@@ -42,7 +140,7 @@
     </div>
 
     <button
-      class="bg-gradient-to-r from-blue-800 to-blue-500 w-[90%] rounded-xl h-[9%] px-[20%] mt-25 font-bold text-white self-center text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
+      class="bg-gradient-to-r from-blue-800 to-blue-500 w-[90%] rounded-xl h-[9%] px-[20%] mt-14 font-bold text-white self-center text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
       (click)="Logout()"
     >
       Logout
@@ -50,7 +148,7 @@
   </div>
 
   <!-- Main Content Area -->
-  <div #mainContent class="flex mt-4 w-full">
+  <div #mainContent class="flex mt-4 w-full pr-4">
     <router-outlet></router-outlet>
   </div>
 </div>

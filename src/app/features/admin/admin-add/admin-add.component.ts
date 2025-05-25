@@ -16,6 +16,7 @@ import { Product } from '../../../models/productModel';
 import { PromoCode } from '../../../models/PromoCodeModel';
 import { Category } from '../../../models/categoryModel';
 import gsap from 'gsap';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-add',
@@ -32,6 +33,14 @@ export class AdminAddComponent implements OnInit, AfterViewInit {
   BatteryLife = '';
   whatInTheBoxText = '';
   highlightsText = '';
+  
+  // Loading Stuff
+  isLoading = false;
+  isUploadingImages = false;
+  loadingMessage = 'Adding your new product';
+  dots = '.';
+  private dotInterval: any;
+  private messageTimeout: any;
 
   PromoCode: PromoCode = {
     _id: '',
@@ -50,14 +59,14 @@ export class AdminAddComponent implements OnInit, AfterViewInit {
     _id: '',
     name: '',
     description: '',
-    price: 0,
-    oldPrice: 0,
-    discount: 0,
+    price: null as any,
+    oldPrice: null as any,
+    discount: null as any,
     colors: [],
     images: [],
     imagesAndColors: {},
     selectedColor: '',
-    stock: 0,
+    stock: null as any,
     rating: 0,
     reviewsCount: 0,
     reviews: [],
@@ -85,7 +94,8 @@ export class AdminAddComponent implements OnInit, AfterViewInit {
     private promoSer: PromoCodeService,
     private msgSer: MessageService,
     private cateSer: CategoryService,
-    private productSer: ProductService
+    private productSer: ProductService,
+    private router : Router
   ) {}
 
   ngOnInit() {
@@ -143,28 +153,54 @@ export class AdminAddComponent implements OnInit, AfterViewInit {
 
   FVaildate(event: Event) {
     const input = event.target as HTMLInputElement;
-    const inputName = input.id;
+    const InputID = input.id;
 
-    if (inputName === 'DiscountValue') {
+    // ---------------- Product Fields ---------------------
+    if (InputID === 'ProdDiscount') {
+      let value = input.value.replace(/\D/g, '').slice(0, 3);
+      let temp = parseInt(value, 10);
+      if (temp > 90) value = '99';
+      this.MyProduct.discount = temp;
+      input.value = value;
+    }
+    if (InputID === 'ProdStock') {
+      let value = input.value.replace(/\D/g, '');
+      this.MyProduct.stock = parseInt(value);
+      input.value = value;
+    }
+    if (InputID === 'ProdPrice') {
+      let value = input.value.replace(/\D/g, '');
+      this.MyProduct.price = parseInt(value);
+      input.value = value;
+    }
+    if (InputID === 'ProdOldPrice') {
+      let value = input.value.replace(/\D/g, '');
+      this.MyProduct.oldPrice = parseInt(value);
+      input.value = value;
+    }
+
+
+    // ---------------- Promo Code Fields ---------------------
+    if (InputID === 'DiscountValue') {
       let value = input.value.replace(/\D/g, '').slice(0, 3);
       if (parseInt(value, 10) > 100) value = '100';
       this.PromoCode.discountValue = parseInt(value, 10);
       input.value = value;
     }
 
-    if (inputName === 'Limt') {
+    if (InputID === 'Limt') {
       let rawValue = input.value.replace(/\D/g, '').slice(0, 9);
       this.PromoCode.usageLimit = parseInt(rawValue || '0');
       input.value = Number(rawValue).toLocaleString();
     }
 
-    if (inputName === 'Code') {
+    if (InputID === 'Code') {
       const value = input.value.replace(/[^a-zA-Z0-9]/g, '');
       this.PromoCode.code = value;
       input.value = value;
     }
 
-    if (inputName === 'expiryDate') {
+    if (InputID === 'expiryDate') {
       let raw = input.value.replace(/\D/g, '').slice(0, 8);
       let day = raw.slice(0, 2);
       let month = raw.slice(2, 4);
@@ -227,7 +263,7 @@ export class AdminAddComponent implements OnInit, AfterViewInit {
       reader.onload = (ev) =>
         this.imagePreviews.push((ev.target as any).result);
       reader.readAsDataURL(f);
-      this.MyProduct.colors.push('#ffffff');
+      this.MyProduct.colors.push('Color Name');
     });
   }
 
@@ -296,10 +332,27 @@ export class AdminAddComponent implements OnInit, AfterViewInit {
     for (const pair of fd.entries()) {
       console.log(pair[0], pair[1]);
     }
-
+    
+    this.isLoading = true;
+    this.startDotAnimation();
+    
+    // Initial message
+    this.loadingMessage = 'Adding your new product';
+    
+    // Change message after 3 seconds to uploading images
+    this.messageTimeout = setTimeout(() => {
+      this.loadingMessage = 'Uploading Your Product Images';
+      this.isUploadingImages = true;
+    }, 4000);
+    
     this.productSer.addProductFormData(fd).subscribe({
-      next: () => this.msgSer.show('Product added.'),
+      next: () => {
+        this.cleanupLoaders();
+        this.msgSer.show('Product Added Successfully.');
+        this.router.navigate(['admin/Dashboard']);
+      },
       error: (err) => {
+        this.cleanupLoaders();
         console.error('Save product error', err);
         this.msgSer.show('Failed to add product.');
       },
@@ -335,5 +388,23 @@ export class AdminAddComponent implements OnInit, AfterViewInit {
     this.whatInTheBoxText = this.highlightsText = '';
     this.selectedImages = [];
     this.imagePreviews = [];
+  }
+  //Loading Functions
+  private startDotAnimation() {
+    this.dotInterval = setInterval(() => {
+      this.dots = this.dots.length >= 3 ? '.' : this.dots + '.';
+    }, 500);
+  }
+
+  private cleanupLoaders() {
+    clearInterval(this.dotInterval);
+    clearTimeout(this.messageTimeout);
+    this.isLoading = false;
+    this.isUploadingImages = false;
+    this.dots = '.';
+  }
+
+  ngOnDestroy() {
+    this.cleanupLoaders();
   }
 }

@@ -13,7 +13,6 @@ import { FormsModule } from '@angular/forms';
 import { Product } from '../../../models/productModel';
 import { ProductService } from '../../../services/product.service';
 import { SearchService } from '../../../services/search.service';
-import { ProductCardComponent } from '../../../Shared/Components/product-card/product-card.component';
 import { CategoryService } from '../../../services/category.service';
 import { BrandService } from '../../../services/brand.service';
 import { Brand } from '../../../models/brandModel';
@@ -80,6 +79,7 @@ export class AdminProdsComponent implements OnInit, AfterViewInit {
       this.searchTerm = term;
       this.applyFilters();
     });
+    
   }
 
   ngAfterViewInit(): void {

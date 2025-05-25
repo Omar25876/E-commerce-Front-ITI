@@ -9,6 +9,31 @@ import { AuthInterceptor } from '../../../../services/auth.interceptor';
 import { UserService } from '../../../../services/user.service';
 import { MessageService } from '../../../../services/message.service';
 import { StorageService } from '../../../../services/storage.service';
+import { AuthService } from '../../../../services/auth.service';
+import { Order } from '../../../../models/orderModel';
+import { OrderService } from '../../../../services/order.service';
+
+
+interface MyItem {
+  id:string;
+  Brand: string;
+  Image: string;
+  name: string;
+  quantity: number;
+  price: number;
+  SelectedColor: string;
+}
+
+interface MyOrder {
+  _id:string;
+  orderId: number;
+  Status: string;
+  DeliveyType: string;
+  totalAmount: number;
+  PromoCode: string;
+  AfterSale: number;
+  items: MyItem[];
+}
 
 @Component({
   selector: 'app-prod-reviews',
@@ -21,6 +46,7 @@ import { StorageService } from '../../../../services/storage.service';
     },],
   imports: [CommonModule, FormsModule, HttpClientModule],
 })
+
 export class ProdReviewsComponent implements OnInit {
   product: Product = {
     _id: '',
@@ -50,10 +76,20 @@ export class ProdReviewsComponent implements OnInit {
     createdAt: '',
     updatedAt: '',
   };
+  CurrentUser:any;
+  Orders:Order[]=[];
 
   selectedFilter: string = 'all'; // Default filter
 
-  constructor(private productService: ProductService, private router: Router, private userService: UserService,private msg:MessageService,private storage: StorageService) {}
+  constructor(
+    private productService: ProductService, 
+    private router: Router, 
+    private userService: UserService,
+    private MsgSer:MessageService,
+    private storage: StorageService,
+    private Auth : AuthService,
+    private OrderSer:OrderService
+  ) {}
 
   reviews: Review[] = [];
   usersList: any[] = [];
@@ -73,11 +109,20 @@ export class ProdReviewsComponent implements OnInit {
         this.calculateRatingCounts(); // Calculate the counts for each rating
       }
     }
+     this.OrderSer.getAllOrders().subscribe({
+      next: (data) => {
+        this.Orders=data.orders;
+      },
+      error: (err) => {
+        console.error('Error fetching Orders:', err);
+      }
+    });
     this.userService.getAllUsers().subscribe({
       next: (res) => {
         this.usersList = res.users;
       }
     });
+    this.CurrentUser=this.Auth.getUserData();
   }
 
   /**
@@ -139,27 +184,54 @@ export class ProdReviewsComponent implements OnInit {
 
   addReview(): void {
     if (this.newReview.comment && this.newReview.rating) {
+          let CurrProdID=this.product._id;
+          console.log("Product Id:");
+          console.log(CurrProdID);
+          let CurrUserID =this.CurrentUser.id;
+          console.log("User Id:");
+          console.log(CurrUserID);
+    
+          let OrderFound=false;
+          for(let i=0;i<this.Orders.length;i++)
+            if(this.Orders[i].userId?._id === CurrUserID){
+              for(let j=0;j<this.Orders[i].items.length;j++){
+                  OrderFound=this.Orders[i].items[j]._id == CurrProdID;
+
+              }}
+          if(!OrderFound)
+           { this.MsgSer.show("Please Buy The Product First"); return;}
+
 
       this.productService.addReviewToProduct(this.product._id, this.newReview).subscribe({
         next: (res) => {
-          console.log('Product updated successfully:', res);
-          this.msg.show(res.message)
+          this.MsgSer.show("Review Updated Successfully");
           this.storage.setItem('product', res.product);
           this.router.navigate(['/product/'+this.product._id+"/reviews"]);
           this.reviews = res.product.reviews;
           this.filteredReviews = [...this.reviews];
           this.calculateRatingCounts();
           this.newReview = { comment: '', rating: 0 };
-        },
-        error: (err) => {
-          console.error('Error updating product:', err);
-          this.msg.show('Failed To add review, try later');
-        },
-      });
+         
+
+            },
+            error: (err) => {
+              console.error('Error updating product:', err);
+              this.MsgSer.show('Failed To add review, try later');
+            },
+          });
     } else {
-      console.error('Review comment or rating is missing.');
+      this.MsgSer.show("Please Enter Review And Pick a Rating First")
     }
+    
+    
+    
+    
+    
   }
+
+ 
+
+
 }
 
 

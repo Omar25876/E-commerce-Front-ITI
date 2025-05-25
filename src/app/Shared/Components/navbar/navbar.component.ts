@@ -55,7 +55,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
     },
     phone: '',
     gender: 'male',
-    isAdmin: false,
+    isAdmin: true,
     createdAt: '',
     updatedAt: '',
   };
